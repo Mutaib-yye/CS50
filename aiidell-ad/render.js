@@ -6,7 +6,7 @@ const fs = require('fs');
 (async () => {
   const [mode, out, ...rest] = process.argv.slice(2);
   const browser = await chromium.launch({ args: ['--disable-gpu-vsync', '--force-color-profile=srgb'] });
-  const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
+  const page = await browser.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
   page.on('pageerror', e => { console.error('PAGEERROR', e.message); });
   page.on('console', m => { if (m.type() === 'error') console.error('CONSOLE', m.text()); });
   await page.goto('file://' + path.resolve(__dirname, 'index.html'));

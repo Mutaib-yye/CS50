@@ -1,5 +1,5 @@
 // ===== Core utilities: easing, timing, drawing helpers =====
-const W = 1920, H = 1080, FPS = 30, DURATION = 50;
+const W = 1080, H = 1920, FPS = 30, DURATION = 50;
 
 const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
 const lerp = (a, b, t) => a + (b - a) * t;

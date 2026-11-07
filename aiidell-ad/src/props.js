@@ -280,11 +280,11 @@ function godRays(c, t, x, y, alpha = 1) {
   }
   c.restore();
 }
-function dustMotes(c, t, x0, x1, col = 'rgba(255,240,210,0.8)', n = 30, seed = 3) {
+function dustMotes(c, t, x0, x1, col = 'rgba(255,240,210,0.8)', n = 30, seed = 3, hh = 1080) {
   const R = rng(seed);
   for (let i = 0; i < n; i++) {
-    const bx = x0 + R() * (x1 - x0), by = R() * 1080, sp = 10 + R() * 25, ph = R() * TAU;
-    const x = bx + Math.sin(t * 0.5 + ph) * 30, y = (by - t * sp + 1080 * 4) % 1080;
+    const bx = x0 + R() * (x1 - x0), by = R() * hh, sp = 10 + R() * 25, ph = R() * TAU;
+    const x = bx + Math.sin(t * 0.5 + ph) * 30, y = (by - t * sp + hh * 4) % hh;
     glowDot(c, x, y, 3 + R() * 5, col, 0.5 + 0.5 * Math.sin(t * 2 + ph));
   }
 }

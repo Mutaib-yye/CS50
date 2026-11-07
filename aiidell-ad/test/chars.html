@@ -1,0 +1,99 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Character Sheet</title>
+<style>
+@font-face{font-family:'Fredoka';src:url('../fonts/Fredoka.ttf');font-weight:300 700;}
+@font-face{font-family:'Poppins';src:url('../fonts/Poppins-SemiBold.ttf');font-weight:600;}
+html,body{margin:0;background:#222}
+canvas{display:block}
+</style></head>
+<body><canvas id="cv"></canvas>
+<script>
+// Usage: chars.html?mode=sheet|faces|motion|hands&chars=../src/characters.js&who=R&t0=0&dt=0.1
+const q = new URLSearchParams(location.search);
+const charsSrc = q.get('chars') || '../src/characters.js';
+function load(src) { return new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.body.appendChild(s); }); }
+window.ready = load('../src/core.js').then(() => load(charsSrc)).then(() => load('../src/props.js'))
+  .then(() => document.fonts.load('600 20px Poppins').catch(() => 0)).then(() => { draw(); return true; });
+
+function cellBg(c, x, y, w, h, warm) {
+  const g = c.createLinearGradient(0, y, 0, y + h);
+  if (warm) { g.addColorStop(0, '#fff3f8'); g.addColorStop(1, '#f1e4ff'); }
+  else { g.addColorStop(0, '#2c3350'); g.addColorStop(1, '#1b1f33'); }
+  c.fillStyle = g; c.fillRect(x, y, w, h);
+}
+function label(c, s, x, y, dark) {
+  c.font = '600 18px Poppins, sans-serif'; c.textAlign = 'left'; c.textBaseline = 'top';
+  c.fillStyle = dark ? '#5a4a7a' : '#dfe4ff'; c.fillText(s, x + 10, y + 8);
+}
+function cell(c, x, y, w, h, s, lbl, warm, fn, ox = 0.5, oy = 0.43) {
+  c.save(); c.beginPath(); c.rect(x, y, w, h); c.clip();
+  cellBg(c, x, y, w, h, warm);
+  try { fn(x + w * ox, y + h * oy, s); } catch (e) { console.error(lbl + ': ' + e.message); c.restore(); c.save(); c.fillStyle = '#c00'; c.fillText('ERROR ' + e.message, x + 10, y + 40); }
+  label(c, lbl, x, y, warm);
+  c.restore();
+}
+
+function draw() {
+  const cv = document.getElementById('cv'), c = cv.getContext('2d');
+  const mode = q.get('mode') || 'sheet';
+  const T = parseFloat(q.get('t0') || '1.3');
+  if (mode === 'sheet') {
+    const cw = 400, ch = 520, cols = 5, rows = 3;
+    cv.width = cw * cols; cv.height = ch * rows;
+    const S = 0.5;
+    const L = [
+      // row 1: lineup
+      ['Rahul (L) neutral', true, (x, y, s) => drawMan(c, { x, y, s, who: 'L', t: T, mood: { happy: 0.2 }, look: { x: 0, y: 0.6 }, blink: 0, rim: '#7fa6ff', rimSide: -1, screenGlow: '#a9d4ff', pose: { phoneY: 215 } })],
+      ['Arjun (R) happy', true, (x, y, s) => drawMan(c, { x, y, s, who: 'R', t: T, mood: { happy: 0.7 }, look: { x: -0.4, y: 0 }, blink: 0, rim: '#ffc79a', rimSide: 1, screenGlow: '#ffd2e4', pose: { phoneY: 215 } })],
+      ['Team man (T) gift', true, (x, y, s) => drawMan(c, { x, y, s, who: 'T', t: T, mood: { happy: 0.85 }, look: { x: -0.5, y: -0.1 }, blink: 0, pose: { phone: false, lh: [-70, 210], rh: [70, 210], prop: c2 => drawGiftBox(c2, 6, 250, 0.42, T) } })],
+      ['Putri (P) bouquet', true, (x, y, s) => drawWoman(c, { x, y, s, who: 'P', t: T, mood: { happy: 1 }, look: { x: 0, y: 0 }, blink: 0, pose: { lh: [-70, 200], rh: [70, 200], prop: c2 => drawBouquet(c2, 0, 200, 0.42, T) } })],
+      ['Hijab (H) bouquet', true, (x, y, s) => drawWoman(c, { x, y, s, who: 'H', t: T, mood: { happy: 0.7 }, look: { x: 0.5, y: -0.1 }, blink: 0, pose: { lh: [-70, 200], rh: [70, 200], prop: c2 => drawBouquet(c2, 0, 200, 0.32, T) } })],
+      // row 2: moods
+      ['L stressed', false, (x, y, s) => drawMan(c, { x, y, s, who: 'L', t: T, mood: { stress: 1 }, look: { x: 0.85, y: -0.1 }, tilt: 0.05, blink: 0, rim: '#7fa6ff', rimSide: -1, screenGlow: '#a9d4ff', pose: { phoneY: 215, phoneA: 0.04 } })],
+      ['L tired + slump', false, (x, y, s) => drawMan(c, { x, y, s, who: 'L', t: T, mood: { stress: 0.7, tired: 1 }, look: { x: -0.2, y: 0.6 }, tilt: -0.13, blink: 0, slump: 28, rim: '#7fa6ff', rimSide: -1, screenGlow: '#a9d4ff', pose: { phoneY: 250 } })],
+      ['R surprise', true, (x, y, s) => drawMan(c, { x, y, s, who: 'R', t: T, mood: { surprise: 1, happy: 0.4 }, look: { x: 0, y: -0.2 }, tilt: -0.04, blink: 0, rim: '#ffc79a', rimSide: 1, pose: { phoneY: 215 } })],
+      ['R fist pump', true, (x, y, s) => drawMan(c, { x, y, s, who: 'R', t: T, mood: { happy: 1 }, look: { x: -0.8, y: 0 }, tilt: 0.07, blink: 0, rim: '#ffc79a', rimSide: 1, pose: { phoneX: -40, phoneY: 215, lh: [-88, 233], rh: [110, 120], rFist: true } })],
+      ['P surprise + gift', true, (x, y, s) => drawWoman(c, { x, y, s, who: 'P', t: T, mood: { happy: 0.8, surprise: 0.6 }, look: { x: 0, y: 0.6 }, blink: 0, tilt: 0.04, pose: { lh: [-92, 205], rh: [92, 205], prop: c2 => drawGiftBox(c2, 6, 225, 0.5, T, 0) } })],
+      // row 3: misc
+      ['R default (no pose)', true, (x, y, s) => drawMan(c, { x, y, s, who: 'R', t: T + 2, mood: {}, look: { x: 0, y: 0.8 }, blink: 0 })],
+      ['R phone:false low hands', true, (x, y, s) => drawMan(c, { x, y, s, who: 'R', t: T, mood: { happy: 1 }, look: { x: 0, y: 0 }, blink: 0, pose: { phone: false, lh: [-60, 300], rh: [60, 300] } })],
+      ['L blink, t+3', false, (x, y, s) => drawMan(c, { x, y, s, who: 'L', t: T + 3, mood: { happy: 0.45 }, look: { x: 0.45, y: -0.7 }, tilt: -0.06, blink: 1, rim: '#7fa6ff', rimSide: -1, pose: { phoneY: 215 } })],
+      ['P default (no pose)', true, (x, y, s) => drawWoman(c, { x, y, s, who: 'P', t: T + 2, mood: {}, look: { x: 0.3, y: 0 }, blink: 0 })],
+      ['H gift, t+5', true, (x, y, s) => drawWoman(c, { x, y, s, who: 'H', t: T + 5, mood: { happy: 0.3 }, look: { x: -0.3, y: 0.2 }, blink: 0, rim: '#ffc79a', rimSide: -1, pose: { lh: [-92, 205], rh: [92, 205], prop: c2 => drawGiftBox(c2, 6, 225, 0.5, T, 0.5) } })],
+    ];
+    L.forEach(([lbl, warm, fn], i) => cell(c, (i % cols) * cw, Math.floor(i / cols) * ch, cw, ch, S, lbl, warm, fn));
+  } else if (mode === 'faces') {
+    const cw = 520, ch = 640;
+    cv.width = cw * 5; cv.height = ch;
+    const S = 1.25;
+    [['L', 0], ['R', 0], ['T', 0], ['P', 1], ['H', 1]].forEach(([who, fem], i) => {
+      cell(c, i * cw, 0, cw, ch, S, who, true, (x, y, s) => {
+        const o = { x, y: y + 60, s, who, t: T, mood: { happy: 0.5 }, look: { x: 0, y: 0 }, blink: 0, pose: fem ? {} : { phoneY: 215 } };
+        fem ? drawWoman(c, o) : drawMan(c, o);
+      }, 0.5, 0.5);
+    });
+  } else if (mode === 'hands') {
+    const cw = 640, ch = 560;
+    cv.width = cw * 3; cv.height = ch;
+    const S = 1.3;
+    cell(c, 0, 0, cw, ch, S, 'phone grip', true, (x, y, s) => drawMan(c, { x, y: y - 230 * s, s, who: 'R', t: T, mood: {}, look: { x: 0, y: 0.5 }, blink: 0, pose: { phoneY: 215 } }), 0.5, 0.5);
+    cell(c, cw, 0, cw, ch, S, 'fist pump', true, (x, y, s) => drawMan(c, { x: x - 60, y: y - 150 * s, s, who: 'R', t: T, mood: { happy: 1 }, look: { x: 0, y: 0.5 }, blink: 0, pose: { phoneX: -40, phoneY: 215, lh: [-88, 233], rh: [110, 120], rFist: true } }), 0.5, 0.5);
+    cell(c, 2 * cw, 0, cw, ch, S, 'gift hold', true, (x, y, s) => drawWoman(c, { x, y: y - 210 * s, s, who: 'P', t: T, mood: {}, look: { x: 0, y: 0.5 }, blink: 0, pose: { lh: [-92, 205], rh: [92, 205], prop: c2 => drawGiftBox(c2, 6, 225, 0.5, T, 0) } }), 0.5, 0.5);
+  } else if (mode === 'motion') {
+    const who = q.get('who') || 'R', n = 10, dt = parseFloat(q.get('dt') || '0.1');
+    const cw = 260, ch = 360;
+    cv.width = cw * n; cv.height = ch;
+    const fem = who === 'P' || who === 'H';
+    for (let i = 0; i < n; i++) {
+      const t = T + i * dt;
+      cell(c, i * cw, 0, cw, ch, 0.42, 't=' + t.toFixed(2), true, (x, y, s) => {
+        const o = { x, y: y + 20, s, who, t, mood: { happy: 0.5 }, look: { x: 0, y: 0 }, blink: blink(t, 4), pose: fem ? {} : { phoneY: 215 } };
+        fem ? drawWoman(c, o) : drawMan(c, o);
+        // reference grid lines to spot drift
+        c.strokeStyle = 'rgba(255,0,0,0.25)'; c.lineWidth = 1;
+        [-170, -44, 233].forEach(v => { c.beginPath(); c.moveTo(x - 130, y + 20 + v * s); c.lineTo(x + 130, y + 20 + v * s); c.stroke(); });
+      });
+    }
+  }
+}
+</script></body></html>
