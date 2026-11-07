@@ -49,7 +49,7 @@ function pillTag(c, x, y, s, a, col, bg) {
 }
 
 function teamScene(c, t, u) {
-  // pastel office in Jakarta
+  // pastel AiiDell office in Indonesia
   const bg = c.createLinearGradient(0, 0, 0, 1080);
   bg.addColorStop(0, '#fff3f8'); bg.addColorStop(1, '#efe4ff');
   c.fillStyle = bg; c.fillRect(-300, -450, 1560, 2000);
@@ -59,7 +59,7 @@ function teamScene(c, t, u) {
   c.fillStyle = '#fff'; rr(c, 300, 110, 520, 110, 26); c.fill(); c.shadowColor = 'transparent'; c.shadowBlur = 0;
   drawLogoIcon(c, 368, 165, 0.6);
   txt(c, 'AiiDell Team', 420, 148, { size: 34, align: 'left', font: 'Fredoka', weight: 700, color: '#ff4f8b' });
-  txt(c, 'Jakarta · Indonesia', 420, 188, { size: 20, align: 'left', weight: 600, color: '#8a6ab8' });
+  txt(c, 'in Indonesia', 420, 188, { size: 20, align: 'left', weight: 600, color: '#8a6ab8' });
   idFlag(c, 750, 175, 50);
   c.restore();
   // shelves with gifts
@@ -86,7 +86,7 @@ function teamScene(c, t, u) {
     c.fillStyle = '#fff'; rr(c, -230, -110, 460, 250, 26); c.fill(); c.shadowColor = 'transparent'; c.shadowBlur = 0;
     c.fillStyle = brandGrad(c, -230, 0, 230, 0); rr(c, -230, -110, 460, 56, 26); c.fill(); c.fillRect(-230, -80, 460, 26);
     txt(c, 'NEW ORDER  #ID-2048', 0, -82, { size: 22, color: '#fff', font: 'Fredoka', weight: 700, ls: 1 });
-    txt(c, 'Blush Rose Bouquet  →  Putri, Jakarta', 0, -26, { size: 17, color: '#2a1f4a', weight: 600 });
+    txt(c, 'Blush Rose Bouquet  →  Putri, Indonesia', 0, -26, { size: 17, color: '#2a1f4a', weight: 600 });
     const steps = ['Order received', 'Gift prepared', 'Out for delivery'];
     steps.forEach((s, i) => {
       const p = clamp((u - 1.0 - i * 0.55) * 4);
@@ -129,7 +129,7 @@ function journeyScene(c, t, u, pw = 960) {
 }
 
 function recipientScene(c, t, u) {
-  // Jakarta home exterior at golden hour
+  // Indonesian home exterior at golden hour
   const sky = c.createLinearGradient(0, 0, 0, 700);
   sky.addColorStop(0, '#ffb3cf'); sky.addColorStop(1, '#ffe2b8');
   c.fillStyle = sky; c.fillRect(-300, -450, 1560, 2000);

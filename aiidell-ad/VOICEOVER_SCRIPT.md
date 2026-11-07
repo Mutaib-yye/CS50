@@ -13,7 +13,7 @@ If you want to narrate it, read the captions below at their timecodes. Speak lik
 | 0:10.7 – 0:13 | Courier quote, customs, "Documents Required" | "…and sending it directly is so expensive." |
 | 0:13 – 0:15 | The right side lights up | "And Arjun?" |
 | 0:15 – 0:19.8 | AiiDell.com → bouquet → her details → order confirmed | "Just a few clicks on AiiDell.com…" |
-| 0:20.3 – 0:24.3 | AiiDell team in Jakarta, gift travelling | "Our team in Indonesia takes care of everything…" |
+| 0:20.3 – 0:24.3 | AiiDell team in Indonesia, gift travelling | "Our team in Indonesia takes care of everything…" |
 | 0:24.6 – 0:27.8 | Putri opens her surprise | "…right to her door." |
 | 0:28 – 0:37.5 | Flowers, Gifts, Food, Snacks, Cakes, delivery notes | *(optional)* "Flowers, gifts, food, snacks and cakes. Same-day delivery may be available, depending on the location." |
 | 0:38.2 – 0:40.8 | Rahul still on hold | "One is still searching…" |

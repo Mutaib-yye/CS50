@@ -32,7 +32,7 @@ const PAL = {
     },
   },
   T: { // AiiDell Indonesia team member: pink polo + headset. Light golden Indonesian.
-    skin: '#f0c7a3', light: '#fee7d2', dark: '#cf9874', deep: '#9e6b4b', sss: '#f08d70', blushC: '#f0968a', lip: '#c47868',
+    skin: '#f2d0ac', light: '#fdebd6', dark: '#d8a982', deep: '#b0835e', sss: '#f2a486', blushC: '#f0968a', lip: '#c47868',
     hair: '#14100e', hairHi: '#4e3e38', hairSheen: '#7e6c66', iris: '#37200f', irisHi: '#9a6c40',
     top: '#ff6a9e', topDark: '#d8467f', topHi: '#ffa2c4', inner: '#ffffff',
     phone: '#333a44', style: 'short', beard: 'none', outfit: 'polo', headset: true, seed: 9,
@@ -47,28 +47,28 @@ const PAL = {
 };
 const WPAL = {
   P: { // Putri – the girlfriend in Indonesia. Fair, warm-peach Indonesian; modern kebaya.
-    skin: '#e9b893', light: '#f6d3b8', dark: '#c98d68', deep: '#9f6a4c', sss: '#ee8a6c', blushC: '#f0928e', lip: '#d36a78',
+    skin: '#f4d6b4', light: '#fef0de', dark: '#ddb28a', deep: '#bb8d66', sss: '#f3ad8e', blushC: '#f7a6a3', lip: '#d8707e',
     hair: '#110b0a', hairHi: '#3e3238', hairSheen: '#8a7d92', iris: '#3a2214', irisHi: '#aa7c4c',
     top: '#f9c6d7', topDark: '#eaa1bb', topHi: '#ffe3ee', cream: '#fbf1e1', gold: '#d6aa5c', goldHi: '#f6dc96',
     flower: true, seed: 13,
     face: {
       shape: { cw: 98, jx: 72, jy: -84, chw: 19, chy: -45, top: -288, fem: true },
-      eye: { w: 24, top: 19.5, bot: 11, tilt: 3, ir: 15, peak: 0.56, lash: 5, crease: 4, creaseA: 0.3, deep: 0.1, fem: true, soft: 1 },
+      eye: { w: 24, top: 18, bot: 10.5, tilt: 4, ir: 15, peak: 0.56, lash: 5, crease: 2.5, creaseA: 0.18, deep: 0.06, fem: true, soft: 1 },
       brow: { x0: 16, x1: 72, y: -213, th: 7, arch: 7, tilt: 1.5, fem: true },
-      nose: { tipR: 10, alaW: 12, bridge: 0.22, top: -174, tipY: -137, fem: true },
+      nose: { tipR: 9, alaW: 12, bridge: 0.12, top: -170, tipY: -137, fem: true },
       ex: 41, ey: -171, mouthY: -99, ridge: 0,
     },
   },
   H: { // AiiDell team member in a hijab, with headset.
-    skin: '#e7b591', light: '#f5d2b6', dark: '#c78b66', deep: '#9d684a', sss: '#ec886a', blushC: '#ee908c', lip: '#cb6676',
+    skin: '#f2d3b0', light: '#fdeedb', dark: '#dbaf86', deep: '#b98a63', sss: '#f1aa8b', blushC: '#f5a3a0', lip: '#d06c7a',
     hair: '#1b1210', hairHi: '#5b3e33', hairSheen: '#8a6a5c', iris: '#3a2214', irisHi: '#a87a4c',
     top: '#ff6a9e', topDark: '#d8467f', topHi: '#ffa2c4', cream: '#fbf1e1', gold: '#d6aa5c', goldHi: '#f6dc96',
     hijab: '#bba6ff', hijabDark: '#8b74e4', headset: true, seed: 8,
     face: {
       shape: { cw: 97, jx: 72, jy: -84, chw: 19, chy: -45, top: -288, fem: true },
-      eye: { w: 23, top: 18.5, bot: 10.5, tilt: 2.5, ir: 14.5, peak: 0.55, lash: 4.8, crease: 4, creaseA: 0.3, deep: 0.1, fem: true, soft: 1 },
+      eye: { w: 23, top: 17.5, bot: 10, tilt: 3.5, ir: 14.5, peak: 0.55, lash: 4.8, crease: 2.5, creaseA: 0.18, deep: 0.06, fem: true, soft: 1 },
       brow: { x0: 16, x1: 71, y: -213, th: 7, arch: 6, tilt: 1.5, fem: true },
-      nose: { tipR: 10, alaW: 12, bridge: 0.22, top: -174, tipY: -137, fem: true },
+      nose: { tipR: 9, alaW: 12, bridge: 0.12, top: -170, tipY: -137, fem: true },
       ex: 40, ey: -171, mouthY: -99, ridge: 0,
     },
   },

@@ -344,7 +344,7 @@ function searchScreen(c, x, y, w, h, u, t) {
   const res = [['International shipping rules 2026', 'Restrictions, prohibited items, permits...'],
     ['Customs duty calculator – Indonesia', 'Import tax, VAT, handling and clearance fees'],
     ['Find travellers to carry parcels', 'Forum · 312 replies · "anyone going?"'],
-    ['Courier rates India → Jakarta', 'Rates vary. Contact for a quote...'],
+    ['Courier rates India → Indonesia', 'Rates vary. Contact for a quote...'],
     ['Documents required for gift parcels', 'Invoice, declaration, ID proof, form...'],
     ['Is it safe to send food abroad?', 'Perishables may be held at customs...']];
   const scroll = Math.max(0, u - 1.4) * 120;
@@ -369,9 +369,9 @@ function chatScreen(c, x, y, w, h, u, t) {
   c.fillStyle = '#5b6b9a'; c.fillRect(x, y, w, 80);
   c.fillStyle = '#c9d2f0'; c.beginPath(); c.arc(x + 44, y + 40, 22, 0, TAU); c.fill();
   txt(c, 'Travel Group', x + 78, y + 30, { size: 19, align: 'left', color: '#fff', weight: 600 });
-  txt(c, 'India → Jakarta · 248 members', x + 78, y + 54, { size: 13, align: 'left', color: '#dfe5ff', weight: 400 });
+  txt(c, 'India → Indonesia · 248 members', x + 78, y + 54, { size: 13, align: 'left', color: '#dfe5ff', weight: 400 });
   const msgs = [
-    ['me', 'Anyone flying to Jakarta this week?', 0.2],
+    ['me', 'Anyone flying to Indonesia this week?', 0.2],
     ['me', 'Can you carry a small gift? Please!', 0.9],
     ['them', 'Sorry bro, my bag is already full', 1.5],
     ['me', 'Anyone else?? Will pay!', 2.1],
@@ -627,7 +627,7 @@ function aiiScreen(c, w, h, u, t) {
     txt(c, '12 premium pink roses, hand-tied', 24, 578, { size: 13, align: 'left', color: '#7a6a90', weight: 400 });
     txt(c, '₹1,999', 24, 618, { size: 26, align: 'left', color: '#ff4f8b', weight: 700 });
     c.fillStyle = '#eafaf0'; rr(c, 24, 644, w - 48, 40, 12); c.fill();
-    txt(c, 'Delivered in Jakarta, Indonesia', 44, 664, { size: 13, align: 'left', color: '#2f8a52', weight: 600 });
+    txt(c, 'Delivered anywhere in Indonesia', 44, 664, { size: 13, align: 'left', color: '#2f8a52', weight: 600 });
     const press = u > 4.7 && u < 4.9 ? 1 : 0;
     c.save(); c.translate(w / 2, 740); c.scale(1 - press * 0.05, 1 - press * 0.05);
     c.shadowColor = 'rgba(255,79,139,0.5)'; c.shadowBlur = 18 + Math.sin(t * 6) * 6; c.shadowOffsetY = 6;
@@ -655,7 +655,7 @@ function aiiScreen(c, w, h, u, t) {
     txt(c, 'Recipient details', 24, 210, { size: 22, align: 'left', color: '#2a1f4a', font: 'Fredoka', weight: 700 });
     // steps
     ['Cart', 'Details', 'Pay'].forEach((s, i) => { c.fillStyle = i <= 1 ? '#ff5f97' : '#e5dcef'; rr(c, 24 + i * 120, 236, 110, 6, 3); c.fill(); txt(c, s, 24 + i * 120, 258, { size: 12, align: 'left', color: i <= 1 ? '#ff4f8b' : '#a99abd', weight: 600 }); });
-    const fields = [['Name', 'Putri', 6.1], ['City / Country', 'Jakarta, Indonesia', 6.6], ['Delivery date', 'Today', 7.3], ['Gift message', 'Happy Birthday, sayang!', 7.6]];
+    const fields = [['Name', 'Putri', 6.1], ['Country', 'Indonesia', 6.6], ['Delivery date', 'Today', 7.3], ['Gift message', 'Happy Birthday, sayang!', 7.6]];
     fields.forEach(([lab, val, at], i) => {
       const fy = 290 + i * 104;
       txt(c, lab, 24, fy, { size: 13, align: 'left', color: '#7a6a90', weight: 600 });
@@ -686,7 +686,7 @@ function aiiScreen(c, w, h, u, t) {
     c.fillStyle = '#fff'; c.shadowColor = 'rgba(140,80,160,0.15)'; c.shadowBlur = 14; rr(c, 24, 240, w - 48, 220, 18); c.fill(); c.shadowColor = 'transparent'; c.shadowBlur = 0;
     drawBouquet(c, 80, 330, 0.3, t);
     txt(c, 'Blush Rose Bouquet', 130, 290, { size: 15, align: 'left', color: '#2a1f4a', weight: 600 });
-    txt(c, 'To: Putri · Jakarta', 130, 316, { size: 13, align: 'left', color: '#7a6a90', weight: 400 });
+    txt(c, 'To: Putri · Indonesia', 130, 316, { size: 13, align: 'left', color: '#7a6a90', weight: 400 });
     c.fillStyle = '#f0e8f7'; c.fillRect(44, 370, w - 88, 2);
     txt(c, 'Delivery', 44, 396, { size: 14, align: 'left', color: '#7a6a90', weight: 400 });
     txt(c, 'Included', w - 44, 396, { size: 14, align: 'right', color: '#2f8a52', weight: 600 });
@@ -727,7 +727,7 @@ function aiiScreen(c, w, h, u, t) {
   const ta = clamp((u - 10.7) * 3);
   txt(c, 'Order Confirmed!', w / 2, 530, { size: 30, color: '#2a1f4a', font: 'Fredoka', weight: 700, alpha: ta });
   txt(c, 'Your gift is on its way', w / 2, 572, { size: 16, color: '#7a6a90', weight: 400, alpha: ta });
-  txt(c, 'to Putri in Jakarta', w / 2, 598, { size: 16, color: '#7a6a90', weight: 400, alpha: ta });
+  txt(c, 'to Putri in Indonesia', w / 2, 598, { size: 16, color: '#7a6a90', weight: 400, alpha: ta });
   c.globalAlpha = ta; idFlag(c, w / 2 + 92, 588, 26); c.globalAlpha = 1;
   // confetti
   const R = rng(77);
@@ -992,12 +992,12 @@ function drawRoute(c, m, p, t, o = {}) {
   c.restore();
   const [ , , ax, ay, bx, by] = routePoint(m, 0, lift);
   // city pins
-  [[ax, ay, 'New Delhi', p > 0], [bx, by, 'Jakarta', p > 0.97]].forEach(([x, y, n, on], i) => {
+  [[ax, ay, 'India', p > 0], [bx, by, 'Indonesia', p > 0.97]].forEach(([x, y, n, on], i) => {
     if (!on) return;
     const pulse = (t * 1.2 + i * 0.5) % 1;
     c.strokeStyle = `rgba(255,255,255,${1 - pulse})`; c.lineWidth = 3; c.beginPath(); c.arc(x, y, 8 + pulse * 30, 0, TAU); c.stroke();
     c.fillStyle = '#fff'; c.beginPath(); c.arc(x, y, 9, 0, TAU); c.fill();
     c.fillStyle = BRAND.pink; c.beginPath(); c.arc(x, y, 5, 0, TAU); c.fill();
-    if (o.cityLabels !== false) txt(c, n, x + (i ? 0 : 0), y + (i ? 34 : -26), { size: o.citySize || 20, weight: 600, color: '#fff', shadow: 'rgba(60,20,60,0.7)', blur: 6 });
+    if (o.cityLabels === true) txt(c, n, x + (i ? 0 : 0), y + (i ? 34 : -26), { size: o.citySize || 20, weight: 600, color: '#fff', shadow: 'rgba(60,20,60,0.7)', blur: 6 });
   });
 }
