@@ -242,6 +242,8 @@
     blob([[64, 24], [86, -80], [126, -200], [152, -280], [124, -296], [98, -176], [44, -40], [28, 30]]); fs_(PAP, 3);
     ctx.fillStyle = TONE_FLAT_P; blob([[40, 20], [60, -60], [96, -170], [110, -170], [72, -50], [56, 24]]); ctx.fill();
     ctx.fillStyle = PAP; ink([[-50, -40], [-20, -156], [44, -250], [104, -300]], 7, .3, .5);
+    ink([[0, -60], [30, -110], [20, -150]], 4, .3, .3); ink([[-20, -10], [16, -50]], 4, .3, .3); ink([[60, -200], [90, -240]], 3, .3, .3);
+    blob([[112, -296], [150, -300, 1], [138, -262], [118, -270]]); fs_(PAP, 3);
     // belt
     ctx.fillStyle = INK; poly([[-62, 10], [78, 22], [76, 46], [-64, 36]]); ctx.fill();
     // --- near leg forward (knee high)
@@ -259,7 +261,10 @@
     hairFront(Hd, f, -.12);
     headband(Hd, f, -.12, 0, 0);
     // --- near arm swinging back (straight-ish, fist behind hip)
+    ctx.lineWidth = 9; ctx.strokeStyle = PAP; ctx.lineJoin = 'round';
+    limb(Sn, En, 40, 33); ctx.stroke(); limb(En, Fn, 33, 27); ctx.stroke();
     limb(Sn, En, 40, 33); fs_(INK, 0); limb(En, Fn, 33, 27); fs_(INK, 0);
+    ctx.fillStyle = PAP; ink([[Sn[0] - 6, Sn[1] + 30], [Sn[0] - 34, Sn[1] + 60]], 4, .3, .3); ink([[En[0] + 10, En[1] - 4], [En[0] - 20, En[1] + 18]], 4, .3, .3);
     ctx.fillStyle = PAP; ink([[Sn[0] - 24, Sn[1] - 20], [En[0] - 20, En[1] - 22]], 6, .3, .5); ink([[En[0] - 26, En[1] - 18], [Fn[0] - 4, Fn[1] - 28]], 4, .3, .5);
     sideFist([Fn[0] - 18, Fn[1] + 6], Math.PI + .5, 38);
     ctx.restore();
@@ -299,52 +304,52 @@
     ctx.fillStyle = INK; ink([[-110, 36], [-80, 110], [-20, 156], [44, 120]], 12, .3, .3);
     ink([[-96, -10], [-70, 40]], 3, .3, .3); ink([[92, 0], [70, 44]], 3, .3, .3);
     // ears
-    for (const s of [-1, 1]) { blob([[s * 104, -26], [s * 132, -34], [s * 136, 10], [s * 108, 34]]); fs_(PAP, 4); }
+    for (const s of [-1, 1]) { blob([[s * 104, -24], [s * 124, -30], [s * 128, 4], [s * 106, 28]]); fs_(PAP, 4); ctx.fillStyle = TONE_DK_P; blob([[s * 108, -16], [s * 120, -18], [s * 118, 6], [s * 108, 14]]); ctx.fill(); }
     // bangs over forehead
-    [[-104, -70, -92, -26], [-66, -80, -46, -40], [-24, -84, -6, -48], [16, -84, 30, -46], [58, -76, 74, -38], [98, -60, 110, -20]].forEach(([x0, y0, x1, y1], i) => {
+    [[-104, -74, -96, -40], [-66, -84, -50, -56], [-24, -88, -10, -62], [16, -88, 28, -62], [58, -80, 72, -54], [98, -64, 108, -36]].forEach(([x0, y0, x1, y1], i) => {
       ctx.beginPath(); ctx.moveTo(x0 - 28, y0 - 12); ctx.quadraticCurveTo(x0 + 6, y0 + 10, x1 + fl(i + 60, 5), y1); ctx.quadraticCurveTo(x0 + 18, y0, x0 + 30, y0 - 16); ctx.closePath(); ctx.fill();
     });
     // eyes in the shadow of the brow (fierce)
-    ctx.fillStyle = TONE_DK_P; blob([[-104, -44], [0, -30], [104, -44], [100, -20], [0, -6], [-100, -20]]); ctx.fill();
+    ctx.fillStyle = TONE_DK_P; blob([[-104, -40], [0, -30], [104, -40], [100, -20], [0, -12], [-100, -20]]); ctx.fill();
     for (const s of [-1, 1]) {
       ctx.save(); ctx.translate(s * 50, -6); ctx.scale(s, 1);
-      const eye = () => blob([[-40, 4, 1], [-4, -18], [40, -16, 1], [30, 12], [-6, 16]]);
+      const eye = () => blob([[-40, 6, 1], [-6, -12], [40, -12, 1], [30, 10], [-6, 13]]);
       ctx.fillStyle = PAP; eye(); ctx.fill();
-      ctx.save(); eye(); ctx.clip(); ctx.fillStyle = INK; ctx.beginPath(); ctx.ellipse(-4, 0, 10, 13, 0, 0, TAU); ctx.fill();
-      ctx.lineWidth = 2; ctx.strokeStyle = INK; ctx.beginPath(); ctx.arc(-4, 0, 16, 0, TAU); ctx.stroke();
-      ctx.fillStyle = PAP; ctx.beginPath(); ctx.arc(-7, -4, 3.5, 0, TAU); ctx.fill(); ctx.restore();
-      ctx.fillStyle = INK; ink([[-46, 6], [-10, -20], [40, -17], [54, -28]], 11, .1, .3);
-      ink([[-26, 18], [24, 14]], 3.5, .3, .3);
-      ink([[-50, -38], [-10, -44], [52, -62]], 19, .08, .45);
-      ink([[-6, -52], [8, -40]], 3, .3, .3);
+      ctx.save(); eye(); ctx.clip(); ctx.fillStyle = INK; ctx.beginPath(); ctx.ellipse(-2, 2, 11, 13, 0, 0, TAU); ctx.fill();
+      ctx.fillStyle = PAP; ctx.beginPath(); ctx.arc(-5, -2, 3, 0, TAU); ctx.fill(); ctx.restore();
+      ctx.fillStyle = INK; ink([[-48, 8], [-10, -14], [40, -14], [56, -24]], 12, .1, .3);
+      ink([[-26, 18], [26, 14]], 3.5, .3, .3);
+      ink([[-50, -24], [-10, -32], [54, -50]], 17, .05, .45);
+      ink([[-40, -14], [-22, -24]], 3, .3, .3);
       ctx.restore();
     }
-    ctx.fillStyle = INK; ink([[-14, -50], [-4, -30]], 4, .3, .3); ink([[14, -50], [4, -30]], 4, .3, .3);
+    ctx.fillStyle = INK; ink([[-12, -44], [-4, -26]], 4, .3, .3); ink([[12, -44], [4, -26]], 4, .3, .3); ink([[-6, -50], [0, -40]], 3, .3, .3);
     ink([[6, 8], [16, 40], [0, 46]], 5, .3, .3);
-    // yelling mouth: clenched teeth rows, corners pulled down
-    blob([[-56, 74, 1], [-20, 62], [20, 62], [56, 74, 1], [36, 104], [0, 112], [-36, 104]]); fs_(INK, 0);
-    ctx.fillStyle = PAP; blob([[-48, 74, 1], [0, 66], [48, 74, 1], [40, 84, 1], [-40, 84, 1]]); ctx.fill();
-    blob([[-30, 104, 1], [0, 108], [30, 104, 1], [26, 96, 1], [-26, 96, 1]]); ctx.fill();
-    ctx.fillStyle = INK; for (let i = -2; i <= 2; i++) ink([[i * 15, 68], [i * 15, 84]], 2.5, .2, .2);
-    ink([[-66, 70], [-56, 80], [-60, 92]], 4, .3, .3); ink([[66, 70], [56, 80], [60, 92]], 4, .3, .3);
-    ink([[-20, 130], [20, 130]], 3, .3, .3);
+    // yelling mouth: open, clenched teeth rows, corners pulled down
+    blob([[-42, 70, 1], [-14, 60], [14, 60], [42, 70, 1], [30, 112], [0, 124], [-30, 112]]); fs_(INK, 0);
+    ctx.fillStyle = PAP; blob([[-36, 70, 1], [0, 64], [36, 70, 1], [30, 80, 1], [-30, 80, 1]]); ctx.fill();
+    blob([[-24, 114, 1], [0, 118], [24, 114, 1], [20, 106, 1], [-20, 106, 1]]); ctx.fill();
+    ctx.fillStyle = INK; for (let i = -1; i <= 1; i++) ink([[i * 14, 66], [i * 14, 80]], 2.5, .2, .2);
+    ctx.fillStyle = '#3a3a3e'; ctx.beginPath(); ctx.ellipse(0, 100, 16, 6, 0, 0, TAU); ctx.fill();
+    ctx.fillStyle = INK; ink([[-52, 64], [-42, 76], [-46, 90]], 4, .3, .3); ink([[52, 64], [42, 76], [46, 90]], 4, .3, .3);
+    ink([[-16, 140], [16, 140]], 3, .3, .3);
     // headband over bangs + knot
     ctx.beginPath(); ctx.moveTo(-132, -96); ctx.quadraticCurveTo(0, -128, 132, -96); ctx.lineTo(128, -68); ctx.quadraticCurveTo(0, -100, -128, -68); ctx.closePath(); fs_(red(), 4.5);
     ctx.fillStyle = INK; ink([[-120, -80], [0, -108], [120, -80]], 3, .3, .3);
-    // sweat drop
-    ctx.fillStyle = PAP; ctx.strokeStyle = INK; ctx.lineWidth = 3.5;
-    blob([[150, -50, 1], [164, -12], [150, 4], [136, -10]]); ctx.fill(); ctx.stroke();
+    // cheek shading hatch (right side) + vein mark
+    ctx.fillStyle = INK; for (let i = 0; i < 4; i++) ink([[60 + i * 8, 30], [50 + i * 8, 56]], 2.5, .3, .3);
+    ink([[70, -64], [84, -74]], 3, .3, .3); ink([[78, -60], [88, -52]], 3, .3, .3);
   }
   function fist(f) {
     // giant foreshortened fist punching at the reader. origin = fist centre
     ctx.lineJoin = 'round';
-    const sleeve = () => blob([[-40, -210], [-300, -200], [-470, -150], [-520, -80], [-470, -10], [-300, 60], [-40, 180]]);
-    sleeve(); ctx.lineWidth = 16; ctx.strokeStyle = PAP; ctx.stroke(); ctx.fillStyle = INK; ctx.fill();
+    // foreshortened sleeve: cone from the fist back to the shoulder (merges into the body mass)
+    blob([[-40, -210], [-300, -190], [-560, -150, 1], [-600, -40, 1], [-300, 70], [-40, 180]]); ctx.fillStyle = INK; ctx.fill();
     ctx.fillStyle = PAP;
-    ink([[-500, -130], [-330, -186], [-150, -200]], 7, .3, .6);
-    ink([[-330, -150], [-290, -110], [-330, -60]], 5, .3, .3); ink([[-250, -170], [-200, -110], [-250, -40], [-210, 20]], 6, .3, .3);
-    ink([[-420, -110], [-390, -70]], 4, .3, .3); ink([[-170, -150], [-140, -60]], 4, .3, .3);
-    ink([[-480, -30], [-330, 30], [-150, 120]], 4, .3, .6);
+    ink([[-560, -150], [-330, -190], [-120, -214]], 9, .5, .3);
+    ink([[-300, -150], [-262, -110], [-300, -60]], 5, .3, .3); ink([[-210, -170], [-170, -110], [-214, -40], [-180, 20]], 6, .3, .3);
+    ink([[-420, -120], [-390, -80]], 4, .3, .3);
+    ink([[-560, -36], [-330, 64], [-120, 170]], 6, .5, .3);
     // cuff
     ctx.save(); ctx.translate(-70, -10); ctx.rotate(-.15);
     ctx.beginPath(); ctx.ellipse(0, 0, 150, 200, 0, 0, TAU); ctx.lineWidth = 14; ctx.strokeStyle = PAP; ctx.stroke(); ctx.fillStyle = INK; ctx.fill();
@@ -445,14 +450,14 @@
   const CAM = [
     [0.00, 560, 860, 1.10], [0.80, 520, 820, 1.20],
     [0.98, 560, 1960, 1.40], [1.40, 580, 1960, 1.52],
-    [1.52, 540, 3000, 1.04], [2.20, 540, 3000, 1.10], [3.00, 540, 2840, .97],
+    [1.52, 560, 3020, 1.00], [2.25, 520, 2990, 1.13], [3.00, 540, 2850, .98],
   ];
   function cam(lt) {
     let i = 0; while (i < CAM.length - 2 && lt >= CAM[i + 1][0]) i++;
     const a = CAM[i], b = CAM[i + 1]; const whip = (b[0] - a[0]) < .25;
     let k = P(lt, a[0], b[0]); k = whip ? E.io(k) : E.sine(k);
     if (i === 4) k = E.out(P(lt, a[0], b[0]));
-    if (i === 5) k = E.io(P(lt, 2.25, 3.0));
+    if (i === 5) k = E.io(P(lt, 2.3, 3.0));
     return { x: lerp(a[1], b[1], k), y: lerp(a[2], b[2], k), z: lerp(a[3], b[3], k), whip: whip ? Math.sin(P(lt, a[0], b[0]) * Math.PI) : 0, dir: Math.sign(b[2] - a[2]) };
   }
 
@@ -489,7 +494,7 @@
       focusLines(540, 1960, 560, 300, 130, f, 11, INK, 1400, .011);
       const s = .92 + .04 * P(lt, .92, 1.5);
       ctx.save(); ctx.translate(540, 1975); ctx.scale(s, s); eyeCU(f, k, lt); ctx.restore();
-      sfx('カッ', 860, 1760, 130, { rot: .12, sc: E.back(P(lt, 1.16, 1.32)) });
+      sfx('カッ', 800, 1770, 130, { rot: .12, sc: E.back(P(lt, 1.16, 1.32)) });
     });
 
     // ---------------- P3: splash (black)
@@ -530,7 +535,7 @@
       // shake while on the splash
       const shk = (lt > 1.5 && lt < 2.1) ? (1 - P(lt, 1.5, 2.1)) * 10 : 0;
       ctx.save();
-      ctx.translate(540 + (h(f * 1.7) - .5) * shk, 960 + (h(f * 2.3) - .5) * shk); ctx.scale(c.z, c.z); ctx.translate(-c.x, -c.y);
+      ctx.translate(540 + (h(f * 1.7) - .5) * shk, 960 + (h(f * 2.3) - .5) * shk); ctx.scale(c.z, c.z); ctx.rotate(lt > 1.5 ? -.025 * Math.sin(P(lt, 1.5, 3) * Math.PI) : 0); ctx.translate(-c.x, -c.y);
       world(lt, f);
       ctx.restore();
       // whip-pan: vertical smear lines in screen space

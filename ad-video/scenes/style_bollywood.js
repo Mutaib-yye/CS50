@@ -21,7 +21,7 @@
     }
     out.push(pts[pts.length - 1]); return out;
   }
-  function tube(pts, wf) {
+  function tube(pts, wf, pen = null) {
     const n = pts.length, L = [], R = [];
     for (let i = 0; i < n; i++) {
       const a = pts[Math.max(0, i - 1)], b = pts[Math.min(n - 1, i + 1)];
@@ -29,11 +29,23 @@
       const w = wf(i / (n - 1));
       L.push([pts[i][0] - dy * w, pts[i][1] + dx * w]); R.push([pts[i][0] + dy * w, pts[i][1] - dx * w]);
     }
-    ctx.beginPath(); ctx.moveTo(L[0][0], L[0][1]);
-    for (const p of L) ctx.lineTo(p[0], p[1]);
-    for (let i = n - 1; i >= 0; i--) ctx.lineTo(R[i][0], R[i][1]);
-    ctx.closePath(); return { L, R };
+    const pp = pen || new Path2D(); pp.moveTo(L[0][0], L[0][1]);
+    for (const p of L) pp.lineTo(p[0], p[1]);
+    for (let i = n - 1; i >= 0; i--) pp.lineTo(R[i][0], R[i][1]);
+    pp.closePath(); return { L, R, path: pp };
   }
+  // fill a Path2D, then a directional rim light: the crescent of the shape facing the light (lx,ly = unit dir to light)
+  const BIG = new Path2D(); BIG.rect(-4000, -4000, 8000, 8000);
+  function rimP(path, fill, lx, ly, w = 3.5, col = 'rgba(255,214,150,1)', a = 1) {
+    ctx.fillStyle = fill; ctx.fill(path);
+    ctx.save(); ctx.clip(path); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = col; const ga = ctx.globalAlpha;
+    for (const [k, al] of [[1, .95], [3, .3]]) {
+      const q = new Path2D(BIG); q.addPath(path, new DOMMatrix([1, 0, 0, 1, -lx * w * k, -ly * w * k]));
+      ctx.globalAlpha = ga * a * al; ctx.fill(q, 'evenodd');
+    }
+    ctx.restore();
+  }
+  const nrm = (x, y) => { const l = Math.hypot(x, y) || 1; return [x / l, y / l]; };
   function polyline(pts) { ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]); }
   // fill current path, then an inner rim-light band (clip + additive stroke)
   function rimFill(fill, rim, rw = 6, ra = .9) {
