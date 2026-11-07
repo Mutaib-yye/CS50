@@ -18,7 +18,7 @@ function leftMan(t, panelT) {
   // look: phone (down) vs card (right) vs dreamy (up)
   let lx = kf(t, [[0, 0], [1.0, 0.1], [1.4, 0.45], [3.0, 0.45], [3.4, 0], [5.4, 0], [5.8, 0.85], [7.6, 0.85], [7.9, 0.1], [8.4, 0.85], [10.6, 0.85], [10.9, 0], [11.4, 0.9], [14, 0.9], [14.4, 0.3], [18, 0.3], [18.4, 0.85], [28, 0.85], [39.6, -0.2]]);
   let ly = kf(t, [[0, 0.8], [1.0, 0.8], [1.4, -0.7], [3.0, -0.7], [3.4, 0.8], [5.4, 0.8], [5.8, -0.1], [7.6, -0.1], [7.9, 0.85], [8.4, -0.1], [10.6, -0.1], [10.9, 0.85], [11.4, -0.1], [14, -0.1], [14.4, 0.6], [18, 0.6], [18.4, 0], [28, 0], [39.6, 0.6]]);
-  const shake = stress > 0.7 ? Math.sin(t * 23) * 0.012 * (stress - 0.7) * 3 : 0;
+  const shake = stress > 0.7 ? sn(t * 4, 11) * 0.03 * (stress - 0.7) * 3 : 0;
   const tilt = kf(t, [[0, 0], [1.4, -0.06], [3.0, -0.06], [3.4, 0], [15, 0.05], [18, -0.03], [28, 0.04], [39.6, -0.13]]) + shake + sn(t * 0.7, 2) * 0.02;
   return {
     x, y: 650, s: 1.1, who: 'L', t,
@@ -115,14 +115,14 @@ function drawLeftPanel(c, t, pw = 960) {
       if (life < 0) continue;
       const lp = (life % 3.6) / 3.6;
       const side = k % 2 ? 1 : -1;
-      const hx = m.x + side * (150 + (k * 37) % 70);
+      const hx = m.x + side * (215 + (k * 37) % 60);
       const hy = 400 - lp * 260;
       const intensity = clamp((m.mood.stress - 0.2) * 1.6);
       questionMark(c, hx + Math.sin(lp * 6 + k) * 14, hy, 44 + (k % 3) * 14, Math.sin(lp * Math.PI) * intensity, Math.sin(t * 2 + k) * 0.3);
     }
   }
   // unanswered message badges
-  [['No reply', 9.4, 470, 560], ['Seen 2h ago', 10.0, 150, 520], ['No reply', 10.6, 480, 470], ['Unread: 0', 19.5, 160, 560], ['Seen', 21, 470, 600]].forEach(([s, at, x, y], i) => {
+  [['No reply', 9.4, 470, 700], ['Seen 2h ago', 10.0, 150, 720], ['No reply', 10.6, 480, 790], ['Unread: 0', 19.5, 160, 770], ['Seen', 21, 470, 760]].forEach(([s, at, x, y], i) => {
     const a = win(t, at, at + 3.4 + (i > 2 ? 18 : 0), 0.3, 0.4);
     msgBadge(c, x, y + Math.sin(t * 2 + i) * 5, E.outBack(clamp((t - at) * 3)), a, s);
   });
@@ -157,8 +157,8 @@ function rightMan(t) {
   if (fist > 0.01) {
     pose.phoneX = lerp(0, -40, fist);
     pose.lh = [lerp(-52, -88, fist), 233];
-    pose.rh = [lerp(52, 110, fist), lerp(233, 120 + Math.sin(t * 14) * 8 * fist, fist)];
-    pose.rFist = fist > 0.5;
+    pose.rh = [lerp(52, 230, fist), lerp(233, 10 + 34 * Math.abs(Math.sin((t - 16.2) * 7)), fist)];
+    pose.rFist = fist;
   }
   if (t > 39.4) pose.phoneY = 190;
   return { x, y: 650, s: 1.1, who: 'R', t, mood: { happy, surprise }, look: { x: lx, y: ly }, tilt, blink: blink(t, 4, 3.2), rim: '#ffc79a', rimSide: 1, screenGlow: '#ffd2e4', pose };
@@ -297,7 +297,7 @@ function recipientScene(c, t, u) {
   // box descends into her hands
   const land = E.out(clamp((u - 0.3) / 0.9));
   const open = E.outBack(clamp((u - 1.6) / 0.6));
-  const hold = clamp((u - 1.0) * 4);
+  const hold = clamp((u - 1.2) * 4);
   const happy = kf(u, [[0, 0.5], [1.2, 0.8], [1.7, 1]]);
   const surprise = kf(u, [[0, 0], [0.4, 0.8], [1.1, 0.6], [1.7, 0.2], [2.4, 0]]);
   drawWoman(c, {
@@ -309,9 +309,10 @@ function recipientScene(c, t, u) {
     },
   });
   if (hold <= 0) {
-    const by = lerp(-200, 740 + 225 * 0.95, land);
-    for (let k = 0; k < 8; k++) sparkle(c, 480 + Math.sin(t * 4 + k) * 70, by - 120 - k * 30, 10 - k, '#fff6d8', 1 - k / 8, t + k);
-    drawGiftBox(c, 486, by, 0.5 * 0.95, t, 0);
+    const bxOf = l => 486 + 330 * (1 - E.inOut(clamp((l - 0.75) / 0.25)));
+    const by = lerp(-150, 740 + 225 * 0.95, land), bx = bxOf(land);
+    for (let k = 1; k < 9; k++) { const lk = Math.max(0, land - k * 0.035); sparkle(c, bxOf(lk), lerp(-150, 953, lk) - 60, 11 - k, '#fff6d8', 1 - k / 9, t + k); }
+    drawGiftBox(c, bx, by, 0.5 * 0.95, t, 0);
   }
   // burst from open box
   if (u > 1.7) {
@@ -421,11 +422,11 @@ function drawRightPanel(c, t, pw = 960, offX = 0) {
     // S5 video call
     if (t > 39.4) {
       const a = spring(t, 39.8, 1.4, 6);
+      for (let i = 0; i < 8; i++) { const p = ((t - 39.8) * 0.45 + i / 8) % 1; const sd = i % 2 ? 1 : -1; if (t > 40.2) drawHeart(c, 240 + sd * (175 + Math.sin(p * 7 + i) * 22), 760 - p * 640, 22 + (i % 3) * 10, i % 2 ? '#ff4f8b' : '#ff9cc0', Math.sin(p * Math.PI) * 0.9); }
       c.save(); c.globalAlpha = clamp(a * 2);
       glowDot(c, 240, 470, 380, 'rgba(255,170,210,0.5)');
       phoneFrame(c, 240, 470, 400, 820, 0.66 * clamp(a, 0, 1.15), (c2, w, h) => videoCallScreen(c2, w, h, t));
       c.restore();
-      for (let i = 0; i < 7; i++) { const p = ((t - 39.8) * 0.45 + i / 7) % 1; if (t > 40.2) drawHeart(c, 240 + Math.sin(p * 7 + i) * 150, 760 - p * 700, 22 + (i % 3) * 10, i % 2 ? '#ff4f8b' : '#ff9cc0', Math.sin(p * Math.PI) * 0.9); }
       pillTag(c, 700, 160, 'Already smiling!', win(t, 40.6, 44.2, 0.5, 0.4), '#ff4f8b', '#ffffff');
     }
   }
