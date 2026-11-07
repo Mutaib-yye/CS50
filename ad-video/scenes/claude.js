@@ -389,7 +389,7 @@
   const DROP = [330, 455];
 
   function drawUI(lt, st) {
-    const kAB = E.io(P(lt, 2.78, 3.06)), kSide = E.io(P(lt, 2.82, 3.2)), kEx = E.io(P(lt, 4.36, 4.86)), uiA = 1 - P(lt, 4.36, 4.62);
+    const kA = E.in(P(lt, 2.78, 2.9)), kAB = E.out(P(lt, 2.86, 3.0)), kSide = E.io(P(lt, 2.82, 3.2)), kEx = E.io(P(lt, 4.36, 4.86)), uiA = 1 - P(lt, 4.36, 4.62);
     ctx.fillStyle = C.bg; ctx.fillRect(0, 0, SW, SH);
     if (uiA > 0) {
       ctx.save(); ctx.globalAlpha = uiA;
@@ -409,8 +409,8 @@
       ctx.fillStyle = C.line; ctx.fillRect(Math.max(0, sx + 180), 104, SW, 1.5);
 
       // ---------- layout A: greeting + big input
-      if (kAB < 1) {
-        ctx.save(); ctx.globalAlpha *= 1 - kAB; ctx.translate(0, -30 * kAB);
+      if (kA < 1) {
+        ctx.save(); ctx.globalAlpha *= 1 - kA; ctx.translate(0, -40 * kA);
         const top = boxTop(lt), dragA = E.io(P(lt, .62, .8)) * (1 - P(lt, 1.08, 1.2));
         const gy = lerp(250, 205, chipK(lt));
         mark(354, gy, 22, .3 + lt * .2); T('Mau bikin apa hari ini?', 384, gy + 2, { size: 44, font: 'Playfair', weight: 'italic 700', color: C.text, align: 'left' });
@@ -422,7 +422,7 @@
         const ck = chipK(lt);
         if (ck > 0) chip(BX + 20, top + 18, 330, .7 + .3 * E.back(P(lt, 1.12, 1.42)), P(lt, 1.12, 1.2));
         const tx = BX + 30, ty = top + 18 + 80 * ck + 30, n = typed(lt);
-        if (n === 0) T('Tulis pesan untuk Claude…', tx, ty, { size: 36, weight: 600, color: '#77736b', align: 'left' });
+        if (n === 0) T('Tulis pesan untuk Claude…', tx, ty, { size: 36, weight: 600, color: '#77736b', align: 'left', alpha: 1 - P(lt, 1.0, 1.1) + P(lt, 1.3, 1.42) });
         else { const lines = wrap(PROMPT.slice(0, n), BW - 70, 40, 'Mont', 600); lines.forEach((l, i) => T(l, tx, ty + i * 52, { size: 40, weight: 600, color: C.text, align: 'left' }));
           const last = lines[lines.length - 1], cx = tx + TW(last, 40, 'Mont', 600) + 4, blink = n < PROMPT.length || (lt * 2.2 % 1) < .55;
           if (blink && lt < 2.74) { ctx.fillStyle = CORAL; ctx.fillRect(cx, ty + (lines.length - 1) * 52 - 22, 3.5, 44); } }
@@ -436,7 +436,7 @@
       // ---------- layout B: conversation + artifact panel
       if (kAB > 0) {
         ctx.save(); ctx.globalAlpha *= kAB;
-        const bIn = E.out(P(lt, 2.78, 3.1)), by = 124 + 60 * (1 - bIn);
+        const bIn = E.out(P(lt, 2.84, 3.12)), by = 124 + 90 * (1 - bIn);
         const lines = wrap(PROMPT, 330, 26, 'Mont', 600), bh = 24 + 50 + 12 + lines.length * 34;
         rr(120, by, 360, bh, 22); ctx.fillStyle = '#3a3633'; ctx.fill();
         chip(136, by + 14, 250, 1, 1, true);
@@ -503,9 +503,9 @@
       const m = ctx.getTransform(); st.sun = m.transformPoint(new DOMPoint(SUN[0], SUN[1]));
       ctx.restore();
       // generating shimmer sweep over the preview
-      const gk = P(lt, 3.05, 3.2) * (1 - P(lt, 4.2, 4.32));
-      if (gk > 0) { const u = ((lt - 3.05) / .75) % 1, sx3 = rx - 200 + u * (rw + 400);
-        ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = gk * .14; const g = ctx.createLinearGradient(sx3 - 120, ry, sx3 + 120, ry + rh * .3);
+      const gk = P(lt, 2.98, 3.1) * (1 - P(lt, 4.2, 4.32));
+      if (gk > 0) { const u = ((lt - 2.98) / .7) % 1, sx3 = rx - 200 + u * (rw + 400);
+        ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = gk * .2; const g = ctx.createLinearGradient(sx3 - 120, ry, sx3 + 120, ry + rh * .3);
         g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(.5, '#fff'); g.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = g; ctx.fillRect(rx, ry, rw, rh); ctx.restore(); }
       // play badge when done
       const pb = pop(lt, 4.26, .25) * (1 - P(lt, 4.45, 4.6));
@@ -520,7 +520,7 @@
       const tgt = [BX + 20 + 33, boxTop(lt) + 18 + 33];
       const fx = lerp(x, tgt[0], E.io(settle)), fy = lerp(y, tgt[1], E.io(settle)), s = lerp(1, .5, E.io(settle)), a = 1 - P(lt, 1.18, 1.3);
       const rot = .22 * Math.sin(Math.PI * e) - .1 * Math.exp(-settle * 6) * Math.sin(settle * 18) * (settle > 0 ? 1 : 0);
-      for (let k = 3; k >= 1; k--) { const [tx, ty] = pos(E.io(P(lt - k * .025, .6, 1.1))); ctx.save(); ctx.translate(tx, ty); ctx.rotate(rot); pdfIcon(0, 0, 1, a * .12 * (4 - k) * (e < .98 ? 1 : 0)); ctx.restore(); }
+      for (let k = 4; k >= 1; k--) { const [tx, ty] = pos(E.io(P(lt - k * .009, .6, 1.1))); ctx.save(); ctx.translate(tx, ty); ctx.rotate(rot); pdfIcon(0, 0, 1, a * .07 * (5 - k) * (e < .98 ? 1 : 0)); ctx.restore(); }
       ctx.save(); ctx.translate(fx, fy); ctx.rotate(rot * (1 - settle));
       ctx.save(); ctx.globalAlpha = a * .4 * (1 - settle); ctx.fillStyle = '#000'; ctx.filter = 'blur(8px)'; ctx.fillRect(-30, -36, 84, 112); ctx.restore();
       pdfIcon(0, 0, s, a); if (settle <= 0) T('Prompt-Pack.pdf', 0, 76, { size: 18, weight: 700, color: C.text });
@@ -542,8 +542,8 @@
     let z = lerp(1.0, 1.1, E.sine(P(lt, 0, 1.0))), x = 540, y = 985;
     const k1 = E.io(P(lt, .5, 1.55)); z = lerp(z, 1.95, k1); y = lerp(y, 935, k1);
     z *= 1 + .035 * E.sine(P(lt, 1.55, 2.78));
-    const k2 = E.io(P(lt, 2.78, 3.3)); z = lerp(z, 1.76, k2); x = lerp(x, 575, k2); y = lerp(y, 882, k2);
-    const k3 = E.sine(P(lt, 3.3, 4.4)); z = lerp(z, 1.86, k3); x = lerp(x, 600, k3);
+    const k2 = E.io(P(lt, 2.78, 3.3)); z = lerp(z, 1.76, k2); x = lerp(x, 548, k2); y = lerp(y, 882, k2);
+    const k3 = E.sine(P(lt, 3.3, 4.4)); z = lerp(z, 1.84, k3); x = lerp(x, 566, k3);
     const k4 = E.io(P(lt, 4.36, 5.7)), kp = E.io(P(lt, 4.36, 5.0)); z = z * Math.pow(6.2 / z, k4); x = lerp(x, DCX, kp); y = lerp(y, DCY, kp);
     x += noise1(lt * .7 + 3) * 2.5; y += noise1(lt * .6 + 9) * 2.5;
     const r = lerp(-.03, -.006, E.io(P(lt, 0, 1.7))) + noise1(lt * .5) * .003 + .03 * E.in(P(lt, 4.5, 5.9));
@@ -585,7 +585,7 @@
         ctx.save(); ctx.globalCompositeOperation = 'lighter';
         for (let i = 0; i < 90; i++) {
           const x = 120 + h(i * 1.3) * 560 + noise1(lt * .35 + i) * 26 + lt * 5, y = 560 + h(i * 2.7) * 700 + noise1(lt * .3 + i * 3) * 26 - lt * 7;
-          const m = inCone(x, y); if (m <= .02) continue;
+          const m = inCone(x, y) * (y > DY - 30 && y < BF ? clamp((DX + 30 - x) / 110) : 1); if (m <= .02) continue;
           const z = h(i * 4.1), r = .8 + z * 2.6, a = m * (.35 + .65 * (.5 + .5 * Math.sin(lt * 2 + i)));
           ctx.fillStyle = `rgba(255,${200 + z * 40 | 0},150,${a * .8})`; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
         }
@@ -619,11 +619,11 @@
         const pk = P(lt, 4.6, 5.0);
         for (let i = 0; i < 80; i++) {
           const rate = .55 + h(i * 3.3) * .7, u = ((lt - 4.6) * rate + h(i * 7.7)) % 1; if (lt < 4.6 + (1 - h(i * 7.7)) / rate * 0 || pk <= 0) continue;
-          const a = h(i * 1.9) * 6.283, d = 30 + Math.pow(u, 2.3) * 1500, d0 = 30 + Math.pow(Math.max(0, u - .05), 2.3) * 1500;
+          const a = h(i * 1.9) * 6.283, d = 30 + Math.pow(u, 2.3) * 1500, d0 = 30 + Math.pow(Math.max(0, u - .018), 2.3) * 1500;
           const x = sx + Math.cos(a) * d, y = sy + Math.sin(a) * d * 1.1, x0 = sx + Math.cos(a) * d0, y0 = sy + Math.sin(a) * d0 * 1.1;
           const al = Math.sin(Math.PI * u) * pk, typ = i % 5, sz = 2 + u * u * (typ < 3 ? 10 : 22);
           if (typ < 3) { const col = typ === 0 ? '255,240,210' : typ === 1 ? '255,200,120' : '255,170,190';
-            ctx.strokeStyle = `rgba(${col},${al * .35})`; ctx.lineWidth = sz * .5; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x, y); ctx.stroke();
+            ctx.strokeStyle = `rgba(${col},${al * .22})`; ctx.lineWidth = sz * .7; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x, y); ctx.stroke();
             blob(x, y, sz * 2.2, col, al * .9); }
           else { ctx.save(); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al * .9; ctx.translate(x, y); ctx.rotate(lt * 3 + i); ctx.fillStyle = typ === 3 ? '#ffc6d4' : '#b9e08f';
             ctx.beginPath(); ctx.ellipse(0, 0, sz, sz * .45, 0, 0, 7); ctx.fill(); ctx.restore(); }

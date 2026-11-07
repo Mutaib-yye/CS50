@@ -29,6 +29,13 @@
     gr.addColorStop(0, 'rgba(255,236,210,1)'); gr.addColorStop(.55, 'rgba(255,220,180,.55)'); gr.addColorStop(.8, 'rgba(255,200,160,.25)'); gr.addColorStop(1, 'rgba(255,200,160,0)');
     g.fillStyle = gr; g.beginPath(); g.arc(64, 64, 62, 0, 7); g.fill(); return c;
   })();
+  const RAYS = (() => {
+    const S = 1600, c = mk(S, S), g = c.getContext('2d'), rg = g.createRadialGradient(800, 800, 0, 800, 800, 800);
+    rg.addColorStop(0, 'rgba(255,205,150,0)'); rg.addColorStop(.1, 'rgba(255,205,150,.9)'); rg.addColorStop(.45, 'rgba(255,190,140,.35)'); rg.addColorStop(1, 'rgba(255,190,140,0)');
+    g.fillStyle = rg;
+    for (let k = 0; k < 22; k++) { const a = k * Math.PI * 2 / 22, wd = (.25 + h(k * 5.3) * .55) * Math.PI / 22; g.beginPath(); g.moveTo(800, 800); g.arc(800, 800, 800, a, a + wd); g.closePath(); g.fill(); }
+    const c2 = mk(S, S), g2 = c2.getContext('2d'); g2.filter = 'blur(7px)'; g2.drawImage(c, 0, 0); return c2;
+  })();
   const PARTS = Array.from({ length: 70 }, (_, i) => ({ x: h(i * 3.7) * 1300 - 110, y: h(i * 5.1 + 2) * 2100 - 90, z: h(i * 1.9 + 7), ph: h(i * 9.3) * 6.28, warm: h(i * 4.4) > .35 }));
 
   // tablet chassis (static, with soft shadow)
@@ -489,7 +496,7 @@
     glowBlob(170, 260 + dy * .2, 900, 'rgba(217,119,87,.22)', 1);
     glowBlob(980, 1650, 900, 'rgba(70,110,255,.16)', 1);
     glowBlob(540, 1000, 700, 'rgba(150,90,220,.12)', 1);
-    ctx.save(); ctx.globalCompositeOperation = 'lighter'; rays(540, -300, 22, lt * .03, 'rgba(255,190,140,.022)'); ctx.restore();
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = .13; ctx.translate(540, -320); ctx.rotate(lt * .02); ctx.scale(2.6, 2.6); ctx.drawImage(RAYS, -800, -800); ctx.restore();
   }
   function drawParts(lt, near) {
     ctx.save(); ctx.globalCompositeOperation = 'lighter';
@@ -649,8 +656,8 @@
 
   SCENES_REG.course = {
     cues: [
-      [0.0, 'swell', 1.6], [0.25, 'shimmer'], [1.45, 'whoosh'],
-      [2.05, 'pop'], [2.4, 'pop'], [2.75, 'pop'], [3.1, 'pop'], [3.42, 'ding'], [3.45, 'shimmer'],
+      [0.0, 'swell', 1.6], [0.25, 'shimmer'], [1.35, 'whoosh'],
+      [1.95, 'pop'], [2.3, 'pop'], [2.65, 'pop'], [3.0, 'pop'], [3.32, 'ding'], [3.35, 'shimmer'],
       [4.95, 'whoosh'], [5.86, 'pop'], [6.4, 'whoosh_in'], [6.5, 'ding'], [7.15, 'pop'],
     ],
     draw(lt, t) {

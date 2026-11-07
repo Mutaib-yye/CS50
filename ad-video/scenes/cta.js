@@ -29,15 +29,23 @@
     g.fillStyle = gr; g.beginPath(); g.arc(64, 64, 62, 0, 7); g.fill(); return c;
   })();
   const PARTS = Array.from({ length: 60 }, (_, i) => ({ x: h(i * 4.7 + 1) * 1300 - 110, y: h(i * 6.1 + 3) * 2100 - 90, z: h(i * 2.9 + 5), ph: h(i * 8.3) * 6.28 }));
+  const RAYS = (() => {
+    const S = 1600, c = mk(S, S), g = c.getContext('2d'), rg = g.createRadialGradient(800, 800, 0, 800, 800, 800);
+    rg.addColorStop(0, 'rgba(255,205,150,0)'); rg.addColorStop(.1, 'rgba(255,205,150,.9)'); rg.addColorStop(.45, 'rgba(255,190,140,.35)'); rg.addColorStop(1, 'rgba(255,190,140,0)');
+    g.fillStyle = rg;
+    for (let k = 0; k < 24; k++) { const a = k * Math.PI * 2 / 24, wd = (.25 + h(k * 3.7) * .55) * Math.PI / 24; g.beginPath(); g.moveTo(800, 800); g.arc(800, 800, 800, a, a + wd); g.closePath(); g.fill(); }
+    const c2 = mk(S, S), g2 = c2.getContext('2d'); g2.filter = 'blur(7px)'; g2.drawImage(c, 0, 0); return c2;
+  })();
+  function softRays(x, y, rot, a, sc = 1.4) { if (a <= 0) return; ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha *= a; ctx.translate(x, y); ctx.rotate(rot); ctx.scale(sc, sc); ctx.drawImage(RAYS, -800, -800); ctx.restore(); }
   const SPARKS = Array.from({ length: 46 }, (_, i) => ({ a: h(i * 3.3) * 6.283, v: 500 + h(i * 7.1) * 1100, r: 2 + h(i * 1.7) * 5, d: .5 + h(i * 5.5) * .7 }));
 
   const MOTION_TX = lazy(() => {
-    const cw = 1040, ch = 380, draw = (g, fill) => { g.save(); g.font = '400 300px Anton'; g.letterSpacing = '16px'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = fill; g.fillText('MOTION', cw / 2 + 8, ch / 2 + 6); g.restore(); };
+    const cw = 1240, ch = 600, draw = (g, fill) => { g.save(); g.font = '400 300px Anton'; g.letterSpacing = '16px'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = fill; g.fillText('MOTION', cw / 2 + 8, ch / 2 + 6); g.restore(); };
     const main = mk(cw, ch), m = main.getContext('2d');
     m.save(); m.translate(0, 12); draw(m, 'rgba(50,10,0,.6)'); m.restore();
-    const gg = m.createLinearGradient(0, 60, 0, 320); gg.addColorStop(0, '#fff8e2'); gg.addColorStop(.35, '#ffd985'); gg.addColorStop(.7, '#f39a4c'); gg.addColorStop(1, '#c9502f');
+    const gg = m.createLinearGradient(0, 170, 0, 430); gg.addColorStop(0, '#fff8e2'); gg.addColorStop(.35, '#ffd985'); gg.addColorStop(.7, '#f39a4c'); gg.addColorStop(1, '#c9502f');
     draw(m, gg);
-    m.save(); m.globalCompositeOperation = 'source-atop'; const hl = m.createLinearGradient(0, 50, 0, 150); hl.addColorStop(0, 'rgba(255,255,255,.6)'); hl.addColorStop(1, 'rgba(255,255,255,0)'); m.fillStyle = hl; m.fillRect(0, 0, cw, 170); m.restore();
+    m.save(); m.globalCompositeOperation = 'source-atop'; const hl = m.createLinearGradient(0, 160, 0, 260); hl.addColorStop(0, 'rgba(255,255,255,.6)'); hl.addColorStop(1, 'rgba(255,255,255,0)'); m.fillStyle = hl; m.fillRect(0, 0, cw, 280); m.restore();
     const glow = mk(cw, ch), gl = glow.getContext('2d'); gl.filter = 'blur(34px)'; draw(gl, '#ff8a3c'); gl.filter = 'none';
     const glow2 = mk(cw, ch), g2 = glow2.getContext('2d'); g2.filter = 'blur(10px)'; draw(g2, '#ffd08a'); g2.filter = 'none';
     return { main, glow, glow2, cw, ch };
@@ -47,7 +55,7 @@
     if (sc <= 0.001) return;
     const tx = MOTION_TX();
     ctx.save(); ctx.translate(x, y); ctx.scale(sc, sc);
-    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = .62 * glowK; ctx.drawImage(tx.glow, -tx.cw / 2, -tx.ch / 2); ctx.globalAlpha = .25 * glowK; ctx.drawImage(tx.glow2, -tx.cw / 2, -tx.ch / 2); ctx.restore();
+    if (glowK > 0) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = .62 * glowK; ctx.drawImage(tx.glow, -tx.cw / 2, -tx.ch / 2); ctx.globalAlpha = .25 * glowK; ctx.drawImage(tx.glow2, -tx.cw / 2, -tx.ch / 2); ctx.restore(); }
     ctx.drawImage(tx.main, -tx.cw / 2, -tx.ch / 2);
     for (const [s0, s1] of sweepAt) {
       const k = P(lt, s0, s1); if (k <= 0 || k >= 1) continue;
@@ -67,7 +75,7 @@
     glowBlob(540, 300, 1000, 'rgba(217,119,87,.20)', 1);
     glowBlob(540, 960, 800 + warm * 200, 'rgba(255,140,80,.10)', .6 + warm * .9);
     glowBlob(1000, 1700, 800, 'rgba(90,90,255,.12)', 1);
-    ctx.save(); ctx.globalCompositeOperation = 'lighter'; rays(540, -350, 22, lt * .03, 'rgba(255,190,140,.022)'); ctx.restore();
+    softRays(540, -350, lt * .02, .12 * (1 - warm), 2.6);
   }
   function drawParts(lt, near, a = 1) {
     ctx.save(); ctx.globalCompositeOperation = 'lighter';
@@ -231,7 +239,7 @@
     ctx.save(); ctx.globalAlpha *= a;
     const l = lt - 7.0;
     glowBlob(540, 930, 760, 'rgba(255,140,80,.28)', 1);
-    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha *= .9; rays(540, 930, 26, lt * .08, 'rgba(255,200,140,.035)'); ctx.restore();
+    softRays(540, 935, lt * .06, .3, 1.5);
     const ks = E.expo(P(l, 0, .7));
     // "Komen" with hairlines
     const ky = 648, kw = TW('Komen', 120, 'Playfair', 'italic 900');
@@ -267,7 +275,7 @@
   SCENES_REG.cta = {
     cues: [
       [0.0, 'whoosh_in'], [1.12, 'whoosh'], [1.3, 'pop'], [1.7, 'impact_big'], [1.74, 'shimmer'],
-      [2.98, 'whoosh'], [3.45, 'notif'], [3.99, 'notif'], [4.35, 'notif'], [4.68, 'type', 0.46], [5.32, 'pop'],
+      [2.8, 'whoosh'], [3.45, 'notif'], [3.99, 'notif'], [4.35, 'notif'], [4.68, 'type', 0.46], [5.32, 'pop'],
       [5.88, 'notif'], [6.95, 'swell', 2.5], [7.05, 'shimmer'],
     ],
     draw(lt, t) {
@@ -296,7 +304,7 @@
       }
 
       // ---- B/C: KOMEN + MOTION lockup (hero, then docks to the top)
-      const dock = E.io(P(lt, 2.95, 3.45));
+      const dock = E.io(P(lt, 2.75, 3.25));
       const lockA = (1 - E.io(P(lt, 5.8, 6.1))) * (lt < 1.2 ? 0 : 1);
       if (lockA > 0 && lt < 7.0) {
         ctx.save(); ctx.globalAlpha = lockA;
@@ -306,12 +314,23 @@
         if (ib > 0 && ib < 1) {
           ctx.save(); ctx.globalCompositeOperation = 'lighter';
           glowBlob(540, my, 900, 'rgba(255,150,80,.38)', (1 - ib));
-          rays(540, my, 28, lt * .25, `rgba(255,200,140,${.06 * (1 - ib)})`);
+          softRays(540, my, lt * .2, .55 * (1 - ib), 1.5);
           const rk = P(lt, 1.7, 2.15); if (rk < 1) { const rr_ = 380 + E.out(rk) * 900; ctx.strokeStyle = `rgba(255,220,180,${(1 - rk) * .35})`; ctx.lineWidth = 3 + 6 * (1 - rk); ctx.beginPath(); ctx.ellipse(540, my, rr_, rr_ * .3, 0, 0, 7); ctx.stroke(); }
           for (const sp of SPARKS) { const k = clamp((lt - 1.7) / sp.d); if (k >= 1) continue; const d = sp.v * E.out(k); ctx.fillStyle = `rgba(255,${200 + 40 * sp.r / 7 | 0},150,${1 - k})`; ctx.beginPath(); ctx.arc(540 + Math.cos(sp.a) * d, my + Math.sin(sp.a) * d * .6 + k * k * 120, sp.r * (1 - k * .5), 0, 7); ctx.fill(); }
           ctx.restore();
         }
         if (lt > 1.7) glowBlob(540, my, 700 * msz, 'rgba(255,130,70,.22)', 1 - dock * .4);
+        // MOTION slam
+        const mk_ = P(lt, 1.52, 1.72);
+        if (mk_ > 0) {
+          const e = E.in(mk_), s = lerp(1.5, 1, e) * msz;
+          const settle = 1 + .05 * Math.sin(P(lt, 1.72, 2.1) * Math.PI) * (lt > 1.72 ? 1 : 0);
+          ctx.save(); ctx.globalAlpha *= clamp(mk_ * 2.5);
+          if (mk_ < 1) for (let j = 1; j <= 2; j++) { const ej = E.in(clamp(mk_ - j * .1)); ctx.save(); ctx.globalAlpha *= .2 / j; drawMotion(540, my, lerp(1.5, 1, ej) * msz, lt, 0); ctx.restore(); }
+          const flashG = 1 + .9 * (1 - P(lt, 1.72, 2.4)) * (lt > 1.72 ? 1 : 0);
+          drawMotion(540, my, s * settle, lt, Math.min(2, flashG) * (1 + .12 * Math.sin(lt * 3)), [[2.15, 2.85], [4.4, 5.1]]);
+          ctx.restore();
+        }
         // KOMEN: letters rise out of a mask, staggered
         const L = 'KOMEN'.split(''), lsz = 128, lsp = 34, widths = L.map(c => TW(c, lsz, 'Mont', 900));
         const tot = widths.reduce((s, v) => s + v, 0) + lsp * (L.length - 1);
@@ -324,17 +343,6 @@
           cx += widths[i] + lsp;
         });
         ctx.restore();
-        // MOTION slam
-        const mk_ = P(lt, 1.52, 1.72);
-        if (mk_ > 0) {
-          const e = E.in(mk_), s = lerp(1.5, 1, e) * msz;
-          const settle = 1 + .05 * Math.sin(P(lt, 1.72, 2.1) * Math.PI) * (lt > 1.72 ? 1 : 0);
-          ctx.save(); ctx.globalAlpha *= clamp(mk_ * 2.5);
-          if (mk_ < 1) for (let j = 1; j <= 3; j++) { const ej = E.in(clamp(mk_ - j * .1)); ctx.save(); ctx.globalAlpha *= .2 / j; drawMotion(540, my, lerp(1.5, 1, ej) * msz, lt, .5); ctx.restore(); }
-          const flashG = 1 + .9 * (1 - P(lt, 1.72, 2.4)) * (lt > 1.72 ? 1 : 0);
-          drawMotion(540, my, s * settle, lt, Math.min(2, flashG) * (1 + .12 * Math.sin(lt * 3)), [[2.15, 2.85], [4.4, 5.1]]);
-          ctx.restore();
-        }
         ctx.restore();
       }
 
