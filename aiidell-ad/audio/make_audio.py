@@ -610,7 +610,7 @@ tt = np.arange(N) / SR
 # ---------------------------------------------------------------- female voice-over (audio/vo, from make_vo.py)
 vo = np.zeros(N)
 vo_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vo')
-VO_SHIFT = {'05': 13.35}            # small timing nudges so lines never overlap
+VO_SHIFT = {}                       # optional per-line timing nudges, e.g. {'03': 20.3}
 if os.path.exists(os.path.join(vo_dir, 'lines.txt')):
     import struct
     for ln in open(os.path.join(vo_dir, 'lines.txt')):
@@ -645,7 +645,7 @@ vo_st = reverb(np.stack([vo, vo], 1), 0.9, 0.07, 9)
 # ducking: music dips ~7 dB and SFX ~3 dB while she speaks (smooth attack/release)
 venv = np.convolve((np.abs(vo) > 0.004).astype(float), np.ones(int(0.35 * SR)) / int(0.35 * SR), mode='same')
 venv = np.clip(venv * 3, 0, 1)
-duck_m = 1 - 0.55 * venv
+duck_m = 1 - 0.45 * venv
 duck_s = 1 - 0.3 * venv
 
 mix = music_r * 0.95 * duck_m[:, None] + sfx_r * 1.0 * duck_s[:, None]

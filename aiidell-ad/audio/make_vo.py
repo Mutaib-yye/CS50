@@ -15,16 +15,27 @@ voice = k.get_voice_style('af_heart') * 0.6 + k.get_voice_style('af_bella') * 0.
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from vo_lines import LINES
+def synth(text, sp):
+    x, sr = k.create(text, voice=voice, speed=float(sp), lang='en-us')
+    x = np.asarray(x, dtype=np.float32)
+    nz = np.where(np.abs(x) > 0.01)[0]
+    if len(nz):
+        x = x[max(0, nz[0] - int(0.02 * sr)): nz[-1] + int(0.06 * sr)]
+    return x, sr
+
+for old in os.listdir(out):
+    if old.endswith('.wav'): os.remove(os.path.join(out, old))
 with open(os.path.join(out, 'lines.txt'), 'w') as f:
-    for i, (t0, text, sp) in enumerate(LINES):
-        samples, sr = k.create(text, voice=voice, speed=sp, lang='en-us')
-        samples = np.asarray(samples, dtype=np.float32)
-        # trim leading/trailing silence
-        nz = np.where(np.abs(samples) > 0.01)[0]
-        if len(nz):
-            samples = samples[max(0, nz[0] - int(0.02 * sr)): nz[-1] + int(0.08 * sr)]
-        path = os.path.join(out, f'{i:02d}.wav')
-        sf.write(path, samples, sr)
-        dur = len(samples) / sr
+    for i, (t0, t1, text) in enumerate(LINES):
+        target = (t1 - t0) - 0.05
+        sp = 1.05
+        for _ in range(3):  # fit the line to fill its window (cheerful pace, no silent gaps)
+            x, sr = synth(text, sp)
+            dur = len(x) / sr
+            sp = float(np.clip(sp * dur / target, 0.9, 1.35))
+            if abs(dur - target) < 0.12: break
+        x, sr = synth(text, sp) if abs(len(x) / sr - target) >= 0.12 else (x, sr)
+        dur = len(x) / sr
+        sf.write(os.path.join(out, f'{i:02d}.wav'), x, sr)
         f.write(f'{i:02d}\t{t0:.2f}\t{dur:.2f}\t{text}\n')
-        print(f'{i:02d} start {t0:6.2f}  dur {dur:4.2f}  end {t0 + dur:6.2f}  {text}')
+        print(f'{i:02d} {t0:6.2f}-{t0 + dur:6.2f} (window to {t1:5.2f}) speed {sp:.2f}  {text[:60]}')
