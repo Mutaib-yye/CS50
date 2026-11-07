@@ -25,12 +25,14 @@
     const l = pts[pts.length - 1]; ctx.lineTo(l[0], l[1]);
   }
   // waxy line: a heavy pass + a lighter offset pass, jitter boils with seed
+  function polyPath(pts) { ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); }
   function cline(pts, col, w, sd, o = {}) {
-    const { jit = 2.2, alpha = .9, passes = 2 } = o;
+    const { jit = 2.2, alpha = .9, passes = 2, sharp = false } = o;
     ctx.save(); ctx.strokeStyle = col; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     for (let p = 0; p < passes; p++) {
       ctx.globalAlpha = alpha * (p ? .5 : 1); ctx.lineWidth = w * (p ? .6 : 1);
-      smoothPath(pts.map((q, i) => [q[0] + J(sd + p * 7, i) * jit, q[1] + J(sd + p * 7, i + 50) * jit]));
+      const jp = pts.map((q, i) => [q[0] + J(sd + p * 7, i) * jit, q[1] + J(sd + p * 7, i + 50) * jit]);
+      if (sharp) polyPath(jp); else smoothPath(jp);
       ctx.stroke();
     }
     ctx.restore();
@@ -58,15 +60,47 @@
     }
     ctx.stroke(); ctx.restore();
   }
+  // patchy colouring for big areas: many small zig-zag patches at slightly varying angles (hand-coloured feel)
+  function scribble(pathFn, col, bx, by, bw, bh, sd, o = {}) {
+    const { cell = 150, ang = -.5, sp = 11, lw = 9, alpha = .55, base = .1, angJ = .35 } = o;
+    ctx.save(); pathFn(); ctx.clip();
+    if (base) { ctx.globalAlpha = base; ctx.fillStyle = col; ctx.fillRect(bx - 4, by - 4, bw + 8, bh + 8); }
+    ctx.strokeStyle = col; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.lineWidth = lw;
+    for (let pass = 0; pass < 2; pass++) {
+      ctx.globalAlpha = alpha * (pass ? .6 : 1); ctx.beginPath(); let ci = 0;
+      for (let gy = by - cell * .5 + pass * cell * .5; gy < by + bh + cell; gy += cell) for (let gx = bx - cell * .5 + pass * cell * .5; gx < bx + bw + cell; gx += cell, ci++) {
+        const a = ang + J(sd + pass, ci) * angJ, ca = Math.cos(a), sa = Math.sin(a), R = cell * (.6 + h2(sd + ci, pass) * .3);
+        const cx = gx + J(sd + 5, ci) * cell * .3, cy = gy + J(sd + 6, ci) * cell * .3;
+        let i = 0;
+        for (let d = -R; d <= R; d += sp, i++) {
+          const L = Math.sqrt(Math.max(0, R * R - d * d)) * (.8 + h2(ci, i) * .4), dir = i % 2 ? 1 : -1;
+          const x1 = cx - sa * d + ca * L * dir, y1 = cy + ca * d + sa * L * dir;
+          if (i === 0) ctx.moveTo(cx - sa * d - ca * L * dir, cy + ca * d - sa * L * dir);
+          ctx.lineTo(x1 + J(sd, ci * 31 + i) * 2, y1 + J(sd + 1, ci * 31 + i) * 2);
+        }
+      }
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+  // ragged band path (for soft hand-coloured transitions)
+  function band(y0, y1, amp, sd, x0 = BX, x1 = BX + BW) {
+    return () => {
+      ctx.beginPath(); const n = 24;
+      for (let i = 0; i <= n; i++) { const x = lerp(x0, x1, i / n); const y = y0 + (noise1(i * .7 + sd) * amp); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+      for (let i = n; i >= 0; i--) { const x = lerp(x0, x1, i / n); ctx.lineTo(x, y1 + noise1(i * .7 + sd + 40) * amp); }
+      ctx.closePath();
+    };
+  }
   // filled crayon shape: base colour scribble + cross-layer + outline
   function shape(pts, fill, line, sd, o = {}) {
     const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
     const bx = Math.min(...xs), by = Math.min(...ys), bw = Math.max(...xs) - bx, bh = Math.max(...ys) - by;
-    const pf = pathOf(pts);
+    const pf = o.sharp ? () => { polyPath(pts); ctx.closePath(); } : pathOf(pts);
     hatch(pf, fill, bx, by, bw, bh, sd, { ang: o.ang ?? -.6, sp: o.sp ?? 8, lw: o.lw ?? 7, alpha: o.alpha ?? .85, base: o.base ?? .22 });
     if (o.cross) hatch(pf, o.cross, bx, by, bw, bh, sd + 11, { ang: (o.ang ?? -.6) + 1.1, sp: o.csp ?? 13, lw: 5, alpha: o.calpha ?? .35, base: 0 });
     if (o.shade) { ctx.save(); pf(); ctx.clip(); hatch(o.shade.path, o.shade.col, bx, by, bw, bh, sd + 21, { ang: (o.ang ?? -.6) - .9, sp: 7, lw: 5, alpha: .55, base: 0 }); ctx.restore(); }
-    if (line) cline(closed(pts), line, o.olw ?? 6, sd + 5, { jit: o.ojit ?? 1.8 });
+    if (line) cline(o.sharp ? [...pts, pts[0], [lerp(pts[0][0], pts[1][0], .2), lerp(pts[0][1], pts[1][1], .2)]] : closed(pts), line, o.olw ?? 6, sd + 5, { jit: o.ojit ?? 1.8, sharp: o.sharp });
   }
 
   // ---------------------------------------------------------------- world geometry
@@ -77,36 +111,38 @@
   const BX = -140, BY = -140, BW = W + 280, BH = H + 280;
   function drawBG(v) {
     const sd = v * 101 + 7;
-    // sky: layered blues, lavender at the top, warm near the sun and horizon
-    const sky = () => { ctx.beginPath(); ctx.rect(BX, BY, BW, 1500); };
-    ctx.save(); const g = ctx.createLinearGradient(0, 0, 0, 1300); g.addColorStop(0, 'rgba(120,150,230,.35)'); g.addColorStop(.6, 'rgba(140,200,240,.25)'); g.addColorStop(1, 'rgba(255,230,180,.25)'); ctx.fillStyle = g; ctx.fillRect(BX, BY, BW, 1500); ctx.restore();
-    hatch(() => { ctx.beginPath(); ctx.rect(BX, BY, BW, 820); }, '#7fa8ec', BX, BY, BW, 820, sd, { ang: -.45, sp: 13, lw: 10, alpha: .55, base: .12 });
-    hatch(() => { ctx.beginPath(); ctx.rect(BX, 560, BW, 760); }, '#8fd0f4', BX, 560, BW, 760, sd + 1, { ang: -.42, sp: 14, lw: 10, alpha: .5, base: .1 });
-    hatch(() => { ctx.beginPath(); ctx.rect(BX, BY, BW, 380); }, '#a58fe0', BX, BY, BW, 380, sd + 2, { ang: .5, sp: 18, lw: 7, alpha: .3, base: 0 });
-    hatch(() => { ctx.beginPath(); ctx.ellipse(840, 380, 420, 380, 0, 0, TAU); }, '#ffe7a3', 420, 0, 840, 760, sd + 3, { ang: .3, sp: 15, lw: 8, alpha: .35, base: 0 });
-    hatch(() => { ctx.beginPath(); ctx.rect(BX, 1080, BW, 240); }, '#ffd9a8', BX, 1080, BW, 240, sd + 4, { ang: -.2, sp: 15, lw: 8, alpha: .35, base: 0 });
+    // sky: layered blues, lavender at the top, warm near the sun and horizon (patchy, ragged transitions)
+    ctx.save(); const g = ctx.createLinearGradient(0, 0, 0, 1300); g.addColorStop(0, 'rgba(120,150,230,.28)'); g.addColorStop(.6, 'rgba(140,200,240,.2)'); g.addColorStop(1, 'rgba(255,230,180,.22)'); ctx.fillStyle = g; ctx.fillRect(BX, BY, BW, 1500); ctx.restore();
+    scribble(band(BY, 860, 60, sd), '#7fa8ec', BX, BY, BW, 1000, sd, { ang: -.5, alpha: .5, base: .08 });
+    scribble(band(560, 1330, 70, sd + 9), '#8fd0f4', BX, 480, BW, 900, sd + 1, { ang: -.4, alpha: .5, base: .08 });
+    scribble(band(BY, 330, 70, sd + 3), '#a58fe0', BX, BY, BW, 520, sd + 2, { ang: .45, alpha: .28, base: 0, sp: 15, lw: 7 });
+    scribble(() => { ctx.beginPath(); const n = 20; for (let i = 0; i < n; i++) { const a = i / n * TAU, r = 400 + noise1(i * .9 + sd) * 50; ctx.lineTo(846 + Math.cos(a) * r, 372 + Math.sin(a) * r * .9); } ctx.closePath(); }, '#ffe39a', 400, -40, 900, 820, sd + 3, { ang: .3, alpha: .3, base: 0, sp: 14, lw: 8 });
+    scribble(band(1040, 1330, 40, sd + 5), '#ffd9a8', BX, 1000, BW, 380, sd + 4, { ang: -.15, alpha: .35, base: 0, sp: 14 });
+    // a few white highlight scribbles near the horizon
+    scribble(band(900, 1100, 50, sd + 7), '#ffffff', BX, 860, BW, 280, sd + 8, { ang: -.3, alpha: .25, base: 0, sp: 18, lw: 8, cell: 200 });
     // far hills (blue-green, softer)
     const fh = []; for (let x = BX; x <= BX + BW; x += 40) fh.push([x, farHill(x)]);
     const fhp = () => { smoothPath(fh); ctx.lineTo(BX + BW, 1700); ctx.lineTo(BX, 1700); ctx.closePath(); };
-    hatch(fhp, '#86bfa6', BX, 1150, BW, 550, sd + 5, { ang: -.7, sp: 9, lw: 8, alpha: .8, base: .25 });
-    hatch(fhp, '#6a9fc0', BX, 1150, BW, 550, sd + 6, { ang: .5, sp: 15, lw: 5, alpha: .35, base: 0 });
+    scribble(fhp, '#86bfa6', BX, 1150, BW, 550, sd + 5, { ang: -.7, sp: 8, lw: 8, alpha: .75, base: .25, cell: 120 });
+    scribble(fhp, '#6a9fc0', BX, 1150, BW, 550, sd + 6, { ang: .5, sp: 14, lw: 5, alpha: .3, base: 0, cell: 120 });
     cline(fh, '#4f8d7c', 6, sd + 7);
     // little far tree + house on the far hill
     const tx = 190, ty = farHill(190);
     cline([[tx, ty + 10], [tx + 2, ty - 60]], '#7a4b2a', 12, sd + 8);
     shape(circ(tx, ty - 100, 62, 56, 14, sd + 9, .1), '#4f9d4a', '#2f6b34', sd + 9, { cross: '#2f7f5a', olw: 5 });
     const hx = 905, hy = farHill(905) - 6;
-    shape([[hx - 50, hy + 4], [hx - 50, hy - 54], [hx + 50, hy - 54], [hx + 50, hy + 4]], '#fff1d8', '#c0784a', sd + 10, { olw: 4, sp: 7, lw: 5 });
-    shape([[hx - 64, hy - 50], [hx, hy - 104], [hx + 64, hy - 50]], '#e85d4a', '#a8362c', sd + 11, { olw: 4, sp: 7, lw: 5 });
+    shape([[hx - 50, hy + 4], [hx - 50, hy - 54], [hx + 50, hy - 54], [hx + 50, hy + 4]], '#fff1d8', '#c0784a', sd + 10, { olw: 4, sp: 7, lw: 5, sharp: true });
+    shape([[hx + 20, hy - 40], [hx + 40, hy - 40], [hx + 40, hy - 22], [hx + 20, hy - 22]], '#8fd0f4', '#4b6fa8', sd + 13, { olw: 3, sp: 4, lw: 4, sharp: true });
+    shape([[hx - 64, hy - 50], [hx, hy - 104], [hx + 64, hy - 50]], '#e85d4a', '#a8362c', sd + 11, { olw: 4, sp: 7, lw: 5, sharp: true });
     shape([[hx - 12, hy + 2], [hx - 12, hy - 30], [hx + 12, hy - 30], [hx + 12, hy + 2]], '#7a4b2a', null, sd + 12, { sp: 5, lw: 4 });
     // near hill: rich layered greens
     const nh = []; for (let x = BX; x <= BX + BW; x += 40) nh.push([x, hill(x)]);
     const nhp = () => { smoothPath(nh); ctx.lineTo(BX + BW, BY + BH); ctx.lineTo(BX, BY + BH); ctx.closePath(); };
-    hatch(nhp, '#7cc84f', BX, 1300, BW, 900, sd + 13, { ang: -.6, sp: 9, lw: 9, alpha: .85, base: .3 });
-    hatch(nhp, '#c3e05a', BX, 1300, BW, 900, sd + 14, { ang: .6, sp: 17, lw: 6, alpha: .35, base: 0 });
+    scribble(nhp, '#7cc84f', BX, 1300, BW, 900, sd + 13, { ang: -.6, sp: 8, lw: 9, alpha: .8, base: .3, cell: 130 });
+    scribble(nhp, '#c3e05a', BX, 1300, BW, 900, sd + 14, { ang: .6, sp: 15, lw: 6, alpha: .3, base: 0, cell: 130 });
     // darker lower ground (gives the lower-left a calm, deep base)
-    hatch(() => { ctx.beginPath(); ctx.rect(BX, 1620, BW, 700); }, '#3f9a45', BX, 1620, BW, 700, sd + 15, { ang: -.5, sp: 10, lw: 9, alpha: .45, base: .12 });
-    hatch(() => { ctx.beginPath(); ctx.rect(BX, 1780, BW, 600); }, '#2f7a3c', BX, 1780, BW, 600, sd + 16, { ang: .4, sp: 12, lw: 8, alpha: .35, base: .1 });
+    scribble(band(1600, 2300, 60, sd + 20), '#3f9a45', BX, 1520, BW, 800, sd + 15, { ang: -.5, sp: 9, lw: 9, alpha: .45, base: .1, cell: 130 });
+    scribble(band(1770, 2300, 60, sd + 21), '#2f7a3c', BX, 1700, BW, 700, sd + 16, { ang: .4, sp: 11, lw: 8, alpha: .35, base: .08, cell: 130 });
     cline(nh, '#3c8a34', 8, sd + 17);
     // grass tufts along the crest and on the right (left-bottom kept calm)
     for (let i = 0; i < 46; i++) {
@@ -255,13 +291,13 @@
     ctx.restore();
     ctx.rotate(rot);
     const T_ = [0, -108], R_ = [78, -18], B_ = [0, 124], L_ = [-78, -18], C_ = [0, -18];
-    shape([T_, R_, C_], '#ffd23f', null, sd + 10, { sp: 6, lw: 6, base: .35, ang: .3 });
-    shape([T_, C_, L_], '#e63946', null, sd + 11, { sp: 6, lw: 6, base: .35, ang: .3 });
-    shape([L_, C_, B_], '#ffd23f', null, sd + 12, { sp: 6, lw: 6, base: .35, ang: .3 });
-    shape([C_, R_, B_], '#e63946', null, sd + 13, { sp: 6, lw: 6, base: .35, ang: .3 });
-    hatch(pathOf([T_, R_, B_, L_]), '#ff8c42', -80, -110, 160, 236, sd + 14, { ang: -1, sp: 14, lw: 5, alpha: .3, base: 0 });
+    shape([T_, R_, C_], '#ffd23f', null, sd + 10, { sp: 6, lw: 6, base: .35, ang: .3, sharp: true });
+    shape([T_, C_, L_], '#e63946', null, sd + 11, { sp: 6, lw: 6, base: .35, ang: .3, sharp: true });
+    shape([L_, C_, B_], '#ffd23f', null, sd + 12, { sp: 6, lw: 6, base: .35, ang: .3, sharp: true });
+    shape([C_, R_, B_], '#e63946', null, sd + 13, { sp: 6, lw: 6, base: .35, ang: .3, sharp: true });
+    hatch(() => { polyPath([T_, R_, B_, L_]); ctx.closePath(); }, '#ff8c42', -80, -110, 160, 236, sd + 14, { ang: -1, sp: 14, lw: 5, alpha: .3, base: 0 });
     cline([T_, B_], '#7a4b2a', 6, sd + 15, { jit: 1, passes: 1 }); cline([L_, R_], '#7a4b2a', 6, sd + 16, { jit: 1, passes: 1 });
-    cline([T_, R_, B_, L_, T_, R_], '#a3202c', 6, sd + 17, { jit: 1.4 });
+    cline([T_, R_, B_, L_, T_, [lerp(T_[0], R_[0], .25), lerp(T_[1], R_[1], .25)]], '#a3202c', 6, sd + 17, { jit: 1.4, sharp: true });
     // tiny smile on the kite
     cline([[-20, 30], [0, 44], [20, 30]], '#7a1c24', 5, sd + 18, { jit: .8 });
     ctx.restore();

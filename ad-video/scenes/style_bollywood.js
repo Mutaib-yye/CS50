@@ -35,16 +35,17 @@
     pp.closePath(); return { L, R, path: pp };
   }
   // fill a Path2D, then a directional rim light: the crescent of the shape facing the light (lx,ly = unit dir to light)
-  const BIG = new Path2D(); BIG.rect(-4000, -4000, 8000, 8000);
-  function rimP(path, fill, lx, ly, w = 3.5, col = 'rgba(255,214,150,1)', a = 1) {
-    ctx.fillStyle = fill; ctx.fill(path);
+  // bb = [x0,y0,x1,y1] must contain the shape (keeps the evenodd fill small = fast)
+  function rimP(path, fill, lx, ly, w, col, a, bb) {
+    if (fill) { ctx.fillStyle = fill; ctx.fill(path); }
     ctx.save(); ctx.clip(path); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = col; const ga = ctx.globalAlpha;
     for (const [k, al] of [[1, .95], [3, .3]]) {
-      const q = new Path2D(BIG); q.addPath(path, new DOMMatrix([1, 0, 0, 1, -lx * w * k, -ly * w * k]));
+      const q = new Path2D(); q.rect(bb[0] - 24, bb[1] - 24, bb[2] - bb[0] + 48, bb[3] - bb[1] + 48); q.addPath(path, new DOMMatrix([1, 0, 0, 1, -lx * w * k, -ly * w * k]));
       ctx.globalAlpha = ga * a * al; ctx.fill(q, 'evenodd');
     }
     ctx.restore();
   }
+  const bbOf = (pts, m) => { let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9; for (const [x, y] of pts) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); } return [x0 - m, y0 - m, x1 + m, y1 + m]; };
   const nrm = (x, y) => { const l = Math.hypot(x, y) || 1; return [x / l, y / l]; };
   function polyline(pts) { ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]); }
   function lg(x0, y0, x1, y1, stops) { const g = ctx.createLinearGradient(x0, y0, x1, y1); stops.forEach(([o, c]) => g.addColorStop(o, c)); return g; }
@@ -225,6 +226,7 @@
     ctx.strokeStyle = 'rgba(232,178,90,.9)'; ctx.lineWidth = 4; cuspArch(540, 404, 1170, 786, 540, 11, .5); ctx.stroke();
     // base shadow line where the wall meets the floor
     ctx.fillStyle = lg(0, 1120, 0, 1160, [[0, 'rgba(20,0,10,0)'], [1, 'rgba(20,0,10,.5)']]); ctx.fillRect(-OX, 1120, LW, 40);
+    ctx.globalCompositeOperation = 'soft-light'; ctx.fillStyle = lg(0, -220, 0, 1160, [[0, 'rgba(255,140,60,.4)'], [.6, 'rgba(255,160,80,.2)'], [1, 'rgba(0,110,120,.35)']]); ctx.fillRect(-OX, -OY, LW, LH);
   });
 
   // ---------------------------------------------------------------- polished floor (world y 1150..2140)
@@ -276,6 +278,8 @@
     });
     return cv(LW, FGH, () => { ctx.filter = 'blur(3px)'; ctx.drawImage(sharp, 0, 0); });
   })();
+  // non-empty regions of FG (canvas px): top band + side strips
+  const FG_RECTS = [[0, 0, LW, OY + 300], [0, OY + 300, OX + 260, FGH - OY - 300], [LW - OX - 260, OY + 300, OX + 260, FGH - OY - 300]];
 
   // ---------------------------------------------------------------- god rays (two sets, cross-faded)
   const RAYS = [1, 2].map(seed => cv(LW / 2, LH / 2, () => {
@@ -288,7 +292,8 @@
       ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(SUN[0], SUN[1]); ctx.arc(SUN[0], SUN[1], len, a - wdt, a + wdt); ctx.closePath(); ctx.fill();
     }
   }));
-  const RAYS_B = RAYS.map(c => cv(c.width, c.height, () => { ctx.filter = 'blur(10px)'; ctx.drawImage(c, 0, 0); }));
+  const RAYS_B = cv(LW / 2, LH / 2, () => { ctx.filter = 'blur(10px)'; ctx.drawImage(RAYS[0], 0, 0); ctx.globalAlpha = .5; ctx.drawImage(RAYS[1], 0, 0); });
+  const RY0 = OY + SUN[1] - 120;   // rays only exist below this canvas row
 
   // dancer's long shadow / contact shadow (soft)
   const SHADOW = cv(800, 900, () => { ctx.filter = 'blur(30px)'; ctx.fillStyle = 'rgba(15,0,10,.9)'; ctx.beginPath(); ctx.ellipse(400, 110, 290, 55, 0, 0, 7); ctx.fill(); ctx.globalAlpha = .5; ctx.beginPath(); ctx.ellipse(400, 420, 230, 330, 0, 0, 7); ctx.fill(); });
@@ -329,9 +334,9 @@
     const y = 10 + v * SK.Hs + Math.sin(th) * r * (.05 + .2 * v) + v2 * 20 * Math.sin(5 * th - spin * 1.7 + ph + 1) + v2 * 34 * Math.cos(th - phi);
     return [Math.cos(th) * r, y];
   }
-  function skirtLayer(spin, R, vmax, amp, ph, colFn, alpha, K = 44) {
+  function skirtLayer(spin, R, vmax, amp, ph, colFn, alpha, K = 44, vmin = 0) {
     ctx.save(); ctx.globalAlpha *= alpha;
-    const VS = [0, .15, .32, .5, .68, .84, .94, 1].map(v => v * vmax);
+    const VS = [0, .15, .32, .5, .68, .84, .94, 1].map(v => lerp(vmin, vmax, v));
     for (let i = 0; i < K; i++) {
       const t0 = -0.03 + (Math.PI + .06) * i / K, t1 = -0.03 + (Math.PI + .06) * (i + 1.3) / K, tm = (t0 + t1) / 2;
       ctx.beginPath();
@@ -357,9 +362,9 @@
 
   function drawSkirt(spin, lite) {
     // translucent chiffon over-flare (behind), teal petticoat, main lehenga
-    skirtLayer(spin * .9, SK.Rh * 1.17, 1.03, .14, 2.1, tm => `rgba(255,${70 + 90 * Math.pow(1 - Math.sin(tm), 2) | 0},${120 - 40 * (1 - Math.sin(tm)) | 0},.32)`, 1, lite ? 12 : 28);
-    skirtLayer(spin * .96, SK.Rh * 1.04, 1.05, .12, 1.2, tm => ramp(['#021d22', '#07484d', '#16938c', '#ffe0a0'], .2 + .75 * Math.pow(1 - Math.sin(tm), 2.5)), 1, lite ? 12 : 28);
-    if (!lite) { ctx.strokeStyle = 'rgba(255,207,106,.9)'; ctx.lineWidth = 3; polyline(hemCurve(spin * .96, 1.05, 0, Math.PI, 50, SK.Rh * 1.04, .12, 1.2)); ctx.stroke(); }
+    skirtLayer(spin * .9, SK.Rh * 1.17, 1.03, .14, 2.1, tm => `rgba(255,${70 + 90 * Math.pow(1 - Math.sin(tm), 2) | 0},${120 - 40 * (1 - Math.sin(tm)) | 0},.32)`, 1, lite ? 12 : 28, .45);
+    skirtLayer(spin * .96, SK.Rh * 1.02, 1.05, .12, 1.2, tm => ramp(['#021d22', '#07484d', '#16938c', '#ffe0a0'], .2 + .75 * Math.pow(1 - Math.sin(tm), 2.5)), 1, lite ? 12 : 28, .78);
+    if (!lite) { ctx.strokeStyle = 'rgba(255,207,106,.9)'; ctx.lineWidth = 3; polyline(hemCurve(spin * .96, 1.05, 0, Math.PI, 50, SK.Rh * 1.02, .12, 1.2)); ctx.stroke(); }
     ctx.beginPath(); hemCurve(spin, 1, 0, Math.PI).forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.lineTo(-SK.rw, 10); ctx.lineTo(SK.rw, 10); ctx.closePath(); ctx.fillStyle = '#5a0632'; ctx.fill();
     skirtLayer(spin, SK.Rh, 1, .1, 0, skirtShade(spin), 1, lite ? 22 : 54);
     if (lite) return;
@@ -375,9 +380,9 @@
     ctx.globalCompositeOperation = 'lighter';
     for (let j = 0; j < 30; j++) for (const v of [.34, .52, .7]) {
       const th0 = ((j / 30) * Math.PI * 2 + spin + v * 3 + .1) % (Math.PI * 2); if (th0 < .12 || th0 > Math.PI - .12) continue;
-      const p = skirtPt(th0, v, spin), q2 = skirtPt(th0 - .05, v, spin);
+      const p = skirtPt(th0, v, spin), q2 = skirtPt(th0 - .018, v, spin);
       const tw = .5 + .5 * Math.sin(j * 7.1 + v * 20 + spin * 6);
-      ctx.strokeStyle = `rgba(255,220,150,${.25 + .45 * tw})`; ctx.lineWidth = 2.6 + v * 1.5; ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(q2[0], q2[1]); ctx.stroke();
+      ctx.strokeStyle = `rgba(255,220,150,${.25 + .45 * tw})`; ctx.lineWidth = 3 + v * 1.6; ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(q2[0], q2[1]); ctx.stroke();
     }
     ctx.globalCompositeOperation = 'source-over';
     // single tier band
@@ -422,8 +427,9 @@
   function arm(pts, w0, w1, lit = 1) {
     const sp = crPts(pts, 7); const { path } = tube(sp, u => lerp(w0, w1, u) * (1 - .25 * Math.pow(u, 3)));
     const a = sp[0], b = sp[sp.length - 1], m = sp[sp.length >> 1], [lx, ly] = toSun(m[0], m[1]);
-    rimP(path, lg(a[0], a[1], b[0], b[1], [[0, SKIN[1]], [.5, SKIN[2]], [1, SKIN[1]]]), lx, ly, 3.5, RIM, lit);
-    rimP(path, 'rgba(0,0,0,0)', -lx * .3, -1, 1.6, 'rgba(255,190,130,1)', .35);
+    const bb = bbOf(sp, w0);
+    rimP(path, lg(a[0], a[1], b[0], b[1], [[0, SKIN[1]], [.5, SKIN[2]], [1, SKIN[1]]]), lx, ly, 3.5, RIM, lit, bb);
+    rimP(path, null, -lx * .3, -1, 1.6, 'rgba(255,190,130,1)', .35, bb);
     return sp;
   }
   function bangles(p, q, n, lt, seed) {
@@ -442,7 +448,7 @@
     if (open) { p.lineTo(48, -10); p.quadraticCurveTo(52, -8, 48, -6); p.lineTo(32, -2); p.lineTo(50, -1); p.quadraticCurveTo(53, 2, 49, 3); p.lineTo(31, 3); p.lineTo(45, 8); p.quadraticCurveTo(46, 11, 42, 11); p.lineTo(26, 8); }
     else { p.bezierCurveTo(42, -6, 52, -2, 54, 2); p.bezierCurveTo(50, 6, 40, 6, 28, 7); }
     p.bezierCurveTo(18, 12, 6, 10, 0, 8); p.closePath();
-    rimP(p, lg(0, -10, 0, 10, [[0, SKIN[3]], [1, SKIN[1]]]), 0, -1, 2.4, RIM, 1);
+    rimP(p, lg(0, -10, 0, 10, [[0, SKIN[3]], [1, SKIN[1]]]), 0, -1, 2.4, RIM, 1, [-5, -15, 58, 15]);
     ctx.fillStyle = '#9a1a28'; ctx.beginPath(); ctx.ellipse(10, 0, 6, 4, 0, 0, 7); ctx.fill();   // alta (red-dyed palm edge)
     ctx.restore();
   }
@@ -478,7 +484,7 @@
   const HAIR = new Path2D();
   HAIR.moveTo(-34, -24); HAIR.bezierCurveTo(-30, -44, -8, -54, 12, -50); HAIR.bezierCurveTo(36, -44, 42, -16, 32, 8); HAIR.bezierCurveTo(26, 18, 18, 22, 12, 22); HAIR.bezierCurveTo(16, 6, 10, -8, 0, -18); HAIR.bezierCurveTo(-12, -28, -24, -28, -34, -24); HAIR.closePath();
   const BUN = new Path2D(); BUN.ellipse(30, -18, 20, 18, .3, 0, 7);
-  const HEAD_POS = [-26, -262], HEAD_ROT = -.5;
+  const HEAD_POS = [-26, -262], HEAD_ROT = -.5, BB_F = [-50, -56, 44, 50];
   const HSUN = (() => { const dx = SUNL[0] - HEAD_POS[0], dy = SUNL[1] - HEAD_POS[1], c = Math.cos(-HEAD_ROT), s = Math.sin(-HEAD_ROT); return nrm(dx * c - dy * s, dx * s + dy * c); })();
 
   function head(lt, lite) {
@@ -497,13 +503,13 @@
       const e = bp[bp.length - 1]; ctx.fillStyle = '#c2185b'; ctx.beginPath(); ctx.moveTo(e[0], e[1]); ctx.lineTo(e[0] + 34, e[1] + 6); ctx.lineTo(e[0] + 30, e[1] + 18); ctx.closePath(); ctx.fill();
       ctx.fillStyle = '#ffcf6a'; ctx.beginPath(); ctx.arc(e[0] + 33, e[1] + 12, 5, 0, 7); ctx.fill();
     }
-    rimP(FACE, lg(-48, 0, 30, 0, [[0, SKIN[3]], [.3, SKIN[2]], [1, SKIN[1]]]), -.75, -.66, 2.6, RIM, .9);
+    rimP(FACE, lg(-48, 0, 30, 0, [[0, SKIN[3]], [.3, SKIN[2]], [1, SKIN[1]]]), -.75, -.66, 2.6, RIM, .9, BB_F);
     if (lite) return;
-    rimP(FACE, 'rgba(0,0,0,0)', HSUN[0], HSUN[1], 2.5, RIM, .8);
+    rimP(FACE, null, HSUN[0], HSUN[1], 2.5, RIM, .8, BB_F);
     glow(G_MAG, -24, 14, 18, .22);
-    rimP(HAIR, lg(-30, -50, 30, 10, [[0, '#4a1f18'], [.3, hairCol], [1, '#050002']]), HSUN[0], HSUN[1], 3.2, 'rgba(255,196,120,1)', 1);
-    rimP(HAIR, 'rgba(0,0,0,0)', -.3, -1, 2, 'rgba(255,196,120,1)', .7);
-    rimP(BUN, lg(10, -36, 50, 0, [[0, '#3a1610'], [1, '#050002']]), HSUN[0], HSUN[1], 3, 'rgba(255,196,120,1)', 1);
+    rimP(HAIR, lg(-30, -50, 30, 10, [[0, '#4a1f18'], [.3, hairCol], [1, '#050002']]), HSUN[0], HSUN[1], 3.2, 'rgba(255,196,120,1)', 1, BB_F);
+    rimP(HAIR, null, -.3, -1, 2, 'rgba(255,196,120,1)', .7, BB_F);
+    rimP(BUN, lg(10, -36, 50, 0, [[0, '#3a1610'], [1, '#050002']]), HSUN[0], HSUN[1], 3, 'rgba(255,196,120,1)', 1, [8, -40, 52, 4]);
     // backlit flyaway strands
     ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = 'rgba(255,200,130,.5)'; ctx.lineWidth = .9;
     for (let k = 0; k < 6; k++) { const a = -1.2 + k * .35, wv = Math.sin(lt * 3 + k) * 3; ctx.beginPath(); ctx.moveTo(Math.cos(a) * 34, -12 + Math.sin(a) * 36); ctx.quadraticCurveTo(Math.cos(a) * 46 + wv, -14 + Math.sin(a) * 46, Math.cos(a) * 52 + wv, -10 + Math.sin(a) * 52); ctx.stroke(); }
@@ -548,7 +554,7 @@
     T1.bezierCurveTo(-46, -186, -28, -190, -14, -196); T1.lineTo(12, -194); T1.bezierCurveTo(30, -188, 50, -184, 58, -170 - br);
     T1.bezierCurveTo(52, -140, 52, -112, 45, -90); T1.bezierCurveTo(44, -60, 42, -30, 40, 0); T1.closePath();
     const skinG = lg(-60, 0, 60, 0, [[0, SKIN[2]], [.35, SKIN[1]], [.75, SKIN[1]], [1, SKIN[2]]]);
-    rimP(T1, skinG, .5, -.85, 3.5, RIM, 1); rimP(T1, 'rgba(0,0,0,0)', -.8, -.6, 2.5, RIM, .7);
+    rimP(T1, skinG, .5, -.85, 3.5, RIM, 1, [-62, -200, 62, 4]); rimP(T1, null, -.8, -.6, 2.5, RIM, .7, [-62, -200, 62, 4]);
     if (!lite) {
       ctx.fillStyle = 'rgba(30,8,4,.45)'; ctx.beginPath(); ctx.ellipse(-2, -34, 2.2, 5, 0, 0, 7); ctx.fill();
       ctx.fillStyle = 'rgba(255,190,140,.12)'; ctx.beginPath(); ctx.ellipse(-12, -50, 10, 30, .1, 0, 7); ctx.fill();
@@ -556,7 +562,7 @@
       const C1 = new Path2D();
       C1.moveTo(-58, -160 - br); C1.bezierCurveTo(-40, -176, -20, -172, -2, -164); C1.bezierCurveTo(16, -174, 38, -176, 56, -162 - br);
       C1.bezierCurveTo(56, -130, 52, -108, 46, -94); C1.bezierCurveTo(20, -86, -18, -86, -48, -94); C1.bezierCurveTo(-54, -110, -58, -136, -58, -160 - br); C1.closePath();
-      rimP(C1, lg(-58, -170, 56, -90, [[0, '#0c6664'], [.5, '#042f35'], [1, '#08504d']]), .4, -.9, 3, RIM, .9);
+      rimP(C1, lg(-58, -170, 56, -90, [[0, '#0c6664'], [.5, '#042f35'], [1, '#08504d']]), .4, -.9, 3, RIM, .9, [-60, -180, 58, -86]);
       ctx.save(); ctx.clip(C1);
       ctx.fillStyle = 'rgba(255,214,120,.5)'; for (let y = -160; y < -96; y += 10) for (let x = -54; x < 54; x += 10) { ctx.beginPath(); ctx.arc(x + ((y / 10) % 2) * 5, y, 1.3, 0, 7); ctx.fill(); }
       ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(-24, -112, 22, 16, 0, 0, 7); ctx.ellipse(24, -112, 22, 16, 0, 0, 7); ctx.fill();
@@ -575,7 +581,7 @@
     if (!lite) bangles([196, -140], [226, -124], 6, lt, 0);
     hand(226, -124, -.3 + Math.sin(lt * 1.7) * .05, 1.05, true);
     // neck
-    { const { path } = tube(crPts([[-2, -186], [-10, -214], [-18, -232]], 4), u => 15 - u * 2); rimP(path, lg(-20, -230, 10, -190, [[0, SKIN[2]], [1, SKIN[1]]]), .8, -.6, 3, RIM, .9); rimP(path, 'rgba(0,0,0,0)', -1, 0, 2, RIM, .6); }
+    { const { path } = tube(crPts([[-2, -186], [-10, -214], [-18, -232]], 4), u => 15 - u * 2); rimP(path, lg(-20, -230, 10, -190, [[0, SKIN[2]], [1, SKIN[1]]]), .8, -.6, 3, RIM, .9, [-36, -246, 16, -172]); rimP(path, null, -1, 0, 2, RIM, .6, [-36, -246, 16, -172]); }
     ctx.save(); ctx.translate(HEAD_POS[0], HEAD_POS[1]); ctx.rotate(HEAD_ROT); head(lt, lite); ctx.restore();
     // raised arm (screen left) arcing over the head
     arm([[-54, -170], [-96, -226], [-118, -282], [-102, -346], [-62, -392]], 15, 8);
@@ -589,6 +595,7 @@
   // reflection buffer (low-res = natural blur)
   const RS = .35, REFL = mk(Math.round(1000 * RS), Math.round(700 * RS));
   const reflCtx = REFL.getContext('2d');
+  const REFL_FADE = (() => { const g = reflCtx.createLinearGradient(0, 0, 0, REFL.height); g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(.12, 'rgba(0,0,0,.8)'); g.addColorStop(.45, 'rgba(0,0,0,.15)'); g.addColorStop(.7, 'rgba(0,0,0,0)'); return g; })();
 
   // ---------------------------------------------------------------- per-frame pieces
   function drawPetal(p, x, y, sz, rot, flip, blurIdx, a) {
@@ -643,8 +650,8 @@
   }
   function flare(c, lt, reveal) {
     const [sx, sy] = toScreen(c, .45, SUN[0], SUN[1]);
-    glow(G_GOLD, sx, sy, 520, .35 + .35 * reveal);
-    glow(G_WHITE, sx, sy, 150, .25 + .6 * reveal);
+    glow(G_GOLD, sx, sy, 330, .3 + .4 * reveal);
+    glow(G_WHITE, sx, sy, 120, .25 + .6 * reveal);
     if (reveal < .02) return;
     ctx.save(); ctx.globalCompositeOperation = 'lighter';
     // anamorphic streak
@@ -661,21 +668,21 @@
     const c = cam(lt);
     const spin = lt * 1.15 + .4;
     // 1. background facade + sky
-    L(c, .45, () => { ctx.drawImage(BG, -OX, -OY); });
+    L(c, .45, () => { ctx.drawImage(BG, 0, 0, LW, OY + 1175, -OX, -OY, LW, OY + 1175); });
     // warm flicker in the arcade recesses
     L(c, .45, () => { for (const [x, y] of [[20, 1100], [160, 1100], [920, 1100], [1060, 1100], [160, 735], [920, 735]]) glow(G_WARM, x, y, 90, .35 + .15 * noise1(lt * 4 + x)); });
     // 2. god rays behind dancer
     const rk = .5 + .5 * Math.sin(lt * 1.4);
-    L(c, .6, () => { ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = .7 * (1 - rk * .5); ctx.drawImage(RAYS_B[0], -OX, -OY, LW, LH); ctx.globalAlpha = .7 * (.5 + rk * .5); ctx.drawImage(RAYS_B[1], -OX, -OY, LW, LH); ctx.restore(); });
+    L(c, .6, () => { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = .62 + .18 * rk; ctx.drawImage(RAYS_B, 0, RY0 / 2, LW / 2, (LH - RY0) / 2, -OX, RY0 - OY, LW, LH - RY0); ctx.restore(); });
     // 3. floor
     floorT(c, () => {
       ctx.drawImage(FLOOR, -OX, FY0);
       // long shadow from the backlit dancer
-      ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.globalAlpha = .75; ctx.drawImage(SHADOW, DX - 400, 1330, 800, 900); ctx.restore();
+      ctx.save(); ctx.globalAlpha = .7; ctx.drawImage(SHADOW, DX - 400, 1330, 800, 900); ctx.restore();
     });
     // dancer reflection on the polished floor
     reflCtx.setTransform(1, 0, 0, 1, 0, 0); reflCtx.clearRect(0, 0, REFL.width, REFL.height);
-    on(reflCtx, () => { ctx.setTransform(RS, 0, 0, -RS, 500 * RS, 440 * RS); dancer(lt, spin, true); });
+    on(reflCtx, () => { ctx.setTransform(RS, 0, 0, -RS, 500 * RS, 440 * RS); dancer(lt, spin, true); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'destination-in'; ctx.fillStyle = REFL_FADE; ctx.fillRect(0, 0, REFL.width, REFL.height); ctx.globalCompositeOperation = 'source-over'; });
     floorT(c, () => {
       ctx.save(); ctx.globalAlpha = .3; ctx.drawImage(REFL, DX - 500, DY + 440, 1000, 700); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = .18; ctx.drawImage(REFL, DX - 500, DY + 440, 1000, 700); ctx.restore();
     });
@@ -707,8 +714,6 @@
     const reveal = sm(40, 120, dist);
     flare(c, lt, reveal);
     swirlPetals(c, lt, true);
-    // front volumetric veil
-    L(c, 1.1, () => { ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = .18; ctx.drawImage(RAYS_B[1], -OX, -OY, LW, LH); ctx.restore(); });
     // 7. jewellery glints (shimmer cue at 2.2)
     const g1 = Math.exp(-Math.pow((lt - 2.22) / .12, 2));
     const [nx, ny] = toScreen(c, 1, ...headWorld(NATH));
@@ -717,12 +722,11 @@
     if (g2 > .05) { glow(G_GOLD, tx, ty, 40 * c.Z, g2 * .8); sparkle(tx, ty, 16 * g2 * c.Z, '#fffbe8', lt); }
     // 8. foreground lanterns + proscenium + near petals (DOF)
     lantern(c, lt, LANTS[0]); lantern(c, lt, LANTS[1]);
-    L(c, 1.35, () => { ctx.drawImage(FG, -OX, -OY); });
+    L(c, 1.35, () => { for (const [x, y, w, hh] of FG_RECTS) ctx.drawImage(FG, x, y, w, hh, x - OX, y - OY, w, hh); });
     nearPetals(c, lt);
     // 9. grade: warm highlights / teal shadows, bloom lift
     ctx.save();
-    ctx.globalCompositeOperation = 'soft-light'; ctx.fillStyle = lg(0, 0, 0, H, [[0, 'rgba(255,140,60,.35)'], [.45, 'rgba(255,170,90,.15)'], [1, 'rgba(0,110,120,.65)']]); ctx.fillRect(-100, -100, W + 200, H + 200);
-    ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = lg(0, 1450, 0, 1920, [[0, 'rgba(8,20,28,0)'], [1, 'rgba(8,20,28,.55)']]); ctx.fillRect(-100, 1450, W + 200, 600);
+    ctx.fillStyle = lg(0, 1400, 0, 1920, [[0, 'rgba(6,26,34,0)'], [1, 'rgba(6,26,34,.6)']]); ctx.fillRect(-100, 1400, W + 200, 620);
     ctx.restore();
     // opening exposure bloom (lens-flare reveal)
     const ob = 1 - E.out(P(lt, 0, .7)); if (ob > 0) { glow(G_GOLD, sx, sy, 900, ob * .9); }

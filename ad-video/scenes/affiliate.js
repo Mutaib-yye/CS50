@@ -253,7 +253,7 @@
     AS.setfg = make(SW, 360, () => { ctx.translate(0, 14); setFgArt(); });
     AS.avatar = make(80, 80, avatarArt);
     const leafS = make(700, 900, () => {
-      for (let i = 0; i < 7; i++) { ctx.save(); ctx.translate(140 + i * 40, 900); ctx.rotate(-1.0 + i * .28); ctx.fillStyle = i % 2 ? '#1b1222' : '#24182c'; ctx.beginPath(); ctx.ellipse(0, -380 - (i % 3) * 60, 70, 360, 0, 0, 7); ctx.fill();
+      for (let i = 0; i < 7; i++) { ctx.save(); ctx.translate(200 + i * 34, 880); ctx.scale(.75, .75); ctx.rotate(-1.0 + i * .28); ctx.fillStyle = i % 2 ? '#1b1222' : '#24182c'; ctx.beginPath(); ctx.ellipse(0, -380 - (i % 3) * 60, 70, 360, 0, 0, 7); ctx.fill();
         ctx.strokeStyle = 'rgba(255,170,110,.35)'; ctx.lineWidth = 6; ctx.beginPath(); ctx.ellipse(0, -380 - (i % 3) * 60, 70, 360, 0, -1.3, .2); ctx.stroke(); ctx.restore(); }
     });
     AS.leaf = make(700, 900, () => { ctx.filter = 'blur(16px)'; ctx.drawImage(leafS, 0, 0); ctx.filter = 'none'; });
@@ -298,6 +298,7 @@
     ctx.restore();
     // neck
     rr(HX - 30, HY + 100, 60, 64, 22); ctx.fillStyle = lin(0, HY + 100, 0, HY + 164, ['#d99478', SK2]); ctx.fill();
+    ctx.fillStyle = rad(HX, HY + 150, 0, HX, HY + 150, 70, ['rgba(150,70,80,.35)', 'rgba(150,70,80,0)']); ctx.fillRect(HX - 80, HY + 100, 160, 110);
     // ---- left arm (viewer-left): wave / point at the bottle
     const wv = Math.sin(vt * 5.2), wave = 1 - pres;
     const hL = [lerp(HX - 228 + wv * 14, HX + 40, pres) - cheer * 10, lerp(HY + 250 + Math.cos(vt * 5.2) * 8, HY + 330, pres) - cheer * 40];
@@ -307,8 +308,8 @@
     ctx.strokeStyle = CA2; ctx.lineWidth = 64; ctx.stroke(); ctx.strokeStyle = CA1; ctx.lineWidth = 44; ctx.save(); ctx.translate(-6, -5); ctx.stroke(); ctx.restore();
     // ---- right arm (viewer-right) holding the bottle
     const bx = HX + 160 + Math.sin(vt * 2.1) * 6 - pres * 18, by = HY + 175 + Math.sin(vt * 2.6) * 6 - pres * 22 - cheer * 30;
-    const bRot = .1 + Math.sin(vt * 1.7) * .08 - pres * .12, bSc = 1 + pres * .1;
-    ctx.beginPath(); ctx.moveTo(HX + 168, HY + 240); ctx.quadraticCurveTo(HX + 225, HY + 330, HX + 214, HY + 410); ctx.quadraticCurveTo(HX + 200, HY + 360, bx + 4, by + 72);
+    const bRot = .1 + Math.sin(vt * 1.7) * .08 - pres * .12, bSc = 1.18 + pres * .12;
+    ctx.beginPath(); ctx.moveTo(HX + 168, HY + 240); ctx.quadraticCurveTo(HX + 225, HY + 330, HX + 214, HY + 410); ctx.quadraticCurveTo(HX + 200, HY + 380, bx + 6, by + 112);
     ctx.strokeStyle = CA2; ctx.lineWidth = 64; ctx.stroke(); ctx.strokeStyle = CA1; ctx.lineWidth = 44; ctx.save(); ctx.translate(-6, -5); ctx.stroke(); ctx.restore();
     // ---- head
     ctx.save(); ctx.translate(HX, HY + 120); ctx.rotate(tilt); ctx.translate(-HX, -HY - 120);
@@ -368,8 +369,9 @@
     };
     hairPath(); ctx.fillStyle = lin(0, HY - 200, 0, HY + 180, ['#8a4c38', [.4, HA1], [1, HA2]]); ctx.fill();
     ctx.save(); hairPath(); ctx.clip();
-    ctx.strokeStyle = 'rgba(255,220,200,.35)'; ctx.lineWidth = 12; ctx.beginPath(); ctx.arc(HX - 6, HY - 30, 128, -2.75, -.55); ctx.stroke();
-    ctx.strokeStyle = 'rgba(255,240,230,.25)'; ctx.lineWidth = 5; ctx.beginPath(); ctx.arc(HX - 6, HY - 30, 118, -2.6, -.75); ctx.stroke();
+    ctx.lineCap = 'round';
+    for (let k = 0; k < 6; k++) { const a0 = -2.55 + k * .3; ctx.strokeStyle = `rgba(255,225,205,${k === 2 || k === 3 ? .42 : .3})`; ctx.lineWidth = 11 - Math.abs(k - 2.5) * 2; ctx.beginPath(); ctx.arc(HX - 4, HY - 18, 132, a0, a0 + .17); ctx.stroke(); }
+    ctx.lineWidth = 14; ctx.strokeStyle = lin(HX - 160, 0, HX + 160, 0, [[0, 'rgba(255,255,255,0)'], [.65, 'rgba(255,255,255,0)'], [1, 'rgba(255,235,250,.55)']]); hairPath(); ctx.stroke();
     ctx.restore();
     sparkle(HX + 104, HY - 122, 20, '#ffd84a', .3); sparkle(HX + 104, HY - 122, 8, '#fff7c2', .3);
     ctx.restore(); // head
@@ -379,9 +381,9 @@
     // glint sweep
     const gl = ((vt * .55) % 1); if (gl < .35) { ctx.save(); rr(-36, -14, 72, 120, 19); ctx.clip(); ctx.globalCompositeOperation = 'lighter'; const gx = lerp(-80, 80, gl / .35); ctx.fillStyle = lin(gx - 20, 0, gx + 20, 0, ['rgba(255,255,255,0)', 'rgba(255,255,255,.5)', 'rgba(255,255,255,0)']); ctx.fillRect(-60, -20, 120, 140); ctx.restore(); }
     ctx.fillStyle = rad(-10, 58, 4, 0, 66, 46, ['#ffe9db', SK2]);
-    ctx.beginPath(); ctx.ellipse(4, 70, 40, 34, 0, 0, 7); ctx.fill();
-    for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.ellipse(-20, 48 + i * 17, 18, 9.5, 0, 0, 7); ctx.fill(); }
-    ctx.strokeStyle = 'rgba(190,110,90,.5)'; ctx.lineWidth = 2.5; for (let i = 0; i < 2; i++) { ctx.beginPath(); ctx.moveTo(-34, 56 + i * 17); ctx.lineTo(-8, 56 + i * 17); ctx.stroke(); }
+    ctx.beginPath(); ctx.ellipse(6, 104, 36, 28, 0, 0, 7); ctx.fill();
+    for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.ellipse(-16, 86 + i * 13, 17, 8, 0, 0, 7); ctx.fill(); }
+    ctx.strokeStyle = 'rgba(190,110,90,.5)'; ctx.lineWidth = 2.2; for (let i = 0; i < 2; i++) { ctx.beginPath(); ctx.moveTo(-30, 92 + i * 13); ctx.lineTo(-6, 92 + i * 13); ctx.stroke(); }
     ctx.restore();
     sparkle(bx - 54, by - 80, 14 * (.5 + .5 * Math.sin(vt * 6)), '#fff', vt);
     // ---- left hand (open palm wave / pointing)
@@ -464,7 +466,7 @@
     }
     // yellow-basket product pill (docks at PHONE_LAND)
     const pk = E.expo(P(lt, PHONE_LAND, PHONE_LAND + .45)), pulse = lt > 2.9 && lt < 3.7 ? .5 + .5 * Math.sin((lt - 2.9) * 12) : 0;
-    const pw = lerp(56, 300, pk);
+    const pw = lerp(56, 82 + TW('Serum Glow', 21, 'Mont', 800) + 28 + TW('Rp49.000', 21, 'Mont', 900) + 4, pk);
     ctx.save(); rr(24, 1066, pw, 54, 12); ctx.fillStyle = `rgba(0,0,0,${.42 + pulse * .1})`; ctx.fill();
     if (pulse > 0) { ctx.strokeStyle = `rgba(255,214,10,${pulse * .8})`; ctx.lineWidth = 3; ctx.stroke(); }
     ctx.clip();
@@ -809,9 +811,9 @@
       const pb = E.io(P(lt, 7.45, 8.6));
       if (pb < 1) {
         ctx.save(); ctx.globalAlpha = (1 - pb) * .95;
-        const s1 = 1 + pb * .8;
-        ctx.save(); ctx.translate(-150 - pb * 500, 1180 + pb * 400); ctx.scale(s1, s1); ctx.drawImage(AS.leaf, 0, 0); ctx.restore();
-        ctx.save(); ctx.translate(1240 + pb * 500, -140 - pb * 300); ctx.scale(-s1 * .8, -s1 * .8); ctx.drawImage(AS.leaf, 0, 0); ctx.restore();
+        const s1 = .9 + pb * .8;
+        ctx.save(); ctx.translate(-330 - pb * 500, 1180 + pb * 400); ctx.rotate(.18); ctx.scale(s1, s1); ctx.drawImage(AS.leaf, 0, 0); ctx.restore();
+        ctx.save(); ctx.translate(1420 + pb * 500, 1060 + pb * 400); ctx.rotate(-.25); ctx.scale(-s1 * .8, s1 * .8); ctx.drawImage(AS.leaf, 0, 0); ctx.restore();
         ctx.restore();
       }
       // ---- screen-space overlays
