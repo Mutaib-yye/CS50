@@ -190,6 +190,13 @@
       ctx.beginPath(); ctx.moveTo(x0, 225); ctx.lineTo(x1, 225); ctx.bezierCurveTo(x1 - 10, 600, x1 + 15, 900, x1 + 5, 1180); ctx.lineTo(x0 - 5, 1180); ctx.bezierCurveTo(x0 + 10, 800, x0 - 10, 500, x0, 225); ctx.fill();
     }
     ctx.fillStyle = '#6a5a8a'; rr(40, 214, 760, 12, 6); ctx.fill();
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = .55;
+    ctx.beginPath(); ctx.moveTo(210, 300); ctx.lineTo(690, 280); ctx.lineTo(1120, 1760); ctx.lineTo(520, 1820); ctx.closePath();
+    ctx.fillStyle = lin(450, 300, 760, 1800, ['rgba(140,160,255,.16)', 'rgba(140,160,255,.05)', 'rgba(140,160,255,0)']); ctx.fill();
+    ctx.restore();
+    ctx.save(); rr(150, 255, 540, 560, 10); ctx.clip(); ctx.globalCompositeOperation = 'lighter';
+    for (const [x0, w0] of [[180, 60], [270, 22], [520, 80]]) { ctx.fillStyle = 'rgba(200,210,255,.05)'; ctx.beginPath(); ctx.moveTo(x0, 815); ctx.lineTo(x0 + w0, 815); ctx.lineTo(x0 + w0 + 260, 255); ctx.lineTo(x0 + 260, 255); ctx.fill(); }
+    ctx.restore();
     // framed print on the right wall
     ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 20; ctx.shadowOffsetY = 8;
     ctx.fillStyle = '#d9c9a8'; ctx.fillRect(820, 430, 180, 230); ctx.restore();
@@ -245,6 +252,11 @@
     AS.setbg = make(SW, SH, () => { ctx.filter = 'blur(6px)'; ctx.drawImage(setS, -14, -14, SW + 28, SH + 28); ctx.filter = 'none'; });
     AS.setfg = make(SW, 360, () => { ctx.translate(0, 14); setFgArt(); });
     AS.avatar = make(80, 80, avatarArt);
+    const leafS = make(700, 900, () => {
+      for (let i = 0; i < 7; i++) { ctx.save(); ctx.translate(140 + i * 40, 900); ctx.rotate(-1.0 + i * .28); ctx.fillStyle = i % 2 ? '#1b1222' : '#24182c'; ctx.beginPath(); ctx.ellipse(0, -380 - (i % 3) * 60, 70, 360, 0, 0, 7); ctx.fill();
+        ctx.strokeStyle = 'rgba(255,170,110,.35)'; ctx.lineWidth = 6; ctx.beginPath(); ctx.ellipse(0, -380 - (i % 3) * 60, 70, 360, 0, -1.3, .2); ctx.stroke(); ctx.restore(); }
+    });
+    AS.leaf = make(700, 900, () => { ctx.filter = 'blur(16px)'; ctx.drawImage(leafS, 0, 0); ctx.filter = 'none'; });
     AS.room = make(W + 200, H + 200, () => { ctx.translate(100, 100); roomArt(); });
     AS.roomB = make((W + 200) / 2, (H + 200) / 2, () => { ctx.filter = 'blur(10px)'; ctx.drawImage(AS.room, -20, -20, (W + 200) / 2 + 40, (H + 200) / 2 + 40); ctx.filter = 'none'; });
   }
@@ -589,9 +601,8 @@
     ctx.beginPath(); ctx.moveTo(575, 1305); ctx.bezierCurveTo(610, 1268, 700, 1262, 770, 1300 - br * 2); ctx.lineTo(800, 1420); ctx.lineTo(585, 1430); ctx.closePath(); ctx.fill();
     // hood behind head
     ctx.fillStyle = '#5f8a74'; ctx.beginPath(); ctx.ellipse(588, 1262, 78, 58, -.5, 0, 7); ctx.fill();
-    // headphones resting on neck
-    ctx.strokeStyle = '#efe6d8'; ctx.lineWidth = 9; ctx.beginPath(); ctx.arc(628, 1302, 40, .2, 2.6); ctx.stroke();
-    ctx.fillStyle = '#e2d6c4'; ctx.beginPath(); ctx.ellipse(668, 1312, 14, 19, -.4, 0, 7); ctx.ellipse(596, 1334, 14, 19, .5, 0, 7); ctx.fill();
+    // hoodie strings
+    ctx.strokeStyle = '#f2ece0'; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(640, 1300); ctx.quadraticCurveTo(648, 1325, 644, 1345); ctx.moveTo(662, 1296); ctx.quadraticCurveTo(672, 1320, 670, 1340); ctx.stroke();
     // head
     ctx.save(); ctx.translate(612, 1236 + br * 1.4); ctx.rotate(-.42);
     ctx.fillStyle = '#1e1c30'; ctx.beginPath(); ctx.ellipse(-4, -8, 62, 60, 0, 0, 7); ctx.fill();
@@ -776,7 +787,7 @@
       if (dark > 0) { ctx.fillStyle = `rgba(6,4,14,${.55 * dark})`; ctx.fillRect(-100, -100, W + 200, H + 200); }
       // ---- world foreground: owner, stand, phone
       ctx.save(); applyCam(cam);
-      if (lt > 7.4) {
+      if (lt > 7.4 && w2s(cam, 1000, 1300)[0] > 0 && w2s(cam, 560, 1300)[0] < W) {
         if (blurK > .03) { ctx.restore(); const c = paint('aff_owner', () => { applyCam(cam); drawOwner(lt); }); comp(c, { blur: blurK * 16 }); ctx.save(); applyCam(cam); }
         else drawOwner(lt);
       }
@@ -794,6 +805,15 @@
       }
       if (lt > 8.4) worldBubbles(lt);
       ctx.restore();
+      // ---- near-camera foliage (depth of field); slides past the lens on the pull back
+      const pb = E.io(P(lt, 7.45, 8.6));
+      if (pb < 1) {
+        ctx.save(); ctx.globalAlpha = (1 - pb) * .95;
+        const s1 = 1 + pb * .8;
+        ctx.save(); ctx.translate(-150 - pb * 500, 1180 + pb * 400); ctx.scale(s1, s1); ctx.drawImage(AS.leaf, 0, 0); ctx.restore();
+        ctx.save(); ctx.translate(1240 + pb * 500, -140 - pb * 300); ctx.scale(-s1 * .8, -s1 * .8); ctx.drawImage(AS.leaf, 0, 0); ctx.restore();
+        ctx.restore();
+      }
       // ---- screen-space overlays
       confetti(lt, cam);
       notifStack(lt);
