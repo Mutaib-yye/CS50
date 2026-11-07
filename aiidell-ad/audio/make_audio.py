@@ -605,23 +605,65 @@ def reverb(x, secs=2.2, wet=0.25, seed=3):
 
 music_r = reverb(music, 2.4, 0.32)
 sfx_r = reverb(sfx, 1.3, 0.16, 5)
+tt = np.arange(N) / SR
 
-# gentle ducking of music under key sfx moments
-mix = music_r * 0.95 + sfx_r * 1.0
+# ---------------------------------------------------------------- female voice-over (audio/vo, from make_vo.py)
+vo = np.zeros(N)
+vo_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vo')
+VO_SHIFT = {'05': 13.35}            # small timing nudges so lines never overlap
+if os.path.exists(os.path.join(vo_dir, 'lines.txt')):
+    import struct
+    for ln in open(os.path.join(vo_dir, 'lines.txt')):
+        idx, t0, dur, text = ln.rstrip('\n').split('\t')
+        t0 = VO_SHIFT.get(idx, float(t0))
+        with wave.open(os.path.join(vo_dir, idx + '.wav')) as w:
+            sr0 = w.getframerate(); nfr = w.getnframes(); sw = w.getsampwidth(); raw = w.readframes(nfr)
+        if sw == 2:
+            x = np.frombuffer(raw, dtype=np.int16).astype(np.float64) / 32768
+        else:
+            x = np.frombuffer(raw, dtype=np.float32).astype(np.float64) if sw == 4 else np.frombuffer(raw, dtype=np.int32) / 2 ** 31
+        # band-limited resample to 48 kHz
+        n_out = int(round(len(x) * SR / sr0))
+        X = np.fft.rfft(x); Y = np.zeros(n_out // 2 + 1, dtype=complex); m = min(len(X), len(Y)); Y[:m] = X[:m]
+        y = np.fft.irfft(Y, n_out) * (n_out / len(x))
+        e = np.ones(len(y)); k = int(0.01 * SR); e[:k] = np.linspace(0, 1, k); e[-k:] = np.linspace(1, 0, k)
+        i0 = int(t0 * SR); n = min(len(y), N - i0)
+        vo[i0:i0 + n] += (y * e)[:n]
+    # voice polish: high-pass, gentle presence lift, light compression
+    vo = fft_filter(vo, 85, None)
+    X = np.fft.rfft(vo); f = np.fft.rfftfreq(len(vo), 1 / SR)
+    X *= 1 + 0.25 * np.exp(-((f - 3500) / 1800) ** 2)          # clarity
+    vo = np.fft.irfft(X, len(vo))
+    env = np.sqrt(np.convolve(vo ** 2, np.ones(960) / 960, mode='same')) + 1e-6
+    act = env > 0.01
+    speech_rms = np.sqrt(np.mean(vo[act] ** 2)) if act.any() else 1
+    vo *= 0.17 / speech_rms
+    env = np.sqrt(np.convolve(vo ** 2, np.ones(960) / 960, mode='same')) + 1e-6
+    vo *= np.minimum(1.0, (0.2 / env) ** 0.4)                    # tame peaks
+vo_st = reverb(np.stack([vo, vo], 1), 0.9, 0.07, 9)
+
+# ducking: music dips ~7 dB and SFX ~3 dB while she speaks (smooth attack/release)
+venv = np.convolve((np.abs(vo) > 0.004).astype(float), np.ones(int(0.35 * SR)) / int(0.35 * SR), mode='same')
+venv = np.clip(venv * 3, 0, 1)
+duck_m = 1 - 0.55 * venv
+duck_s = 1 - 0.3 * venv
+
+mix = music_r * 0.95 * duck_m[:, None] + sfx_r * 1.0 * duck_s[:, None]
 for ch in range(2):
     mix[:, ch] = fft_filter(mix[:, ch], 32, None)
-tt = np.arange(N) / SR
 fade = np.clip((50.0 - tt) / 1.4, 0, 1) ** 1.5
 fade_in = np.clip(tt / 0.08, 0, 1)
 mix *= (fade * fade_in)[:, None]
-# simple bus compression + soft clip limiter
+# simple bus compression + soft clip for the music/SFX bed
 rms = np.sqrt(np.convolve(np.mean(mix ** 2, 1), np.ones(2400) / 2400, mode='same')) + 1e-6
-target = 0.18
-gain = np.minimum(1.0, (target / rms) ** 0.35)
+gain = np.minimum(1.0, (0.18 / rms) ** 0.35)
 mix *= gain[:, None]
-peak = np.max(np.abs(mix))
-mix = mix / peak * 1.25
-mix = np.tanh(mix) / np.tanh(1.25) * 0.66  # ~ -14 LUFS, peaks well below 0 dBFS
+mix = mix / np.max(np.abs(mix)) * 1.25
+mix = np.tanh(mix) / np.tanh(1.25) * 0.6
+# voice on top, then a soft limiter
+vo_fade = np.clip((50.0 - tt) / 0.3, 0, 1)
+mix = mix + vo_st * 0.95 * vo_fade[:, None]
+mix = np.tanh(mix * 1.1) / np.tanh(1.1) * 0.8
 
 out = (np.clip(mix, -1, 1) * 32767).astype(np.int16)
 path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'soundtrack.wav')

@@ -1,0 +1,19 @@
+00	0.55	1.38	Meet Rahul and Arjun!
+01	3.15	2.81	Both want to surprise someone special in Indonesia.
+02	6.10	0.98	But look at Rahul...
+03	8.30	2.54	Hours searching for the best shop, the best courier...
+04	11.00	2.25	and sending it directly? So expensive!
+05	13.10	0.78	And Arjun?
+06	15.10	2.14	Just a few clicks on Eye Dell dot com...
+07	19.15	0.84	Easy peasy!
+08	20.30	2.51	Our team in Indonesia takes care of everything...
+09	24.60	0.96	right to her door!
+10	28.45	0.70	Flowers,
+11	29.95	0.94	thoughtful gifts,
+12	31.45	0.95	delicious food,
+13	32.95	0.99	Indian snacks,
+14	34.45	0.95	and yummy cakes!
+15	38.20	1.24	One is still searching...
+16	40.90	1.54	the other is already smiling.
+17	45.25	3.00	Different countries. One simple way to make someone smile.
+18	48.35	1.16	Eye Dell dot com!

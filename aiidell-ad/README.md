@@ -5,7 +5,7 @@ It tells a **soft-sell story** in a left/right split screen: **Rahul** (left) do
 
 The characters have fair skin. Rahul and Arjun are distinctly Indian men. Putri, in a pastel kebaya with a batik accent and a frangipani, and the AiiDell team in Indonesia (one member in a hijab) are distinctly Indonesian, with fair, light skin and a yellow undertone. Hands have jointed fingers and thumbs, arms have elbows that bend out and down, and no arm, hand or prop ever crosses a face.
 
-* `AiiDell_India_to_Indonesia_Ad.mp4` – the final video (H.264 + AAC, music and SFX only, **no voice**)
+* `AiiDell_India_to_Indonesia_Ad.mp4` – the final video (H.264 + AAC): music, SFX and a **fun, friendly female voice-over** reading the story (Kokoro neural TTS; the music dips under her voice)
 * `VOICEOVER_SCRIPT.md` – an optional, timed voice-over script for recording your own voice
 * `audio/soundtrack.wav` – the original music score and synced sound effects (48 kHz stereo)
 
@@ -19,6 +19,11 @@ The characters have fair skin. Rahul and Arjun are distinctly Indian men. Putri,
 | 28–37.5 s | What you can send: Flowers, Gifts, Food, Snacks, Cakes, plus the delivery notes. |
 | 37.5–44.5 s | "One is still searching…" / "…the other is already smiling." Rahul is exhausted; Arjun is on a video call with Putri. |
 | 44.5–50 s | India → Indonesia connection, "Different countries. One simple way to make someone smile.", the AiiDell.com logo, and "Send love the easy way · www.aiidell.com". |
+
+## Voice-over
+* `audio/vo_lines.py` – the voice lines and their start times (shared by both generators).
+* `audio/make_vo.py <kokoro_model_dir>` – the current voice (Kokoro "af_heart" + "af_bella" blend). It writes `audio/vo/`.
+* `audio/make_vo_qwen.py` – the same lines with **Qwen3-TTS** on your own PC. The VoiceDesign model creates the voice from a description, and the optional Base model keeps it consistent across lines. Run it, then `python aiidell-ad/audio/make_audio.py`, then push `audio/vo/` (or mux it yourself with ffmpeg).
 
 ## Re-rendering
 Everything is generated from code, so you can edit text, colours or timing and render again:

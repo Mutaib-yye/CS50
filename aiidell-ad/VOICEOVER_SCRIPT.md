@@ -1,8 +1,7 @@
 # AiiDell.com – "Send Gifts from India to Indonesia" (soft-sell story)
 ## Optional voice-over script (for your own voice)
 
-The video has **no voice**, only music and motion sound effects. The story is already told by the on-screen captions, so the video works without narration.
-If you want to narrate it, read the captions below at their timecodes. Speak like you're telling a friend a little story: warm, relaxed and smiling, not like an announcer.
+The video now includes a **fun, friendly female voice-over** that reads these lines, generated with Kokoro TTS (see `audio/make_vo.py`). To regenerate it with Qwen3-TTS on your PC, use `audio/make_vo_qwen.py`. To record your own voice instead, read the lines below at their timecodes. Speak like you're telling a friend a little story: warm, relaxed and smiling, not like an announcer.
 
 | Time | On screen | Voice-over (same as the caption) |
 |---|---|---|
