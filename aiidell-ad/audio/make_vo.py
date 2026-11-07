@@ -1,17 +1,22 @@
-"""Female voice-over (fun, warm, clear) for the AiiDell ad, using Kokoro neural TTS.
+"""Voice-over for the AiiDell ad, using Kokoro neural TTS (continuous, cheerful, time-fitted).
 Needs: pip install kokoro-onnx soundfile ; model files kokoro-v1.0.onnx + voices-v1.0.bin
-Usage: python make_vo.py <model_dir>   -> writes audio/vo/NN.wav (24 kHz) + audio/vo/lines.txt"""
+Usage: python make_vo.py <model_dir> [female|male]
+  female (default) -> audio/vo/       blend af_heart 0.6 + af_bella 0.4 (fun, warm, clear)
+  male             -> audio/vo_male/  blend am_michael 0.6 + am_puck 0.4 (friendly, upbeat)"""
 import sys, os
 import numpy as np
 import soundfile as sf
 from kokoro_onnx import Kokoro
 
 model_dir = sys.argv[1]
-out = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vo')
+gender = sys.argv[2] if len(sys.argv) > 2 else 'female'
+out = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vo' if gender == 'female' else 'vo_male')
 os.makedirs(out, exist_ok=True)
 k = Kokoro(os.path.join(model_dir, 'kokoro-v1.0.onnx'), os.path.join(model_dir, 'voices-v1.0.bin'))
-# blend: warm + clear (heart) with bright, playful energy (bella)
-voice = k.get_voice_style('af_heart') * 0.6 + k.get_voice_style('af_bella') * 0.4
+if gender == 'female':
+    voice = k.get_voice_style('af_heart') * 0.6 + k.get_voice_style('af_bella') * 0.4
+else:
+    voice = k.get_voice_style('am_michael') * 0.6 + k.get_voice_style('am_puck') * 0.4
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from vo_lines import LINES

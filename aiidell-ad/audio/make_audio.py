@@ -609,7 +609,7 @@ tt = np.arange(N) / SR
 
 # ---------------------------------------------------------------- female voice-over (audio/vo, from make_vo.py)
 vo = np.zeros(N)
-vo_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vo')
+vo_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.environ.get('VO_DIR', 'vo'))
 VO_SHIFT = {}                       # optional per-line timing nudges, e.g. {'03': 20.3}
 if os.path.exists(os.path.join(vo_dir, 'lines.txt')):
     import struct
@@ -666,7 +666,7 @@ mix = mix + vo_st * 0.95 * vo_fade[:, None]
 mix = np.tanh(mix * 1.1) / np.tanh(1.1) * 0.8
 
 out = (np.clip(mix, -1, 1) * 32767).astype(np.int16)
-path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'soundtrack.wav')
+path = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.environ.get('OUT_WAV', 'soundtrack.wav'))
 with wave.open(path, 'wb') as w:
     w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR)
     w.writeframes(out.tobytes())
