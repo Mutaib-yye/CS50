@@ -47,7 +47,7 @@ const PAL = {
 };
 const WPAL = {
   P: { // Putri – the girlfriend in Indonesia. Fair, warm-peach Indonesian; modern kebaya.
-    skin: '#f6d4b9', light: '#fff2e8', dark: '#dda387', deep: '#b07a60', sss: '#f3937c', blushC: '#f59a9c', lip: '#d76f7f',
+    skin: '#e9b893', light: '#f6d3b8', dark: '#c98d68', deep: '#9f6a4c', sss: '#ee8a6c', blushC: '#f0928e', lip: '#d36a78',
     hair: '#110b0a', hairHi: '#3e3238', hairSheen: '#8a7d92', iris: '#3a2214', irisHi: '#aa7c4c',
     top: '#f9c6d7', topDark: '#eaa1bb', topHi: '#ffe3ee', cream: '#fbf1e1', gold: '#d6aa5c', goldHi: '#f6dc96',
     flower: true, seed: 13,
@@ -60,7 +60,7 @@ const WPAL = {
     },
   },
   H: { // AiiDell team member in a hijab, with headset.
-    skin: '#f3cdb0', light: '#fff0e3', dark: '#d79d80', deep: '#a8755b', sss: '#f08e78', blushC: '#f39696', lip: '#cf6a7a',
+    skin: '#e7b591', light: '#f5d2b6', dark: '#c78b66', deep: '#9d684a', sss: '#ec886a', blushC: '#ee908c', lip: '#cb6676',
     hair: '#1b1210', hairHi: '#5b3e33', hairSheen: '#8a6a5c', iris: '#3a2214', irisHi: '#a87a4c',
     top: '#ff6a9e', topDark: '#d8467f', topHi: '#ffa2c4', cream: '#fbf1e1', gold: '#d6aa5c', goldHi: '#f6dc96',
     hijab: '#bba6ff', hijabDark: '#8b74e4', headset: true, seed: 8,
@@ -644,12 +644,10 @@ function beardDraw(c, P, kind, C) {
   c.save();
   if (full) {
     // groomed full beard: soft volume, crisp cheek line, connected moustache
-    c.save(); c.filter = 'blur(1.2px)';
     beardPath(c, S, 3);
     const g = c.createLinearGradient(-60, -200, 50, -40);
-    g.addColorStop(0, hexA(shade(P.hair, 0.16), 0.84)); g.addColorStop(0.5, hexA(P.hair, 0.88)); g.addColorStop(1, hexA('#070403', 0.92));
+    g.addColorStop(0, shade(P.hair, 0.14)); g.addColorStop(0.5, P.hair); g.addColorStop(1, '#070403');
     c.fillStyle = g; c.fill();
-    c.restore();
     c.save(); beardPath(c, S, 3); c.clip();
     // light falloff (lit left, darker right / underside)
     const lg = c.createLinearGradient(-100, 0, 100, 0);
@@ -1400,6 +1398,12 @@ function drawMan(c, o) {
   c.translate(o.headX || 0, 120);
   hairBack(c, P, P.style, sway);
   [-1, 1].forEach(s => drawEar(c, P, s, s * (P.face.shape.cw - 1), -166, false));
+  {
+    const full = P.beard === 'full';
+    const js = c.createRadialGradient(4, -40, 4, 4, -40, 64);
+    js.addColorStop(0, hexA(P.deep, full ? 0.55 : 0.35)); js.addColorStop(1, hexA(P.deep, 0));
+    c.fillStyle = js; c.beginPath(); c.ellipse(4, -40, 64, full ? 26 : 20, 0, 0, TAU); c.fill();
+  }
   paintFace(c, P, F, oo, false);
   hairFront(c, P, P.style, t, sway);
   if (P.headset) drawHeadset(c, false);
