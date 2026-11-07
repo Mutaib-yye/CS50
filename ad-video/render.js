@@ -6,7 +6,8 @@ const { spawn, execFileSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const FPS = 30, DUR = 69.5, N = FPS * DUR;
+const FPS = 30;
+let N = 0;
 const WORKERS = +(process.env.WORKERS || 4);
 const OUT = path.resolve(process.env.OUT || path.join(__dirname, 'out'));
 fs.mkdirSync(OUT, { recursive: true });
@@ -23,6 +24,8 @@ const grab = (page, t, q) => page.evaluate(([t, q]) => { window.renderFrame(t); 
 
 (async () => {
   const browser = await chromium.launch({ args: ['--allow-file-access-from-files'] });
+  { const p = await openPage(browser); const info = await p.evaluate(() => ({ dur: window.DURATION, cues: window.CUES, tl: window.TIMELINE })); N = Math.round(info.dur * FPS);
+    fs.writeFileSync(path.join(OUT, 'cues.json'), JSON.stringify(info)); await p.close(); console.log('duration', info.dur, 'frames', N); }
   if (process.env.STILLS) {
     const page = await openPage(browser);
     for (const s of process.env.STILLS.split(',')) fs.writeFileSync(path.join(OUT, `still_${s}.jpg`), Buffer.from(await grab(page, +s, .85), 'base64'));
