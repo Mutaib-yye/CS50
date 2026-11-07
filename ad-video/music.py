@@ -4,14 +4,14 @@ import json, re, wave, os
 import numpy as np
 
 SR = 44100
-DUR = 69.5
-N = int(SR * (DUR + 1))
+_info = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'out', 'cues.json')))  # written by render.js
+DUR = float(_info['dur'])
+N = int(SR * (DUR + 2))
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, 'out'); os.makedirs(OUT, exist_ok=True)
 rng = np.random.default_rng(42)
 
-cues_src = open(os.path.join(HERE, 'cues.js')).read()
-CUES = json.loads(re.search(r'window\.CUES\s*=\s*(\[.*\]);', cues_src, re.S).group(1))
+CUES = _info['cues']
 
 def tt(d): return np.arange(int(d * SR)) / SR
 def noise(d): return rng.uniform(-1, 1, int(d * SR))
@@ -127,8 +127,28 @@ def sfx_stamp(): return sfx_impact(False) * .7 + np.pad(CLAP, (0, int(1.0 * SR) 
 def sfx_clock():
     t = tt(.08); return (np.sin(2 * np.pi * 1800 * t) + .6 * np.sin(2 * np.pi * 1200 * t)) * np.exp(-t * 80) * .45
 
+def sfx_notif():
+    t1 = tt(.12); t2 = tt(.35)
+    out = np.zeros(int(.5 * SR)); add(out, 0, np.sin(2 * np.pi * 1318.5 * t1) * np.exp(-t1 * 20) * .4); add(out, .09, (np.sin(2 * np.pi * 1760 * t2) + .3 * np.sin(2 * np.pi * 3520 * t2)) * np.exp(-t2 * 9) * .4)
+    return out
+def sfx_type(d):
+    out = np.zeros(int((d + .1) * SR)); tt_ = 0.0; k = 0
+    while tt_ < d:
+        c = hp(noise(.03), 1500) * np.exp(-tt(.03) * 220) * (.5 + .5 * rng.random()); add(out, tt_, c, .5); k += 1
+        tt_ += .06 + rng.random() * .07
+    return out
+def sfx_shimmer():
+    out = np.zeros(int(1.4 * SR))
+    for i in range(7): add(out, i * .045, bell(2093 * 2 ** (i / 7 * 1.2) , .9) * .12)
+    add(out, 0, hp(noise(1.0), 6000) * np.exp(-tt(1.0) * 4) * .15)
+    return out
+def sfx_swell(d):
+    t = tt(d); env = (t / d) ** 2
+    s = lp(noise(d), 1200 + 3000) * env * .5 + (np.sin(2 * np.pi * 110 * t) + .5 * np.sin(2 * np.pi * 164.8 * t)) * env * .25
+    return s
+
 # ---------------- music arrangement
-B0 = 3.5; BEAT = 19.7 / 42; BAR = BEAT * 4
+B0 = 4.0; BEAT = 13.0 / 28; BAR = BEAT * 4   # 129 BPM, drop lands on a bar at 17.0 s
 CH = [  # Am, F, C, G  (bass root, chord tones)
     (110.00, [220.00, 261.63, 329.63]),
     (87.31, [174.61, 220.00, 261.63]),
@@ -136,21 +156,23 @@ CH = [  # Am, F, C, G  (bass root, chord tones)
     (98.00, [196.00, 246.94, 293.66]),
 ]
 def section(t):
-    if t < 3.5: return 'intro'
-    if t < 17.5: return 'groove'
-    if t < 20.6: return 'break'
-    if t < 23.15: return 'build'
-    if t < 41.5: return 'drop'
-    if t < 62.5: return 'groove2'
-    if t < 69.0: return 'drop'
+    if t < 4.0: return 'intro'
+    if t < 11.0: return 'groove'
+    if t < 14.5: return 'break'
+    if t < 16.98: return 'build'
+    if t < 34.5: return 'drop'
+    if t < 54.5: return 'groove2'
+    if t < DUR - .6: return 'drop'
     return 'end'
 
 drums = np.zeros(N); synth = np.zeros(N); sfx = np.zeros(N); send = np.zeros(N)
 kicks = []
 # intro drone + heartbeat
-d = 3.5; t = tt(d); drone = (np.sin(2 * np.pi * 55 * t) * .5 + lp(saw(55, t) + saw(55.4, t), 300) * .3) * np.minimum(t / 1.0, 1)
+d = 4.0; t = tt(d); drone = (np.sin(2 * np.pi * 55 * t) * .5 + lp(saw(55, t) + saw(55.4, t), 300) * .3) * np.minimum(t / 1.0, 1)
 add(synth, 0, drone * .6)
-add(synth, 0, pad([220, 261.63, 329.63], 3.5, 600) * .35)
+add(synth, 0, pad([220, 261.63, 329.63], 4.0, 900) * .4); add(send, 0, pad([220, 261.63, 329.63], 4.0, 900), .3)
+for i in range(16):
+    n_ = [440, 523.25, 659.25, 880][i % 4]; add(synth, i * BEAT / 2, pluck(n_, .35), .12); add(send, i * BEAT / 2, pluck(n_, .35), .2)
 
 nsteps = int((DUR - B0) / (BEAT / 4)) + 1
 for st in range(nsteps):
@@ -185,7 +207,7 @@ for st in range(nsteps):
         if s16 == 0: p = pad(chord, BAR, 700); add(synth, tb, p, .35); add(send, tb, p, .3)
         if s16 % 8 == 0: add(drums, tb, HAT, .3)
     elif sec == 'build':
-        k = (tb - 20.6) / (23.15 - 20.6)
+        k = (tb - 14.5) / (16.98 - 14.5)
         if s16 % 4 == 0: add(drums, tb, KICK, .8); kicks.append(tb)
         step = 4 if k < .4 else (2 if k < .75 else 1)
         if s16 % step == 0: add(drums, tb, SNARE, .25 + .5 * k)
@@ -195,7 +217,7 @@ for st in range(nsteps):
         if s16 % 4 == 0: n_ = chord[(st // 4) % 3] * 4; add(synth, tb, bell(n_, 1.0), .12); add(send, tb, bell(n_, 1.0), .2)
 
 # final chord hit
-fin = supersaw([110, 220, 261.63, 329.63, 440], 1.2, 2800, 2.0); add(synth, 69.0, fin, .45); add(send, 69.0, fin, .5)
+fin = supersaw([110, 220, 261.63, 329.63, 440], 1.2, 2800, 2.0); add(synth, DUR - .6, fin, .45); add(send, DUR - .6, fin, .5)
 
 # sidechain ducking on synths
 duck = np.ones(N); L = int(.28 * SR); env = 1 - .55 * np.exp(-np.arange(L) / SR / .07)
@@ -222,6 +244,12 @@ for c in CUES:
     elif ty == 'slam': s, g = sfx_stamp(), .8
     elif ty == 'stamp': s, g = sfx_stamp(), .8
     elif ty == 'clock': s, g = sfx_clock(), .8
+    elif ty == 'notif': s, g = sfx_notif(), .7
+    elif ty == 'type': s, g = sfx_type(dur or 1), .8
+    elif ty == 'shimmer': s, g = sfx_shimmer(), .8
+    elif ty == 'swell': s, g = sfx_swell(dur or 1.2), .6
+    elif ty == 'whoosh_in':
+        add(sfx, t0 - .3, sfx_whoosh(), .55); s, g = sfx_impact(False), .45
     elif ty in ('ticks', 'cuts'):
         step = .06 if ty == 'ticks' else .15; k = 0
         while k * step < (dur or 1): add(sfx, t0 + k * step, sfx_tick() if ty == 'ticks' else sfx_pop() * .6, .7); k += 1
