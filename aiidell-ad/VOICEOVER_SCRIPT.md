@@ -1,29 +1,26 @@
-# AiiDell.com – "Send Gifts from India to Indonesia"
+# AiiDell.com – "Send Gifts from India to Indonesia" (soft-sell story)
 ## Optional voice-over script (for your own voice)
 
-The rendered video has **no voice**, only music and motion sound effects. Every key line is already on screen as text, so the video works without narration.
-If you want to add your voice, record these lines and place them at the timecodes below. Speak warmly and confidently, with a slight smile, at a relaxed pace (about 2.3 words per second).
+The video has **no voice**, only music and motion sound effects. The story is already told by the on-screen captions, so the video works without narration.
+If you want to narrate it, read the captions below at their timecodes. Speak like you're telling a friend a little story: warm, relaxed and smiling, not like an announcer.
 
-| Time | On screen | Voice-over line |
+| Time | On screen | Voice-over (same as the caption) |
 |---|---|---|
-| 0:00 – 0:05 | Headline "WANT TO SEND A GIFT TO INDONESIA?" → "THE HARD WAY" vs "THE AiiDELL WAY" | "Want to send a gift to someone special in Indonesia? There's the hard way… and the AiiDell way." |
-| 0:05 – 0:11 | Left: search results, travel group chat | "He's searching online… asking strangers to carry a parcel…" |
-| 0:11 – 0:15 | Left: courier quote, customs, "Documents Required" stamp | "…comparing courier charges, customs duties and taxes." |
-| 0:08 – 0:15 *(alternative, over the right side)* | Right: browsing aiidell.com, add to cart, recipient details | "He just opens AiiDell.com, picks a gift, adds her details, and checks out." |
-| 0:15 – 0:18 | "Order Confirmed!" / "Wait… that's it? So easy!" | "Done. That's it." |
-| 0:18 – 0:22 | AiiDell Team, Jakarta: new order checklist | "Our team in Indonesia receives your order and prepares your gift…" |
-| 0:22 – 0:25 | Glowing route India → Indonesia | "…and delivers it with love…" |
-| 0:25 – 0:28 | Putri opens her surprise | "…right to her door." |
-| 0:28 – 0:37 | Showcase: Flowers, Gifts, Food, Snacks, Cakes | "Flowers. Gifts. Delicious food. Indian snacks. And cakes for every celebration." |
-| 0:37 – 0:39.5 | Delivery notes | "Same-day delivery may be available, depending on the location." |
-| 0:40 – 0:44 | Split: exhausted vs. smiling on a video call | "One is still waiting. The other is already smiling." |
-| 0:45 – 0:47 | "Different countries. One simple way to make someone smile." | "Different countries. One simple way to make someone smile." |
-| 0:47 – 0:50 | AiiDell.com logo + "VISIT US NOW: www.aiidell.com" | "Why make it complicated? Visit AiiDell.com today." |
-
-### Short version (if you only want one or two lines)
-* **Opening (0:00):** "Want to send a gift to Indonesia? There's an easier way."
-* **Closing (0:46):** "AiiDell.com. Different countries, one simple way to make someone smile."
+| 0:00.6 – 0:03 | Rahul (left) and Arjun (right) | "Meet Rahul and Arjun." |
+| 0:03 – 0:06 | Both dreaming of a surprise | "Both want to surprise someone special in Indonesia." |
+| 0:06 – 0:08 | The left side lights up | "But look at Rahul…" |
+| 0:08.4 – 0:10.6 | Searching, travel group chat, no replies | "Hours searching for the best shop, the best courier…" |
+| 0:10.7 – 0:13 | Courier quote, customs, "Documents Required" | "…and sending it directly is so expensive." |
+| 0:13 – 0:15 | The right side lights up | "And Arjun?" |
+| 0:15 – 0:19.8 | AiiDell.com → bouquet → her details → order confirmed | "Just a few clicks on AiiDell.com…" |
+| 0:20.3 – 0:24.3 | AiiDell team in Jakarta, gift travelling | "Our team in Indonesia takes care of everything…" |
+| 0:24.6 – 0:27.8 | Putri opens her surprise | "…right to her door." |
+| 0:28 – 0:37.5 | Flowers, Gifts, Food, Snacks, Cakes, delivery notes | *(optional)* "Flowers, gifts, food, snacks and cakes. Same-day delivery may be available, depending on the location." |
+| 0:38.2 – 0:40.8 | Rahul still on hold | "One is still searching…" |
+| 0:40.9 – 0:43.5 | Arjun on a video call with Putri | "…the other is already smiling." |
+| 0:45.5 – 0:47 | "Different countries. One simple way to make someone smile." | "Different countries. One simple way to make someone smile." |
+| 0:47.7 – 0:50 | AiiDell.com logo · "Send love the easy way" | "Send love the easy way, with AiiDell.com." |
 
 ### Mixing tips
-* The music is mastered to about −14 LUFS. When you add your voice, lower the music by about 6–8 dB under the speech (sidechain ducking), and keep your voice peaks near −3 dBFS.
-* Record in a quiet room, about 15 cm from the mic, and add a gentle high-pass at 80 Hz.
+* The music is mastered to about −14 LUFS. Under your voice, lower the music by about 6–8 dB (sidechain ducking), and keep your voice peaks near −3 dBFS.
+* Record in a quiet room, about 15 cm from the mic, and add a gentle high-pass filter at 80 Hz.

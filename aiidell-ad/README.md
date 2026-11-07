@@ -1,7 +1,7 @@
 # AiiDell.com – Cinematic Ad: "Send Gifts from India to Indonesia"
 
 A 50-second, **vertical 1080×1920 (9:16)**, 30 fps motion-graphics advertisement for TikTok, Instagram Reels and Stories, and YouTube Shorts, in a Disney-inspired, cute, premium style.
-It uses a stacked split-screen comparison: **the hard way** (top) vs. **the AiiDell way** (bottom). Key text is kept clear of TikTok's on-screen buttons.
+It tells a **soft-sell story** in a left/right split screen: **Rahul** (left) does it the hard way and **Arjun** (right) does it the AiiDell way. Gentle narration captions carry the story; there is no hard-sell headline. Key text is kept clear of TikTok's on-screen buttons.
 
 The characters have fair skin. Rahul and Arjun are distinctly Indian men. Putri, in a pastel kebaya with a batik accent and a frangipani, and the AiiDell Jakarta team (one member in a hijab) are distinctly Indonesian. Hands have jointed fingers and thumbs, arms have elbows that bend out and down, and no arm, hand or prop ever crosses a face.
 
@@ -12,12 +12,13 @@ The characters have fair skin. Rahul and Arjun are distinctly Indian men. Putri,
 ## Storyboard (as rendered)
 | Time | Scene |
 |---|---|
-| 0–5 s | Opening hook: two young Indian men side by side, each dreaming of a surprise for Indonesia. Headline "WANT TO SEND A GIFT TO INDONESIA?" with "THE HARD WAY" vs "THE AiiDELL WAY" |
-| 5–18 s | Left: search results → asking travellers in a group chat (seen, no reply) → a courier quote with customs, tax and fees plus a "Documents Required" stamp → flying paperwork, a spinning clock and question marks. Right: types www.aiidell.com → browses → adds a bouquet to the cart → enters recipient details (Putri, Jakarta) → checks out → "Order Confirmed!" with confetti → "Wait… that's it? So easy!" |
-| 18–28 s | Left: on hold with the courier helpline, bills piling up. Right: the AiiDell team in Jakarta receives and prepares the order → a gift box travels along a glowing India → Indonesia route → Putri receives and opens her surprise (flowers, cake, snacks, food), with the sender smiling in picture-in-picture |
-| 28–39.5 s | Product showcase: Flowers, Gifts, Food, Snacks, Cakes, followed by the delivery notes (same-day delivery may be available depending on the location; other options depending on the area and service) |
-| 39.5–45 s | Final comparison: an exhausted man buried in paperwork vs. a happy video call. The left side fades and the right side expands |
-| 45–50 s | Magical India → Indonesia connection, "Different countries. One simple way to make someone smile.", the AiiDell.com logo, "Why make it complicated…", and "VISIT US NOW: www.aiidell.com" |
+| 0–6 s | "Meet Rahul and Arjun." / "Both want to surprise someone special in Indonesia." Both men, side by side, dream of a surprise. |
+| 6–13 s | "But look at Rahul…" (the left side is in the spotlight): searching for the best shop and courier, asking travellers (seen, no reply), an expensive courier quote with customs, flying paperwork and a spinning clock. |
+| 13–20 s | "And Arjun?" / "Just a few clicks on AiiDell.com…" (the right side is in the spotlight): aiidell.com → bouquet → her details → order confirmed → a happy fist pump. |
+| 20–28 s | Full screen: "Our team in Indonesia takes care of everything…" / "…right to her door." The Jakarta team, the India → Indonesia route, and Putri opening her surprise. Small insets show Rahul still on hold and Arjun smiling. |
+| 28–37.5 s | What you can send: Flowers, Gifts, Food, Snacks, Cakes, plus the delivery notes. |
+| 37.5–44.5 s | "One is still searching…" / "…the other is already smiling." Rahul is exhausted; Arjun is on a video call with Putri. |
+| 44.5–50 s | India → Indonesia connection, "Different countries. One simple way to make someone smile.", the AiiDell.com logo, and "Send love the easy way · www.aiidell.com". |
 
 ## Re-rendering
 Everything is generated from code, so you can edit text, colours or timing and render again:

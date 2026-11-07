@@ -455,131 +455,133 @@ place(music, strings([mtof(m) for m in [62, 66, 69, 74]], 5.0, 0.4, 2.5), 45.0, 
 for i, m in enumerate([74, 78, 81, 86, 90, 93]):
     place(music, celesta(mtof(m), 2.4), 45.3 + i * 0.12, (i - 2.5) * 0.25, 0.12)
 
-# ---------------------------------------------------------------- SFX (synced to picture)
-# S1
+# ---------------------------------------------------------------- SFX (synced to picture: soft-sell story)
+def ph(u):  # AiiDell phone-flow time -> video time
+    return 13.5 + (u - 0.3) / 1.75
+
+# captions: a soft, warm "pop" + tiny chime as each narration line appears
+for i, ca in enumerate([0.6, 3.2, 6.1, 8.4, 10.7, 13.1, 15.1, 20.3, 24.6, 38.2, 40.9]):
+    place(sfx, pop(700, 1100, 0.07), ca, 0, 0.12)
+    place(sfx, celesta(mtof(86 + (i % 3) * 2), 0.8), ca + 0.02, 0, 0.06)
+
+# S1 – meet Rahul and Arjun
 place(sfx, whoosh(0.9, 300, 2500), 0.0, -0.6, 0.35)
 place(sfx, whoosh(0.9, 300, 2500), 0.05, 0.6, 0.35)
-sparkle_cloud(0.3, 0.9, 12, 0.18)
-place(sfx, whoosh(0.5, 800, 4000), 0.45, 0, 0.25)
-for i in range(0, 33, 3):  # headline letter pops
-    place(sfx, pop(1200 + i * 25, 500, 0.06), 0.55 + i * 0.045, (i / 33 - 0.5), 0.12)
-place(sfx, pop(700, 260), 1.25, -0.5, 0.35); place(sfx, pop(760, 280), 1.3, 0.5, 0.35)
-place(sfx, pop(500, 200, 0.12), 2.45, 0, 0.4)
-place(sfx, whoosh(0.4, 600, 3000), 2.55, -0.4, 0.25)
-chime_arp(2.62, [74, 78, 81], 0.06, 0.12, 0.4)
-place(sfx, whoosh(0.7, 400, 2200), 4.35, 0, 0.3)
+sparkle_cloud(0.3, 0.9, 12, 0.16)
+place(sfx, pop(600, 1200, 0.1), 1.0, 0, 0.22)                     # heart medallion
+place(sfx, pop(800, 400, 0.08), 1.1, -0.5, 0.2); place(sfx, pop(850, 420, 0.08), 1.15, 0.5, 0.2)  # name tags
+place(sfx, pop(700, 260), 1.35, -0.5, 0.3); place(sfx, pop(760, 280), 1.4, 0.5, 0.3)              # thought bubbles
+chime_arp(1.5, [81, 86], 0.08, 0.08, 0)
 
-# S2 – right side (AiiDell phone)
-place(sfx, whoosh(0.5, 900, 5000), 4.95, 0.5, 0.3)
-chime_arp(5.0, [86, 90], 0.08, 0.1, 0.5)
-for k in range(15):  # url typing
-    place(sfx, tick(0.6), 5.27 + k * 0.066, 0.5, 0.2)
-place(sfx, click(), 6.3, 0.5, 0.35)
-place(sfx, whoosh(0.35, 1500, 6000), 6.6, 0.5, 0.12)
-for k in range(4):
-    place(sfx, pop(1400, 900, 0.05), 6.9 + k * 0.1, 0.5, 0.08)
-place(sfx, click(), 8.25, 0.5, 0.35)
-place(sfx, whoosh(0.35, 1200, 5000), 8.6, 0.5, 0.15)
-place(sfx, click(), 9.7, 0.5, 0.35)
-place(sfx, whoosh(0.5, 800, 4000), 9.85, 0.5, 0.18)
-chime_arp(10.3, [93, 97], 0.06, 0.16, 0.6)
-place(sfx, pop(900, 1500, 0.08), 10.3, 0.6, 0.25)
-place(sfx, whoosh(0.35, 1200, 5000), 10.8, 0.5, 0.15)
-for (a, n) in [(11.1, 5), (11.6, 18), (12.3, 5), (12.6, 22)]:
-    for k in range(n):
-        place(sfx, tick(0.5), a + k * (0.5 / n), 0.5, 0.16)
-place(sfx, click(), 13.1, 0.5, 0.35)
-place(sfx, whoosh(0.35, 1200, 5000), 13.5, 0.5, 0.15)
-place(sfx, click(), 14.1, 0.5, 0.35)
-# success
-chime_arp(15.2, [81, 85, 88, 93], 0.075, 0.2, 0.5)
-place(sfx, pop(600, 1400, 0.12), 15.2, 0.5, 0.25)
-for k in range(10):
-    place(sfx, pop(1500 + rs.rand() * 1500, 2500, 0.05), 15.3 + rs.rand() * 0.6, 0.3 + rs.rand() * 0.6, 0.08)
-sparkle_cloud(15.3, 1.2, 14, 0.14)
-place(sfx, whoosh(0.4, 500, 2500), 16.15, 0.5, 0.2)  # fist pump
-chime_arp(15.95, [86, 90, 93], 0.05, 0.1, 0.5)
-
-# S2 – left side (hard way)
+# S2 – "But look at Rahul…" (left)
+place(sfx, whoosh(0.6, 900, 300), 6.05, -0.5, 0.25)
+place(sfx, pop(500, 250, 0.1), 6.35, -0.5, 0.2)
 for k in range(28):
-    place(sfx, tick(0.4), 5.3 + k * 0.04, -0.5, 0.1)
-for i, a in enumerate([8.7, 9.4, 10.0, 10.6, 11.1]):
-    place(sfx, pop(800 if i != 2 else 500, 400, 0.08), a, -0.5, 0.18)
-place(sfx, buzz(0.4), 9.4, -0.5, 0.1)
-place(sfx, buzz(0.4), 10.6, -0.5, 0.1)
+    place(sfx, tick(0.4), 6.35 + k * 0.03, -0.5, 0.1)
+place(sfx, whoosh(0.4, 1200, 4000), 8.5, -0.5, 0.15)
+for i, a_ in enumerate([8.64, 9.14, 9.57, 10.0, 10.36]):
+    place(sfx, pop(800 if i != 2 else 500, 400, 0.08), a_, -0.5, 0.18)
+place(sfx, buzz(0.4), 9.14, -0.5, 0.1); place(sfx, buzz(0.4), 10.0, -0.5, 0.1)
+for a_ in (9.4, 9.9, 10.4):
+    place(sfx, pop(420, 220, 0.09), a_, -0.4, 0.12)
+place(sfx, whoosh(0.4, 1200, 4000), 10.7, -0.5, 0.15)
 for i in range(5):
-    place(sfx, tick(0.8), 12.0 + i * 0.28, -0.5, 0.18)
-place(sfx, pop(300, 120, 0.15), 13.6, -0.5, 0.25)  # total
-place(sfx, stamp(), 14.1, -0.5, 0.45)
-for i in range(7):
-    place(sfx, paper(0.4), 14.4 + i * 0.4, -0.4, 0.3)
-    place(sfx, whoosh(0.4, 1500, 600), 14.4 + i * 0.4, -0.3, 0.06)
-wah(15.6, 0.9)
-# clock ticks speeding up on the left
-tt_ = 5.0
-while tt_ < 17.6:
+    place(sfx, tick(0.8), 10.87 + i * 0.245, -0.5, 0.18)
+place(sfx, pop(300, 120, 0.15), 12.27, -0.5, 0.25)
+place(sfx, stamp(), 12.7, -0.5, 0.45)
+for i in range(6):
+    place(sfx, paper(0.4), 12.0 + i * 0.4, -0.4, 0.28)
+    place(sfx, whoosh(0.4, 1500, 600), 12.0 + i * 0.4, -0.3, 0.06)
+wah(12.85, 0.9)
+tt_ = 6.0
+while tt_ < 13.0:
     place(sfx, tick(0.5), tt_, -0.7, 0.07)
-    tt_ += max(0.12, 0.6 - (tt_ - 5) * 0.04)
-# question mark pops
-for k in range(14):
-    place(sfx, pop(1000, 600, 0.05), 6.2 + k * 0.9 + 0.3, -0.6, 0.05)
+    tt_ += max(0.12, 0.6 - (tt_ - 6) * 0.06)
+for k in range(9):
+    place(sfx, pop(1000, 600, 0.05), 6.8 + k * 0.8 + 0.3, -0.6, 0.05)
 
-# S3
-place(sfx, riser(1.6, 1.0), 16.6, 0, 0.18)
-place(sfx, whoosh(0.8, 300, 4000), 17.9, 0.5, 0.35)
-sparkle_cloud(17.95, 0.8, 22, 0.18)
-place(sfx, pop(600, 1200, 0.1), 19.1, 0.5, 0.25)
-for i, a in enumerate([19.6, 20.15, 20.7]):
-    chime_arp(a, [86 + i * 2, 93 + i * 2], 0.05, 0.12, 0.5)
-place(sfx, whoosh(0.5, 800, 5000), 21.55, 0.5, 0.25)
-sparkle_cloud(22.0, 2.2, 10, 0.12)
-place(sfx, whoosh(2.2, 300, 1800), 22.0, 0.4, 0.12)
-chime_arp(24.2, [81, 86, 90, 93], 0.06, 0.18, 0.5)
-place(sfx, whoosh(0.5, 800, 5000), 24.45, 0.5, 0.25)
-sparkle_cloud(24.9, 0.9, 16, 0.14)
-place(sfx, pop(400, 200, 0.12), 25.6, 0.5, 0.2)
-place(sfx, pop(500, 1600, 0.14), 26.2, 0.5, 0.3)
-chime_arp(26.25, [74, 78, 81, 86, 90], 0.06, 0.2, 0.5, celesta, 1.5)
+# S3 – "And Arjun?" (right) – a few clicks on AiiDell.com
+place(sfx, whoosh(0.6, 300, 900), 13.05, 0.5, 0.25)
+place(sfx, whoosh(0.5, 900, 5000), 13.4, 0.5, 0.3)
+chime_arp(13.45, [86, 90], 0.08, 0.1, 0.5)
+for k in range(15):
+    place(sfx, tick(0.6), ph(0.27) + k * 0.038, 0.5, 0.2)
+place(sfx, click(), ph(1.3), 0.5, 0.35)
+for k in range(4):
+    place(sfx, pop(1400, 900, 0.05), ph(1.9) + k * 0.06, 0.5, 0.08)
+place(sfx, click(), ph(3.25), 0.5, 0.35)
+place(sfx, whoosh(0.3, 1200, 5000), ph(3.6), 0.5, 0.15)
+place(sfx, click(), ph(4.7), 0.5, 0.35)
+place(sfx, whoosh(0.4, 800, 4000), ph(4.85), 0.5, 0.18)
+chime_arp(ph(5.3), [93, 97], 0.05, 0.16, 0.6)
+place(sfx, pop(900, 1500, 0.08), ph(5.3), 0.6, 0.25)
+place(sfx, whoosh(0.3, 1200, 5000), ph(5.8), 0.5, 0.15)
+for (a_, n) in [(6.1, 5), (6.6, 18), (7.3, 5), (7.6, 22)]:
+    for k in range(n):
+        place(sfx, tick(0.5), ph(a_) + k * (0.29 / n), 0.5, 0.16)
+place(sfx, click(), ph(8.1), 0.5, 0.35)
+place(sfx, whoosh(0.3, 1200, 5000), ph(8.5), 0.5, 0.15)
+place(sfx, click(), ph(9.1), 0.5, 0.35)
+chime_arp(ph(10.2), [81, 85, 88, 93], 0.07, 0.2, 0.5)
+place(sfx, pop(600, 1400, 0.12), ph(10.2), 0.5, 0.25)
+for k in range(10):
+    place(sfx, pop(1500 + rs.rand() * 1500, 2500, 0.05), ph(10.3) + rs.rand() * 0.6, 0.3 + rs.rand() * 0.6, 0.08)
+sparkle_cloud(ph(10.3), 0.9, 14, 0.14)
+place(sfx, whoosh(0.4, 500, 2500), 19.35, 0.5, 0.18)
+
+# S4 – delivered right to her door (full screen)
+place(sfx, whoosh(0.8, 300, 4000), 19.95, 0.3, 0.35)
+sparkle_cloud(20.0, 0.8, 22, 0.18)
+place(sfx, pop(600, 1200, 0.1), 20.4, 0, 0.25)
+for i, a_ in enumerate([20.9, 21.45, 22.0]):
+    chime_arp(a_, [86 + i * 2, 93 + i * 2], 0.05, 0.12, 0.2)
+place(sfx, pop(380, 200, 0.12), 20.8, -0.6, 0.14)
+place(sfx, whoosh(0.5, 800, 5000), 22.4, 0, 0.25)
+sparkle_cloud(22.8, 2.2, 10, 0.12)
+place(sfx, whoosh(2.2, 300, 1800), 22.8, 0.3, 0.12)
+chime_arp(25.0, [81, 86, 90, 93], 0.06, 0.18, 0.4)
+place(sfx, whoosh(0.5, 800, 5000), 25.1, 0, 0.22)
+place(sfx, pop(700, 1200, 0.1), 25.6, 0.6, 0.18)
+sparkle_cloud(25.5, 0.9, 16, 0.14)
+place(sfx, pop(400, 200, 0.12), 26.4, 0, 0.2)
+place(sfx, pop(500, 1600, 0.14), 26.8, 0, 0.3)
+chime_arp(26.85, [74, 78, 81, 86, 90], 0.06, 0.2, 0, celesta, 1.5)
 for i in range(4):
-    place(sfx, pop(900 + i * 150, 1400, 0.08), 26.5 + i * 0.15, 0.3 + i * 0.1, 0.18)
-place(sfx, pop(700, 1200, 0.1), 25.1, 0.7, 0.18)  # PIP
-place(sfx, riser(1.0, 1.0), 26.9, 0, 0.16)
+    place(sfx, pop(900 + i * 150, 1400, 0.08), 27.1 + i * 0.15, -0.3 + i * 0.2, 0.18)
+place(sfx, riser(0.9, 1.0), 26.9, 0, 0.14)
 place(sfx, whoosh(0.9, 250, 5000), 27.75, 0, 0.42)
 sparkle_cloud(27.8, 0.9, 26, 0.2)
 
-# S4
+# S5 – what you can send
 for k in range(4):
-    a = 28.6 + k * 1.7 + 0.74 * 1.7
-    place(sfx, whoosh(0.5, 600, 2800), a - 0.05, (k % 2 - 0.5), 0.18)
+    place(sfx, whoosh(0.5, 600, 2800), 28.4 + k * 1.5 + 1.11 - 0.05, (k % 2 - 0.5), 0.18)
 for k in range(5):
-    chime_arp(28.6 + k * 1.7 + (0.05 if k == 0 else 0), [81 + (k % 3) * 2, 88 + (k % 3) * 2], 0.05, 0.1, 0)
-place(sfx, whoosh(0.7, 400, 3000), 37.05, 0, 0.25)
-place(sfx, pop(700, 1100, 0.08), 37.6, -0.2, 0.18)
-place(sfx, pop(700, 1100, 0.08), 38.0, 0.2, 0.18)
+    chime_arp(28.4 + k * 1.5 + (0.05 if k == 0 else 0), [81 + (k % 3) * 2, 88 + (k % 3) * 2], 0.05, 0.1, 0)
+place(sfx, whoosh(0.7, 400, 3000), 35.85, 0, 0.25)
+place(sfx, pop(700, 1100, 0.08), 36.3, -0.2, 0.18)
+place(sfx, pop(700, 1100, 0.08), 36.7, 0.2, 0.18)
 
-# S5
-place(sfx, whoosh(0.7, 300, 2600), 39.25, -0.6, 0.3)
-place(sfx, whoosh(0.7, 300, 2600), 39.3, 0.6, 0.3)
-chime_arp(39.8, [86, 90, 86, 90], 0.12, 0.1, 0.5)  # call connects
-place(sfx, pop(400, 180, 0.15), 40.2, -0.5, 0.15)
+# S6 – one still searching, the other already smiling
+place(sfx, whoosh(0.7, 300, 2600), 37.35, -0.6, 0.3)
+place(sfx, whoosh(0.7, 300, 2600), 37.4, 0.6, 0.3)
+chime_arp(38.2, [86, 90, 86, 90], 0.12, 0.1, 0.5)
+place(sfx, pop(420, 220, 0.09), 39.0, -0.5, 0.12)
+place(sfx, pop(420, 220, 0.09), 39.5, -0.5, 0.12)
+place(sfx, whoosh(0.6, 900, 300), 40.85, 0.4, 0.15)
 for k in range(8):
-    place(sfx, pop(1200, 1700, 0.05), 40.4 + k * 0.4, 0.5, 0.06)
-place(sfx, pop(500, 300, 0.1), 40.6, -0.5, 0.15)
-place(sfx, pop(800, 1300, 0.1), 40.6, 0.5, 0.15)
+    place(sfx, pop(1200, 1700, 0.05), 38.8 + k * 0.5, 0.5, 0.05)
 place(sfx, whoosh(1.4, 250, 3000), 43.4, 0.4, 0.3)
 place(sfx, riser(1.3, 1.0), 43.4, 0, 0.18)
 sparkle_cloud(44.6, 1.0, 30, 0.2)
+
+# end card – soft close
 place(sfx, whoosh(1.1, 300, 1600), 45.25, 0, 0.15)
 chime_arp(46.3, [86, 90, 93], 0.06, 0.16, 0.6)
-# logo sting
 place(sfx, whoosh(0.5, 700, 5000), 46.65, 0, 0.3)
 chime_arp(46.8, [74, 81, 86, 90, 93, 98], 0.05, 0.22, 0, bell, 2.5)
-place(sfx, boom(0.6), 46.8, 0, 0.25)
-sparkle_cloud(47.5, 0.8, 18, 0.14)
-place(sfx, pop(600, 1300, 0.12), 48.3, 0, 0.3)
-chime_arp(48.35, [86, 93], 0.06, 0.12, 0)
-place(sfx, click(), 49.5, 0.3, 0.35)
-place(sfx, pop(900, 1500, 0.08), 49.52, 0.3, 0.2)
+place(sfx, boom(0.6), 46.8, 0, 0.22)
+chime_arp(47.75, [81, 86, 90], 0.08, 0.12, 0, celesta, 1.6)
+sparkle_cloud(48.5, 0.8, 14, 0.12)
 
 
 # ---------------------------------------------------------------- mix & master
