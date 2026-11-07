@@ -1,6 +1,6 @@
-# AI Motion Cuan — 68s vertical video ad (Bahasa Indonesia)
+# AI Motion Cuan — 69.5s vertical video ad (Bahasa Indonesia)
 
-**Final video:** `AI_Motion_Cuan_Ad_9x16.mp4` (1080x1920, 30fps, H.264 + AAC, 68s). Made for Reels, Shorts and TikTok.
+**Final video:** `AI_Motion_Cuan_Ad_9x16.mp4` (1080x1920, 30fps, H.264 + AAC, 69.5s). A smaller `_preview.mp4` (720p, ~7 MB) is for sharing on WhatsApp. Made for Reels, Shorts and TikTok.
 
 Every frame is drawn in code (`ad.js`, HTML canvas). The soundtrack is original and made with `music.py` (numpy), so there are no stock or copyrighted assets.
 
@@ -13,5 +13,5 @@ ffmpeg -y -i out/video.mp4 -i out/audio.wav -c:v copy -c:a aac -b:a 192k -shorte
 Preview stills: `STILLS=5,24,66 node render.js`. To watch it live, open `ad.html` in a browser.
 
 - Timeline and sound cues: `cues.js`
-- Scenes: `sHook`, `sFeed`, `sMoney`, `sTwist`, `sShowcase` (6 styles), `sCourse`, `sHow`, `sOffer` in `ad.js`
+- Scenes: `sHook`, `sFeed`, `sMoney`, `sTwist`, `sShowcase` (7 styles: Ghibli-style, Bollywood-style, history, crayon, manga, graffiti, pixel), `sAffiliate`, `sCourse`, `sHow`, `sCTA` ("Komen MOTION") in `ad.js`
 - Voice-over script: `VOICEOVER_SCRIPT.md`

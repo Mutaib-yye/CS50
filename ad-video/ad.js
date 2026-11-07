@@ -1,8 +1,8 @@
 // =====================================================================
-//  AI MOTION CUAN — 68s vertical (1080x1920) motion-graphic ad
+//  AI MOTION CUAN — 69.5s vertical (1080x1920) motion-graphic ad
 //  Every frame is a pure function of time t → window.renderFrame(t)
 // =====================================================================
-const W = 1080, H = 1920, DUR = 68;
+const W = 1080, H = 1920, DUR = 69.5;
 const MAIN = document.getElementById('c').getContext('2d');
 let ctx = MAIN;
 const CUES = window.CUES || [];
@@ -525,57 +525,6 @@ function sManga(lt, T0) {
     T('Aku pasti VIRAL!!', 560, 1618, { size: 92, font: 'Bangers', color: '#000', ls: 3, sc: pop(lt, 1.8) });
   });
 }
-// --- anime sunset
-function girl(x, y, s, lt) {
-  ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.fillStyle = '#0d0618';
-  ctx.fillRect(-20, -125, 15, 125); ctx.fillRect(6, -125, 15, 125);
-  const fl = Math.sin(lt * 3.2) * 10;
-  ctx.beginPath(); ctx.moveTo(-32, -235); ctx.lineTo(32, -235); ctx.lineTo(62 + fl * .4, -112); ctx.lineTo(-75 + fl, -108 + fl * .3); ctx.closePath(); ctx.fill();
-  ctx.beginPath(); ctx.moveTo(-34, -238); ctx.lineTo(34, -238); ctx.lineTo(30, -335); ctx.lineTo(-30, -335); ctx.closePath(); ctx.fill();
-  ctx.lineWidth = 15; ctx.strokeStyle = '#0d0618'; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-26, -320); ctx.lineTo(-95, -420); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(26, -320); ctx.lineTo(40, -230); ctx.stroke();
-  ctx.fillRect(-9, -358, 18, 28); ctx.beginPath(); ctx.ellipse(0, -392, 37, 43, 0, 0, 7); ctx.fill();
-  const w1 = Math.sin(lt * 4) * 14, w2 = Math.sin(lt * 4 + 1) * 22, w3 = Math.sin(lt * 4 + 2) * 30;
-  ctx.beginPath(); ctx.moveTo(26, -430); ctx.quadraticCurveTo(-30, -452, -48, -405);
-  ctx.bezierCurveTo(-110, -390 + w1, -170, -345 + w2, -250, -330 + w3); ctx.bezierCurveTo(-180, -310 + w2, -120, -310 + w1, -34, -340); ctx.closePath(); ctx.fill();
-  // ribbon
-  ctx.beginPath(); ctx.moveTo(-20, -320); ctx.bezierCurveTo(-80, -300 + w1, -140, -280 + w2, -190, -270 + w3); ctx.lineTo(-185, -255 + w3); ctx.bezierCurveTo(-130, -265 + w2, -80, -285, -20, -305); ctx.fill();
-  ctx.restore();
-}
-function sAnime(lt, T0) {
-  const z = 1 + lt * .035;
-  camera(540, 1000, z, () => {
-    bgGrad([[0, '#140c3c'], [.28, '#4b1f7a'], [.5, '#c73e7a'], [.63, '#ff7a59'], [.7, '#ffc78a']], 0, 1260);
-    for (let i = 0; i < 90; i++) { const tw = .4 + .6 * Math.abs(Math.sin(T0 * 2 + i)); ctx.fillStyle = `rgba(255,255,255,${tw * .8})`; ctx.fillRect(h(i) * W, h(i + .5) * 650, 3, 3); }
-    radial(540, 1180, 640, 'rgba(255,235,180,.75)', 'rgba(255,150,100,0)');
-    rays(540, 1180, 22, T0 * .05, 'rgba(255,220,180,.05)');
-    ctx.fillStyle = '#fff4cf'; ctx.beginPath(); ctx.arc(540, 1180, 175, 0, 7); ctx.fill();
-    for (let i = 0; i < 6; i++) {
-      const cx = ((h(i) * 1400 + T0 * (14 + i * 8)) % 1600) - 260, cy = 380 + i * 120, cw = 260 + h(i + 1) * 260;
-      ctx.fillStyle = i < 3 ? 'rgba(120,60,140,.75)' : 'rgba(255,140,150,.75)';
-      for (let k = 0; k < 5; k++) { ctx.beginPath(); ctx.ellipse(cx + k * cw * .22, cy - Math.sin(k * 1.3) * 18, cw * .3, 30 + Math.sin(k) * 10, 0, 0, 7); ctx.fill(); }
-      ctx.fillStyle = 'rgba(255,220,200,.45)'; ctx.beginPath(); ctx.ellipse(cx + cw * .4, cy + 16, cw * .55, 9, 0, 0, 7); ctx.fill();
-    }
-    ctx.fillStyle = '#3a1d5c'; ctx.beginPath(); ctx.moveTo(-100, 1260); for (let x = -100; x <= W + 100; x += 30) ctx.lineTo(x, 1190 - Math.abs(Math.sin(x * .007)) * 120 - h(Math.floor(x / 30)) * 30); ctx.lineTo(W + 100, 1300); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = '#28124a'; ctx.fillRect(-100, 1258, W + 200, 900);
-    ctx.fillStyle = 'rgba(255,200,160,.35)'; for (let i = 0; i < 9; i++) ctx.fillRect(540 - 160 + h(i) * 40, 1275 + i * 22, 320 - i * 30 + h(i + 1) * 40, 5);
-    ctx.fillStyle = '#140b26'; ctx.beginPath(); ctx.moveTo(-100, 2100); ctx.lineTo(-100, 1640); ctx.bezierCurveTo(300, 1600, 600, 1460, 1200, 1400); ctx.lineTo(1200, 2100); ctx.closePath(); ctx.fill();
-    ctx.strokeStyle = '#140b26'; ctx.lineWidth = 4; for (let i = 0; i < 70; i++) { const x = i * 18 - 40, y0 = x < 0 ? 1640 : lerp(1630, 1400, Math.pow(x / 1200, .8)); const sw = Math.sin(T0 * 3 + i * .4) * 12; ctx.beginPath(); ctx.moveTo(x, y0 + 10); ctx.quadraticCurveTo(x + sw * .5, y0 - 20, x + sw, y0 - 35 - h(i) * 25); ctx.stroke(); }
-    girl(800, 1450, 1.05, T0);
-    ctx.strokeStyle = 'rgba(255,170,200,.5)'; ctx.lineWidth = 3;
-  });
-  // petals (screen space)
-  for (let i = 0; i < 75; i++) {
-    const sp = 160 + h(i + 1) * 220, y = ((T0 * sp + h(i + 2) * 2300) % 2300) - 150, x = ((h(i) * 1500 - T0 * 140 + Math.sin(T0 * 1.6 + i) * 50) % 1300 + 1300) % 1300 - 110;
-    ctx.save(); ctx.translate(x, y); ctx.rotate(T0 * 2 + i); ctx.scale(1, Math.cos(T0 * 3 + i)); ctx.fillStyle = i % 3 ? '#ffb7c5' : '#ffd6e0';
-    ctx.beginPath(); ctx.ellipse(0, 0, 15 + h(i + 3) * 8, 9, 0, 0, 7); ctx.fill(); ctx.restore();
-  }
-  // lens flare
-  ctx.save(); ctx.globalCompositeOperation = 'lighter';
-  [[.3, 60, 'rgba(255,180,120,.12)'], [.55, 30, 'rgba(255,120,200,.15)'], [.8, 90, 'rgba(150,120,255,.08)']].forEach(([k, r, c]) => { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(lerp(540, 120, k), lerp(1180, 300, k), r, 0, 7); ctx.fill(); });
-  ctx.restore();
-  const jp = '夕焼けの約束'; [...jp].forEach((c, i) => T(c, 980, 420 + i * 82, { size: 70, font: 'IPAGothic', color: '#fff', alpha: fi(lt, .4 + i * .08, .4) * .9, glow: 'rgba(255,180,200,.8)', gb: 20 }));
-}
 // --- pixel art
 const ROBOT = ['....k.......', '....y.......', '..kkkkkkk...', '.kgggggggk..', '.kgwkgwkgk..', '.kgggggggk..', '.kggrrrggk..', '..kkkkkkk...', '..kbbbbbk...', '.kbbbybbbk..', '..kbbbbbk...'];
 const LEGS = [['..k....k....', '.kk....kk...'], ['...k..k.....', '...kk.kk....']];
@@ -611,70 +560,164 @@ function sPixel(lt, T0) {
   });
   ctx.save(); ctx.imageSmoothingEnabled = false; ctx.drawImage(PIX.canvas, 0, 0, W, H); ctx.restore();
 }
-// --- neon synthwave
-function sNeon(lt, T0) {
-  bgGrad([[0, '#05000f'], [.57, '#2d0050']], 0, 1100);
-  for (let i = 0; i < 80; i++) { ctx.fillStyle = `rgba(255,255,255,${.3 + .7 * Math.abs(Math.sin(T0 + i))})`; ctx.fillRect(h(i) * W, h(i + .4) * 900, 2, 2); }
-  ctx.save(); ctx.beginPath(); ctx.arc(540, 1000, 280, 0, 7); ctx.clip();
-  const g = ctx.createLinearGradient(0, 720, 0, 1100); g.addColorStop(0, '#ffd319'); g.addColorStop(.5, '#ff2975'); g.addColorStop(1, '#8c1eff'); ctx.fillStyle = g; ctx.fillRect(200, 700, 700, 420);
-  for (let i = 0; i < 8; i++) { const y = 880 + i * 30 + (T0 * 20) % 30; ctx.fillStyle = '#1a0033'; ctx.fillRect(200, y, 700, 3 + i * 2); }
+// --- Ghibli-inspired pastoral story (painterly countryside)
+const CLOUD = mk(900, 560); (() => {
+  const g = CLOUD.getContext('2d'); const r = mulberry(77); const puffs = [];
+  for (let i = 0; i < 60; i++) { const x = 110 + r() * 680, hf = Math.max(0, 1 - Math.abs(x - 450) / 380); const y = 470 - r() * 330 * hf - 30; const rad = 45 + r() * 80 * hf + 25; puffs.push([x, y, rad]); }
+  puffs.sort((a, b) => b[1] - a[1]);
+  for (const [x, y, rad] of puffs) { const gr = g.createRadialGradient(x - rad * .3, y - rad * .4, rad * .1, x, y, rad); gr.addColorStop(0, '#ffffff'); gr.addColorStop(.7, '#f4f8fc'); gr.addColorStop(1, '#d9e6f2'); g.fillStyle = gr; g.beginPath(); g.arc(x, y, rad, 0, 7); g.fill(); }
+  g.globalCompositeOperation = 'source-atop'; const sh = g.createLinearGradient(0, 150, 0, 520); sh.addColorStop(0, 'rgba(150,175,210,0)'); sh.addColorStop(1, 'rgba(130,155,200,.55)'); g.fillStyle = sh; g.fillRect(0, 0, 900, 560);
+})();
+function canopy(x, y, s, T0) {
+  const cols = ['#2f5d34', '#3f7a3c', '#5b9a4a', '#8cc063'];
+  cols.forEach((c, li) => { ctx.fillStyle = c; for (let i = 0; i < 9; i++) { const a = i / 9 * 6.28 + li, rr_ = (90 - li * 18) * s; const sw = Math.sin(T0 * 1.5 + i) * 4 * s; ctx.beginPath(); ctx.arc(x + Math.cos(a) * rr_ + sw - li * 8 * s, y + Math.sin(a) * rr_ * .6 - li * 22 * s, (70 - li * 10) * s, 0, 7); ctx.fill(); } });
+}
+function sGhibli(lt, T0) {
+  const pan = lt * 18;
+  bgGrad([[0, '#4f9fe0'], [.45, '#9fd0f2'], [.62, '#e3f2f6']], 0, 1300);
+  radial(920, 260, 700, 'rgba(255,250,220,.75)', 'rgba(255,250,220,0)');
+  ctx.drawImage(CLOUD, -260 + T0 * 12 % 200, 250, 1260, 784);
+  ctx.globalAlpha = .9; ctx.drawImage(CLOUD, 640 - pan, 620, 540, 336); ctx.globalAlpha = 1;
+  const hill = (base, amp, fq, ph, col) => { ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(-100, H + 100); for (let x = -100; x <= W + 100; x += 20) ctx.lineTo(x, base + Math.sin((x + pan * ph) * fq) * amp + Math.sin((x + pan * ph) * fq * 2.7) * amp * .3); ctx.lineTo(W + 100, H + 100); ctx.fill(); };
+  hill(1150, 50, .004, .3, '#8db8a8');
+  hill(1260, 70, .0035, .6, '#7fb35a');
+  // house + tree on mid hill
+  const hx = 760 - pan * .6, hy = 1225;
+  ctx.fillStyle = '#f6f1e4'; ctx.fillRect(hx, hy, 130, 80); ctx.fillStyle = '#c4473a'; ctx.beginPath(); ctx.moveTo(hx - 15, hy + 4); ctx.lineTo(hx + 65, hy - 55); ctx.lineTo(hx + 145, hy + 4); ctx.fill();
+  ctx.fillStyle = '#5b7fa3'; ctx.fillRect(hx + 22, hy + 25, 26, 26); ctx.fillRect(hx + 82, hy + 25, 26, 26);
+  ctx.fillStyle = '#5a3d2b'; ctx.fillRect(250 - pan * .6, 1110, 26, 140); canopy(263 - pan * .6, 1060, 1.1, T0);
+  hill(1440, 60, .003, 1, '#5d9a3c');
+  // grass waves (wind)
+  ctx.strokeStyle = 'rgba(200,235,140,.55)'; ctx.lineWidth = 4; ctx.lineCap = 'round';
+  for (let i = 0; i < 90; i++) { const x = h(i) * W, y = 1480 + h(i + 1) * 420, w = Math.sin(T0 * 3 - x * .01) * 16; ctx.beginPath(); ctx.moveTo(x, y); ctx.quadraticCurveTo(x + w * .5, y - 20, x + w + 6, y - 36 - h(i + 2) * 20); ctx.stroke(); }
+  // girl (back view, sundress + straw hat), looking at the sky
+  ctx.save(); ctx.translate(560, 1640); ctx.scale(1.25, 1.25);
+  const fl = Math.sin(T0 * 3.4) * 9;
+  ctx.fillStyle = '#f0c9a4'; ctx.fillRect(-16, -70, 11, 70); ctx.fillRect(6, -70, 11, 70);
+  ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.moveTo(-28, -190); ctx.lineTo(28, -190); ctx.lineTo(58 + fl, -62); ctx.quadraticCurveTo(0, -50 + fl * .3, -55 + fl * .5, -64); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = '#d6dde6'; ctx.lineWidth = 3; ctx.stroke();
+  ctx.fillStyle = '#f0c9a4'; ctx.save(); ctx.translate(-26, -180); ctx.rotate(.5); ctx.fillRect(-5, 0, 10, 60); ctx.restore(); ctx.save(); ctx.translate(26, -180); ctx.rotate(-.35); ctx.fillRect(-5, 0, 10, 60); ctx.restore();
+  ctx.fillStyle = '#3b2418'; const w1 = Math.sin(T0 * 4) * 10, w2 = Math.sin(T0 * 4 + 1) * 16;
+  ctx.beginPath(); ctx.moveTo(-30, -250); ctx.quadraticCurveTo(-34, -205, -24, -180); ctx.bezierCurveTo(10, -185, 60 + w1, -195, 90 + w2, -215); ctx.bezierCurveTo(60 + w1, -225, 40, -250, 30, -250); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(0, -232, 32, 34, 0, 0, 7); ctx.fill();
+  ctx.fillStyle = '#f2d98c'; ctx.beginPath(); ctx.ellipse(0, -258, 62, 16, -.08, 0, 7); ctx.fill(); ctx.beginPath(); ctx.ellipse(0, -270, 30, 20, 0, Math.PI, 0); ctx.fill();
+  ctx.fillStyle = '#d0453c'; ctx.fillRect(-30, -268, 60, 8); ctx.beginPath(); ctx.moveTo(26, -264); ctx.quadraticCurveTo(60 + w1, -250, 85 + w2, -262); ctx.lineTo(80 + w2, -252); ctx.quadraticCurveTo(55, -244, 24, -258); ctx.fill();
   ctx.restore();
-  ctx.save(); ctx.shadowColor = '#ff2975'; ctx.shadowBlur = 80; ctx.fillStyle = 'rgba(255,41,117,.15)'; ctx.beginPath(); ctx.arc(540, 1000, 280, 0, 7); ctx.fill(); ctx.restore();
-  ctx.fillStyle = '#12002a'; ctx.strokeStyle = '#00f0ff'; ctx.lineWidth = 3; ctx.shadowColor = '#00f0ff'; ctx.shadowBlur = 14;
-  ctx.beginPath(); ctx.moveTo(-50, 1100); [[120, 940], [230, 1020], [330, 900], [450, 1100]].forEach(p => ctx.lineTo(...p)); ctx.closePath(); ctx.fill(); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(600, 1100); [[720, 960], [820, 1030], [940, 880], [1130, 1100]].forEach(p => ctx.lineTo(...p)); ctx.closePath(); ctx.fill(); ctx.stroke();
-  ctx.shadowBlur = 0;
-  ctx.fillStyle = '#0a0018'; ctx.fillRect(-100, 1100, W + 200, 900);
-  ctx.save(); ctx.strokeStyle = '#ff2bd6'; ctx.shadowColor = '#ff2bd6'; ctx.shadowBlur = 18; ctx.lineWidth = 3;
-  for (let i = 0; i < 22; i++) { const z = i + 1 - (T0 * 2.2) % 1; const y = 1100 + 820 / z; if (y > 1990) continue; ctx.globalAlpha = clamp(1.4 - z / 14); ctx.beginPath(); ctx.moveTo(-100, y); ctx.lineTo(W + 100, y); ctx.stroke(); }
-  ctx.globalAlpha = 1; for (let j = -14; j <= 14; j++) { ctx.beginPath(); ctx.moveTo(540 + j * 26, 1100); ctx.lineTo(540 + j * 330, 1920); ctx.stroke(); }
+  // drifting leaves / dandelion seeds
+  for (let i = 0; i < 40; i++) { const x = ((h(i) * 1300 + T0 * (160 + h(i + 1) * 140)) % 1300) - 110, y = 500 + h(i + 2) * 1300 + Math.sin(T0 * 2 + i) * 40; ctx.save(); ctx.translate(x, y); ctx.rotate(T0 * 3 + i); ctx.fillStyle = i % 3 ? 'rgba(255,255,255,.85)' : '#9fd36b'; ctx.beginPath(); ctx.ellipse(0, 0, 9, 4, 0, 0, 7); ctx.fill(); ctx.restore(); }
+  // watercolor paper texture
+  ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.globalAlpha = .45; ctx.drawImage(PAPER, 0, 0); ctx.restore();
+  T('“Musim panas itu... semuanya berubah.”', 540, 1665, { size: 52, font: 'Liberation Serif', weight: 'italic 700', color: '#fff', shadow: { c: 'rgba(0,0,0,.55)', x: 3, y: 4 }, alpha: fi(lt, .3, .4), maxW: 1000 });
+}
+// --- Bollywood-style drama
+function onion(cx, by, w, hh) { ctx.beginPath(); ctx.moveTo(cx - w, by); ctx.bezierCurveTo(cx - w * 1.3, by - hh * .5, cx - w * .2, by - hh * .72, cx, by - hh); ctx.bezierCurveTo(cx + w * .2, by - hh * .72, cx + w * 1.3, by - hh * .5, cx + w, by); ctx.closePath(); ctx.fill(); }
+function sBolly(lt, T0) {
+  const z = 1 + lt * .04;
+  camera(540, 1100, z, () => {
+    bgGrad([[0, '#3d0030'], [.4, '#b3124e'], [.7, '#ff6a00'], [.9, '#ffb300']], 0, 1500);
+    rays(540, 1080, 24, T0 * .25, 'rgba(255,220,120,.13)');
+    radial(540, 1080, 700, 'rgba(255,235,160,.65)', 'rgba(255,150,0,0)');
+    // palace silhouette
+    ctx.fillStyle = '#3a0022';
+    ctx.fillRect(110, 1180, 860, 800); ctx.fillRect(390, 1040, 300, 160); onion(540, 1045, 150, 270); ctx.fillRect(536, 740, 8, 50);
+    for (const x of [270, 810]) { ctx.fillRect(x - 70, 1100, 140, 90); onion(x, 1105, 70, 140); }
+    for (const x of [95, 985]) { ctx.fillRect(x - 22, 860, 44, 1100); onion(x, 865, 30, 70); }
+    ctx.fillStyle = '#ffcf6b'; ctx.shadowColor = '#ffb020'; ctx.shadowBlur = 25;
+    for (let i = 0; i < 7; i++) { const x = 175 + i * 122; ctx.beginPath(); ctx.moveTo(x - 26, 1330); ctx.lineTo(x - 26, 1260); ctx.arc(x, 1260, 26, Math.PI, 0); ctx.lineTo(x + 26, 1330); ctx.fill(); }
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#2a0018'; ctx.fillRect(-100, 1380, W + 200, 700);
+    ctx.fillStyle = 'rgba(255,190,90,.25)'; ctx.beginPath(); ctx.ellipse(540, 1720, 420, 70, 0, 0, 7); ctx.fill();
+  });
+  // dancer (spinning lehenga)
+  ctx.save(); ctx.translate(540, 1720); ctx.scale(1.45, 1.45);
+  const sp = T0 * 9; ctx.fillStyle = '#1c0010'; ctx.strokeStyle = '#ffcc66'; ctx.lineWidth = 3.5;
+  ctx.beginPath(); ctx.moveTo(-26, -250); for (let x = -175; x <= 175; x += 7) ctx.lineTo(x, -30 + Math.sin(x * .06 + sp) * 14 + Math.abs(x) * .05); ctx.lineTo(26, -250); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(-28, -250); ctx.lineTo(28, -250); ctx.lineTo(22, -340); ctx.lineTo(-22, -340); ctx.closePath(); ctx.fill();
+  ctx.lineWidth = 12; ctx.lineCap = 'round'; ctx.strokeStyle = '#1c0010';
+  ctx.beginPath(); ctx.moveTo(-20, -330); ctx.quadraticCurveTo(-90, -380, -70, -450); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(20, -330); ctx.quadraticCurveTo(90, -330, 130, -380); ctx.stroke();
+  ctx.fillStyle = '#1c0010'; ctx.beginPath(); ctx.ellipse(0, -372, 26, 31, 0, 0, 7); ctx.fill(); ctx.beginPath(); ctx.arc(-14, -398, 16, 0, 7); ctx.fill();
+  const w1 = Math.sin(T0 * 5) * 18, w2 = Math.sin(T0 * 5 + 1) * 26;
+  ctx.strokeStyle = '#ff2d6f'; ctx.lineWidth = 8; ctx.beginPath(); ctx.moveTo(15, -335); ctx.bezierCurveTo(90, -300 + w1, 160, -260 + w2, 230, -300 + w2); ctx.stroke();
+  ctx.strokeStyle = '#ffcc66'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(15, -331); ctx.bezierCurveTo(90, -296 + w1, 160, -256 + w2, 230, -296 + w2); ctx.stroke();
   ctx.restore();
-  const flick = (lt < .5 && Math.floor(T0 * 20) % 3 === 0) || (lt > 1.9 && lt < 2.0) ? .25 : 1;
-  ctx.save(); ctx.globalAlpha = flick; ctx.font = `270px ${fs('Anton')}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round'; ctx.letterSpacing = '14px';
-  ctx.shadowColor = '#ff2bd6'; ctx.shadowBlur = 60; ctx.strokeStyle = '#ff2bd6'; ctx.lineWidth = 16; ctx.strokeText('CUAN', 540, 560); ctx.strokeText('CUAN', 540, 560);
-  ctx.shadowBlur = 10; ctx.strokeStyle = '#fff0fb'; ctx.lineWidth = 5; ctx.strokeText('CUAN', 540, 560); ctx.restore();
-  const s2 = 'MODE AUTOPILOT', n = Math.floor(P(lt, .5, 1.4) * s2.length);
-  T(s2.slice(0, n) + (Math.floor(T0 * 4) % 2 ? '_' : ''), 540, 760, { size: 64, weight: 900, color: '#bff9ff', glow: '#00f0ff', gb: 30, ls: 8 });
+  // marigold petals + sparkles
+  for (let i = 0; i < 60; i++) { const y = ((T0 * (220 + h(i) * 200) + h(i + 1) * 2200) % 2200) - 150, x = h(i + 2) * W + Math.sin(T0 * 2 + i) * 60; ctx.fillStyle = i % 2 ? '#ff9f1c' : '#ffd23f'; ctx.beginPath(); ctx.ellipse(x, y, 11, 7, T0 * 3 + i, 0, 7); ctx.fill(); }
+  for (let i = 0; i < 14; i++) { const s = Math.max(0, Math.sin(T0 * 4 + i * 1.7)); sparkle(h(i + 5) * W, 350 + h(i + 6) * 900, 22 * s, '#fff6d0', T0); }
+  T('“Aku akan kembali... untukmu!”', 540, 1665, { size: 54, font: 'Liberation Serif', weight: 'italic 700', color: '#ffe08a', shadow: { c: 'rgba(60,0,20,.8)', x: 3, y: 4 }, alpha: fi(lt, .3, .4), maxW: 1000 });
+}
+// --- History (Sejarah) on old parchment
+const ISLES = [[230, 820, 210, 55, -.65, 1], [520, 1010, 230, 40, .02, 2], [590, 760, 150, 130, .2, 3], [820, 820, 60, 120, .3, 4], [860, 1060, 60, 22, 0, 5], [960, 1000, 45, 20, .2, 6], [930, 760, 40, 50, .1, 7]];
+function isle(cx, cy, rx, ry, rot, seed) { ctx.beginPath(); for (let i = 0; i <= 40; i++) { const a = i / 40 * 6.28, q = 1 + (h2(seed, i % 40) - .5) * .35 + Math.sin(a * 3 + seed) * .1; const x = Math.cos(a) * rx * q, y = Math.sin(a) * ry * q; ctx.lineTo(cx + x * Math.cos(rot) - y * Math.sin(rot), cy + x * Math.sin(rot) + y * Math.cos(rot)); } ctx.closePath(); }
+function sHistory(lt, T0) {
+  ctx.drawImage(PAPER, 0, 0);
+  ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.fillStyle = '#d9b77c'; ctx.fillRect(0, 0, W, H); ctx.restore();
+  const ink = '#3b2412';
+  // map
+  ctx.save(); ctx.globalAlpha = fi(lt, 0, .3);
+  ctx.strokeStyle = 'rgba(59,36,18,.25)'; ctx.lineWidth = 2; for (let y = 560; y < 1200; y += 60) { ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(1020, y); ctx.stroke(); } for (let x = 100; x < 1020; x += 90) { ctx.beginPath(); ctx.moveTo(x, 540); ctx.lineTo(x, 1200); ctx.stroke(); }
+  for (const [cx, cy, rx, ry, rot, s] of ISLES) { isle(cx, cy, rx, ry, rot, s); ctx.fillStyle = 'rgba(140,95,40,.28)'; ctx.fill(); ctx.strokeStyle = ink; ctx.lineWidth = 4; ctx.stroke(); isle(cx, cy, rx * 1.12, ry * 1.25, rot, s); ctx.strokeStyle = 'rgba(59,36,18,.3)'; ctx.lineWidth = 2; ctx.stroke(); }
+  // compass
+  ctx.save(); ctx.translate(930, 610); ctx.rotate(Math.sin(T0) * .05); ctx.fillStyle = ink; for (let k = 0; k < 4; k++) { ctx.rotate(Math.PI / 2); ctx.beginPath(); ctx.moveTo(0, -70); ctx.lineTo(12, 0); ctx.lineTo(-12, 0); ctx.fill(); } ctx.restore(); T('U', 930, 518, { size: 30, font: 'Liberation Serif', weight: 700, color: ink });
+  // route + ship
+  const route = [[600, 1030], [470, 1080], [330, 1000], [230, 900], [330, 1110], [700, 1110], [850, 1000], [820, 900]];
+  const k = E.io(P(lt, .2, 2.2)); const segs = route.length - 1, pos = k * segs, si = Math.min(Math.floor(pos), segs - 1), f = pos - si;
+  ctx.strokeStyle = '#a3241a'; ctx.lineWidth = 6; ctx.setLineDash([16, 14]); ctx.beginPath(); ctx.moveTo(...route[0]); for (let i = 1; i <= si; i++) ctx.lineTo(...route[i]);
+  const sx = lerp(route[si][0], route[si + 1][0], f), sy = lerp(route[si][1], route[si + 1][1], f); ctx.lineTo(sx, sy); ctx.stroke(); ctx.setLineDash([]);
+  ctx.save(); ctx.translate(sx, sy - 30 + Math.sin(T0 * 5) * 4); ctx.fillStyle = '#5a341a'; ctx.beginPath(); ctx.moveTo(-40, 0); ctx.lineTo(40, 0); ctx.lineTo(28, 18); ctx.lineTo(-28, 18); ctx.fill(); ctx.fillRect(-2, -60, 4, 60);
+  ctx.fillStyle = '#f3e3c0'; ctx.beginPath(); ctx.moveTo(2, -58); ctx.lineTo(36, -6); ctx.lineTo(2, -6); ctx.fill(); ctx.strokeStyle = ink; ctx.lineWidth = 2; ctx.stroke();
+  ctx.fillStyle = '#c0281c'; ctx.fillRect(-2, -72, 24, 7); ctx.fillStyle = '#fff'; ctx.fillRect(-2, -65, 24, 7); ctx.restore();
+  ctx.restore();
+  // stepped temple (ink drawing)
+  ctx.save(); ctx.translate(540, 1560); ctx.globalAlpha = fi(lt, .4, .4); ctx.strokeStyle = ink; ctx.fillStyle = 'rgba(120,80,35,.25)'; ctx.lineWidth = 4;
+  for (let i = 0; i < 6; i++) { const w = 760 - i * 120, y = -i * 52; ctx.fillRect(-w / 2, y - 52, w, 52); ctx.strokeRect(-w / 2, y - 52, w, 52); ctx.beginPath(); for (let x = -w / 2 + 20; x < w / 2; x += 26) { ctx.moveTo(x, y - 40); ctx.lineTo(x, y - 12); } ctx.lineWidth = 1.5; ctx.stroke(); ctx.lineWidth = 4; }
+  for (let i = 0; i < 7; i++) { const x = -150 + i * 50, y = -312; ctx.beginPath(); ctx.arc(x, y, 18, Math.PI, 0); ctx.lineTo(x + 18, y + 2); ctx.lineTo(x - 18, y + 2); ctx.fill(); ctx.stroke(); }
+  ctx.beginPath(); ctx.arc(0, -330, 48, Math.PI, 0); ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0, -378); ctx.lineTo(0, -420); ctx.stroke();
+  ctx.restore();
+  // year counter + caption
+  const yr = Math.floor(lerp(1200, 1293, E.out(P(lt, .1, 1.1))));
+  T(String(yr), 540, 430, { size: 170, font: 'Liberation Serif', weight: 700, color: ink, sc: pop(lt, .05), ls: 6 });
+  T('“Tahun 1293, sebuah kerajaan besar lahir...”', 540, 1665, { size: 50, font: 'Liberation Serif', weight: 'italic 700', color: '#2b1608', alpha: fi(lt, .5, .4), maxW: 1000 });
+  // burned edges + film scratches + flicker
+  radial(540, 960, 1150, 'rgba(60,30,8,0)', 'rgba(60,30,8,.75)');
+  const fr = Math.floor(T0 * 24); ctx.fillStyle = 'rgba(40,20,5,.35)'; for (let i = 0; i < 3; i++) if (h2(fr, i) > .5) ctx.fillRect(h2(fr, i + 3) * W, 0, 2, H);
+  ctx.fillStyle = `rgba(0,0,0,${h(fr) * .08})`; ctx.fillRect(0, 0, W, H);
 }
 // --- showcase driver
 const STYLES = [
+  { f: sGhibli, name: 'ALA GHIBLI', lab: { font: 'Liberation Serif', weight: 'italic 700', size: 120, color: '#fff', shadow: { c: 'rgba(30,60,90,.6)', x: 4, y: 5 } } },
+  { f: sBolly, name: 'ALA BOLLYWOOD', lab: { font: 'Anton', size: 120, grad: ['#fff2b0', '#ffc93c', '#ff8a00'], stroke: '#4a0020', sw: 12, ls: 4 } },
+  { f: sHistory, name: 'SEJARAH', lab: { font: 'Liberation Serif', weight: 700, size: 120, color: '#3b2412', ls: 10 } },
   { f: sCrayon, name: 'CRAYON', lab: { font: 'Caveat', size: 130, color: '#e63946', stroke: '#fff', sw: 10 } },
-  { f: sGraffiti, name: 'GRAFFITI', lab: { font: 'Marker', size: 110, color: '#ffe600', stroke: '#000', sw: 14 } },
   { f: sManga, name: 'MANGA', lab: { font: 'Bangers', size: 140, color: '#000', stroke: '#fff', sw: 14, ls: 6 } },
-  { f: sAnime, name: 'ANIME', lab: { font: 'Anton', size: 130, color: '#fff', glow: '#ff6fa8', gb: 30, ls: 10 } },
+  { f: sGraffiti, name: 'GRAFFITI', lab: { font: 'Marker', size: 110, color: '#ffe600', stroke: '#000', sw: 14 } },
   { f: sPixel, name: 'PIXEL ART', lab: { font: 'Pixel', size: 70, color: '#ffd23f', stroke: '#1d1d2c', sw: 14 } },
-  { f: sNeon, name: 'NEON', lab: { font: 'Mont', weight: 900, size: 120, color: '#bff9ff', glow: '#00f0ff', gb: 40, ls: 10 } },
 ];
-const SHOW0 = 23.2, STEP = 3.0;
-function styleOverlay(i, lt, t) {
-  const s = STYLES[i];
+const SHOW0 = 23.2, STEP = 2.4, MONT0 = SHOW0 + STEP * STYLES.length, MONT1 = MONT0 + 1.5;
+function styleOverlay(i, lt) {
+  const s = STYLES[i]; const n = STYLES.length;
   pill(540, 120, `GAYA 0${i + 1}`, { size: 34, bg: 'rgba(0,0,0,.75)', sc: pop(lt, .05, .3) });
-  T(s.name, 540, 235, { ...s.lab, sc: pop(lt, .1, .35) });
+  T(s.name, 540, 235, { ...s.lab, sc: pop(lt, .1, .35), maxW: 1000 });
   pill(540, 1835, '✦ Dibuat dengan Claude', { size: 36, bg: CORAL, sc: pop(lt, .2, .3) });
-  for (let k = 0; k < 6; k++) { ctx.fillStyle = k === i ? '#fff' : 'rgba(255,255,255,.35)'; rr(540 - 6 * 28 + k * 56, 1760, 40, 8, 4); ctx.fill(); }
+  for (let k = 0; k < n; k++) { ctx.fillStyle = k === i ? '#fff' : 'rgba(255,255,255,.35)'; rr(540 - n * 28 + k * 56 + 8, 1760, 40, 8, 4); ctx.fill(); }
 }
-function sShowcase(t, lt) {
-  if (t < SHOW0) return;
-  if (t < 41.2) {
+function sShowcase(t) {
+  if (t < MONT0) {
     const i = Math.floor((t - SHOW0) / STEP), l = t - SHOW0 - i * STEP;
-    const zin = lerp(1.18, 1, E.out(P(l, 0, .3)));
-    camera(540, 960, zin, () => STYLES[i].f(l, t));
-    styleOverlay(i, l, t);
+    camera(540, 960, lerp(1.18, 1, E.out(P(l, 0, .3))), () => STYLES[i].f(l, t));
+    styleOverlay(i, l);
   } else {
-    const k = Math.floor((t - 41.2) / .15), i = k % 6;
-    camera(540, 960, 1.05 + (k % 2) * .05, () => STYLES[i].f(1.6 + (t - 41.2) % .15 * 3, t));
+    const k = Math.floor((t - MONT0) / .15), i = k % STYLES.length;
+    camera(540, 960, 1.05 + (k % 2) * .05, () => STYLES[i].f(1.6 + (t - MONT0) % .15 * 3, t));
     ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(-100, -100, W + 200, H + 200);
-    if (t < 42.1) T('SEMUA GAYA.', 540, 960, { size: 190, font: 'Anton', stroke: '#000', sw: 22, sc: pop(t, 41.2, .25) });
-    else T('SATU AI.', 540, 960, { size: 240, font: 'Anton', color: '#fff', stroke: CORAL, sw: 24, sc: pop(t, 42.1, .25) });
+    if (t < MONT0 + .75) T('SEMUA GAYA.', 540, 960, { size: 190, font: 'Anton', stroke: '#000', sw: 22, sc: pop(t, MONT0, .25) });
+    else T('SATU AI.', 540, 960, { size: 240, font: 'Anton', color: '#fff', stroke: CORAL, sw: 24, sc: pop(t, MONT0 + .75, .25) });
     pill(540, 1835, '✦ Dibuat dengan Claude', { size: 36, bg: CORAL });
   }
 }
-function sIntroShow(t, lt) {
-  // 23.2 handled by showcase; nothing here
-}
 
 // =====================================================================
-// SCENE 6 — COURSE (43 – 52)
+// SCENE 7 — COURSE (52 – 58.5)
 // =====================================================================
 function techBg(lt) {
   bgGrad([[0, '#0b1026'], [1, '#1d0b3a']]);
@@ -683,10 +726,10 @@ function techBg(lt) {
 }
 const ITEMS = [
   'Bikin video animasi pakai Claude',
-  'Crayon, graffiti, anime, manga & lainnya',
-  'Cara pilih niche yang paling cuan',
-  'Upload ke YouTube, IG & TikTok',
-  'Strategi monetisasi dari nol',
+  'Gaya Ghibli, Bollywood, sejarah & lainnya',
+  'Storytelling yang bikin penonton nagih',
+  'Jualan TikTok affiliate pakai animasi',
+  'Upload & monetisasi YouTube, IG, TikTok',
   'BONUS: PDF Prompt siap pakai 🎁',
 ];
 function sCourse(t, lt) {
@@ -706,7 +749,7 @@ function sCourse(t, lt) {
   T('Bikin video animasi viral pakai Claude', 540, 785, { size: 42, weight: 700, color: '#cfd3ff' });
   ctx.fillStyle = 'rgba(255,255,255,.18)'; ctx.fillRect(140, 850, 800, 3);
   ITEMS.forEach((s, i) => {
-    const t0 = 2.2 + i * 1.0, y = 950 + i * 132, a = E.out(P(lt, t0, t0 + .3)); if (a <= 0) return;
+    const t0 = 1.9 + i * .72, y = 950 + i * 132, a = E.out(P(lt, t0, t0 + .3)); if (a <= 0) return;
     check(170, y, 36, pop(lt, t0, .3));
     T(s, 230 + (1 - a) * 60, y, { size: 40, weight: 800, align: 'left', alpha: a, color: i === 5 ? YEL : '#fff', maxW: 760 });
   });
@@ -714,7 +757,7 @@ function sCourse(t, lt) {
 }
 
 // =====================================================================
-// SCENE 7 — HOW IT WORKS + SLEEPING (52 – 60)
+// SCENE 8 — HOW IT WORKS (58.5 – 62.5, internal clock x1.125)
 // =====================================================================
 function pdfIcon(x, y, s, rot) {
   ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.scale(s, s);
@@ -725,7 +768,7 @@ function pdfIcon(x, y, s, rot) {
   ctx.restore();
 }
 function sHow(t, lt) {
-  if (lt < 4.5) {
+  {
     techBg(lt + 9);
     T('Caranya?', 540, 220, { size: 74, weight: 800, sc: pop(lt, .05) });
     T('GAMPANG BANGET.', 540, 340, { size: 130, font: 'Anton', color: YEL, sc: pop(lt, .2) });
@@ -763,93 +806,178 @@ function sHow(t, lt) {
       T(lt < 3.8 ? `Rendering ${Math.floor(pk * 100)}%` : '', 770, ry - 50, { size: 30, weight: 700, color: '#ccc' });
       if (lt > 3.8) pill(770, ry - 50, '✓ VIDEO JADI!', { size: 46, font: 'Anton', weight: '', bg: '#16a34a', sc: lerp(1.8, 1, E.back(P(lt, 3.8, 4.0))), rot: -.05 });
     }
-    return;
   }
-  // --- sleeping scene
-  const l = lt - 4.5;
-  bgGrad([[0, '#040820'], [1, '#1a1f5c']]);
-  for (let i = 0; i < 70; i++) { ctx.fillStyle = `rgba(255,255,255,${.25 + .75 * Math.abs(Math.sin(t * 1.5 + i * 3))})`; const s = 2 + h(i + 9) * 3; ctx.fillRect(h(i + 7) * W, h(i + 8) * 1300, s, s); }
-  ctx.save(); ctx.beginPath(); ctx.rect(-100, -100, W + 200, H + 200); ctx.arc(205, 255, 80, 0, 7, true); ctx.clip('evenodd');
-  ctx.shadowColor = '#fff6c8'; ctx.shadowBlur = 60; ctx.fillStyle = '#fff6c8'; ctx.beginPath(); ctx.arc(170, 280, 90, 0, 7); ctx.fill(); ctx.restore();
-  // bed
-  const by = 1600; const br = 1 + Math.sin(t * 2.4) * .02;
-  ctx.fillStyle = '#5b3a29'; rr(90, by - 40, 900, 330, 30); ctx.fill(); ctx.fillStyle = '#7b4f37'; rr(70, by - 200, 70, 520, 20); ctx.fill();
-  ctx.fillStyle = '#f1f1f1'; rr(140, by - 60, 830, 90, 30); ctx.fill();
-  ctx.fillStyle = '#e8e3ff'; rr(150, by - 140, 230, 110, 50); ctx.fill();
-  ctx.fillStyle = '#f2c9a0'; ctx.beginPath(); ctx.arc(270, by - 120, 62, 0, 7); ctx.fill();
-  ctx.fillStyle = '#3b2a20'; ctx.beginPath(); ctx.arc(255, by - 145, 60, Math.PI * .9, Math.PI * 2.1); ctx.fill();
-  ctx.strokeStyle = '#3b2a20'; ctx.lineWidth = 5; ctx.lineCap = 'round'; for (const ex of [248, 292]) { ctx.beginPath(); ctx.arc(ex, by - 112, 12, .2, Math.PI - .2); ctx.stroke(); }
-  ctx.save(); ctx.translate(620, by - 40); ctx.scale(1, br); ctx.fillStyle = '#3d5af1'; rr(-300, -95, 650, 150, 60); ctx.fill(); ctx.fillStyle = 'rgba(255,255,255,.15)'; for (let i = 0; i < 6; i++) ctx.fillRect(-250 + i * 100, -90, 40, 140); ctx.restore();
-  for (let i = 0; i < 3; i++) { const k = ((l * .6 + i / 3) % 1); T('Z', 360 + k * 120 + i * 10, by - 190 - k * 110, { size: 50 + i * 20, font: 'Anton', color: '#bcd0ff', alpha: Math.sin(k * Math.PI) }); }
-  const notes = [['🔔', 'Video kamu ditonton', '+25.000 kali hari ini'], ['💰', 'Pendapatan masuk', '+Rp450.000'], ['❤️', 'Subscriber baru', '+3.200 orang'], ['🔥', 'Video kamu', 'masuk TRENDING!']];
-  notes.forEach(([ic, a, b], i) => {
-    const t0 = .3 + i * .6, k = E.out(P(l, t0, t0 + .35)); if (k <= 0) return; const y = 400 + i * 160;
-    ctx.save(); ctx.globalAlpha = k; ctx.translate(0, (1 - k) * -120);
-    ctx.fillStyle = 'rgba(255,255,255,.95)'; rr(110, y - 65, 860, 130, 34); ctx.fill();
-    ctx.fillStyle = '#f3f3f7'; rr(135, y - 45, 90, 90, 22); ctx.fill(); T(ic, 180, y + 2, { size: 54 });
-    T(a, 250, y - 22, { size: 34, weight: 700, color: '#555', align: 'left' }); T(b, 250, y + 24, { size: 42, weight: 900, color: '#111', align: 'left' });
-    T('sekarang', 940, y - 22, { size: 26, weight: 600, color: '#999', align: 'right' });
-    ctx.restore();
-  });
-  T('Kamu tidur...', 540, 1090, { size: 76, weight: 900, sc: pop(l, .6) });
-  rich([['channel tetap ', '#fff'], ['CUAN 💸', YEL]], 540, 1195, { size: 76, weight: 900, sc: pop(l, 1.6) });
 }
 
 // =====================================================================
-// SCENE 8 — OFFER + CTA (60 – 68)
+// SCENE 6 — TIKTOK AFFILIATE: animation sells for you (41.5 – 52)
 // =====================================================================
-function coin(x, y, r, rot) { ctx.save(); ctx.translate(x, y); ctx.scale(Math.cos(rot), 1); ctx.fillStyle = '#b8860b'; ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.fill(); ctx.fillStyle = '#ffd34d'; ctx.beginPath(); ctx.arc(0, 0, r * .84, 0, 7); ctx.fill(); T('$', 0, 2, { size: r * 1.1, font: 'Anton', color: '#b8860b' }); ctx.restore(); }
-function sOffer(t, lt) {
-  if (lt < 1.3) {
-    bgFill('#e11d48');
-    ctx.save(); ctx.globalAlpha = .12; ctx.fillStyle = '#000'; for (let i = -10; i < 20; i++) { const x = i * 120 + (lt * 300) % 120; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + 50, 0); ctx.lineTo(x - 900, H); ctx.lineTo(x - 950, H); ctx.fill(); } ctx.restore();
-    const s = lerp(2.5, 1, E.back(P(lt, 0, .25)));
-    T('BAYAR', 540, 830, { size: 290, font: 'Anton', sc: s, shadow: { c: '#7f0d26', x: 14, y: 16 } });
-    T('SEKALI.', 540, 1090, { size: 290, font: 'Anton', color: YEL, sc: lt > .3 ? lerp(2.5, 1, E.back(P(lt, .3, .55))) : 0, shadow: { c: '#7f0d26', x: 14, y: 16 } });
+function heart(x, y, s, c) { ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.fillStyle = c; ctx.beginPath(); ctx.moveTo(0, 12); ctx.bezierCurveTo(-30, -8, -18, -34, 0, -18); ctx.bezierCurveTo(18, -34, 30, -8, 0, 12); ctx.fill(); ctx.restore(); }
+function mascot(cx, cy, T0, talk) {
+  // body
+  ctx.fillStyle = '#8ecdf5'; rr(cx - 150, cy + 120, 300, 320, 120); ctx.fill();
+  ctx.fillStyle = '#ffe0c7'; ctx.fillRect(cx - 28, cy + 90, 56, 50);
+  // hair back
+  ctx.fillStyle = '#4a2c2a'; ctx.beginPath(); ctx.ellipse(cx, cy + 10, 175, 185, 0, 0, 7); ctx.fill(); ctx.fillRect(cx - 175, cy, 350, 150);
+  // face
+  ctx.fillStyle = '#ffe0c7'; ctx.beginPath(); ctx.ellipse(cx, cy + 20, 140, 140, 0, 0, 7); ctx.fill();
+  // bangs
+  ctx.fillStyle = '#4a2c2a'; ctx.beginPath(); ctx.moveTo(cx - 150, cy - 10); ctx.quadraticCurveTo(cx - 120, cy - 180, cx, cy - 175); ctx.quadraticCurveTo(cx + 120, cy - 180, cx + 150, cy - 10); ctx.quadraticCurveTo(cx + 90, cy - 90, cx + 40, cy - 60); ctx.quadraticCurveTo(cx, cy - 100, cx - 40, cy - 60); ctx.quadraticCurveTo(cx - 90, cy - 90, cx - 150, cy - 10); ctx.fill();
+  // eyes (blink)
+  const blink = (T0 % 2.6) < .12;
+  for (const s of [-1, 1]) {
+    const ex = cx + s * 55, ey = cy + 20;
+    if (blink) { ctx.strokeStyle = '#2a1a1a'; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(ex, ey, 26, .2, Math.PI - .2); ctx.stroke(); continue; }
+    ctx.fillStyle = '#2a1a1a'; ctx.beginPath(); ctx.ellipse(ex, ey, 27, 36, 0, 0, 7); ctx.fill();
+    ctx.fillStyle = '#7a4a9a'; ctx.beginPath(); ctx.ellipse(ex, ey + 8, 20, 24, 0, 0, 7); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(ex - 9, ey - 12, 10, 0, 7); ctx.fill(); ctx.beginPath(); ctx.arc(ex + 9, ey + 12, 5, 0, 7); ctx.fill();
+  }
+  ctx.fillStyle = 'rgba(255,120,140,.45)'; ctx.beginPath(); ctx.ellipse(cx - 95, cy + 75, 26, 14, 0, 0, 7); ctx.fill(); ctx.beginPath(); ctx.ellipse(cx + 95, cy + 75, 26, 14, 0, 0, 7); ctx.fill();
+  const mo = talk ? Math.abs(Math.sin(T0 * 14)) : .2;
+  ctx.fillStyle = '#c2364a'; ctx.beginPath(); ctx.ellipse(cx, cy + 92, 22, 6 + 16 * mo, 0, 0, 7); ctx.fill();
+}
+function product(x, y, s, T0) {
+  ctx.save(); ctx.translate(x, y); ctx.rotate(Math.sin(T0 * 3) * .08); ctx.scale(s, s);
+  ctx.fillStyle = '#e9b949'; rr(-22, -150, 44, 40, 8); ctx.fill();
+  const g = ctx.createLinearGradient(-55, 0, 55, 0); g.addColorStop(0, '#ff8fb3'); g.addColorStop(.5, '#ffc2d6'); g.addColorStop(1, '#ff7aa6'); ctx.fillStyle = g; rr(-55, -115, 110, 200, 30); ctx.fill();
+  ctx.fillStyle = '#fff'; rr(-42, -50, 84, 70, 10); ctx.fill(); T('GLOW', 0, -24, { size: 26, font: 'Anton', color: '#ff3d7f' }); T('serum', 0, 4, { size: 18, weight: 700, color: '#ff3d7f' });
+  ctx.restore();
+  for (let i = 0; i < 4; i++) { const s2 = Math.max(0, Math.sin(T0 * 5 + i * 1.6)); sparkle(x + Math.cos(i * 1.7) * 110 * s, y - 40 + Math.sin(i * 2.3) * 120 * s, 20 * s2, '#fff', T0); }
+}
+function tiktokPhone(lt, T0) {
+  const px = 190, py = 330, pw = 700, ph = 1270, sx = px + 18, sy = py + 18, sw = pw - 36, sh = ph - 36;
+  ctx.fillStyle = '#16161c'; rr(px, py, pw, ph, 80); ctx.fill(); ctx.strokeStyle = '#3a3a44'; ctx.lineWidth = 6; ctx.stroke();
+  ctx.save(); rr(sx, sy, sw, sh, 64); ctx.clip();
+  // the "video": pastel room + talking animated seller
+  const g = ctx.createLinearGradient(0, sy, 0, sy + sh); g.addColorStop(0, '#ffe3ef'); g.addColorStop(1, '#d6ecff'); ctx.fillStyle = g; ctx.fillRect(sx, sy, sw, sh);
+  ctx.fillStyle = 'rgba(255,255,255,.6)'; ctx.fillRect(sx + 40, sy + 330, 250, 14); ctx.fillStyle = '#8fd19e'; ctx.beginPath(); ctx.arc(sx + 90, sy + 300, 34, 0, 7); ctx.fill(); ctx.fillStyle = '#e07a5f'; ctx.fillRect(sx + 70, sy + 300, 40, 32);
+  ctx.fillStyle = '#ffd166'; ctx.beginPath(); ctx.arc(sx + sw - 140, sy + 260, 60, 0, 7); ctx.fill();
+  const bob = Math.sin(T0 * 3) * 8;
+  mascot(sx + sw / 2 - 30, sy + 560 + bob, T0, true);
+  product(sx + sw / 2 + 170, sy + 720 + bob, 1, T0);
+  // captions
+  const caps = [[0.3, 'Kulit kusam? 😱'], [1.7, 'Pakai ini 7 hari...'], [3.1, 'GLOWING! ✨ Cek keranjang kuning 👇']];
+  let cap = null; for (const c of caps) if (lt >= c[0]) cap = c;
+  if (cap) T(cap[1], sx + sw / 2, sy + 1010, { size: 46, weight: 900, color: '#fff', stroke: '#000', sw: 10, sc: pop(lt, cap[0], .25), maxW: sw - 60 });
+  // UI chrome
+  T('Mengikuti   |   Untuk Anda', sx + sw / 2, sy + 70, { size: 30, weight: 800, color: '#fff', stroke: 'rgba(0,0,0,.35)', sw: 6 });
+  const icx = sx + sw - 60;
+  ctx.fillStyle = '#4a2c2a'; ctx.beginPath(); ctx.arc(icx, sy + 520, 38, 0, 7); ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 4; ctx.stroke();
+  heart(icx, sy + 630, 1.6, '#ff2d55'); T('128,4K', icx, sy + 680, { size: 24, weight: 800, stroke: 'rgba(0,0,0,.4)', sw: 5 });
+  ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(icx, sy + 745, 30, 26, 0, 0, 7); ctx.fill(); T('2.315', icx, sy + 795, { size: 24, weight: 800, stroke: 'rgba(0,0,0,.4)', sw: 5 });
+  ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.moveTo(icx - 26, sy + 845); ctx.lineTo(icx + 30, sy + 870); ctx.lineTo(icx - 26, sy + 895); ctx.lineTo(icx - 14, sy + 870); ctx.fill(); T('4.102', icx, sy + 925, { size: 24, weight: 800, stroke: 'rgba(0,0,0,.4)', sw: 5 });
+  // floating hearts
+  for (let i = 0; i < 10; i++) { const k = ((T0 * .8 + h(i)) % 1); heart(icx - 20 + Math.sin(k * 8 + i) * 30, sy + 600 - k * 420, .9, `rgba(255,${60 + i * 15},100,${1 - k})`); }
+  // yellow basket product card
+  const bA = pop(lt, 3.1, .35);
+  if (bA > 0) { ctx.save(); ctx.translate(sx + 270, sy + 1095); ctx.scale(bA, bA); ctx.fillStyle = '#ffd60a'; rr(-240, -42, 480, 84, 18); ctx.fill(); T('🛒 Serum Glow Up • Rp49.000', -215, 2, { size: 30, weight: 900, color: '#1a1a1a', align: 'left', maxW: 440 }); ctx.restore(); }
+  T('@animasi.cuan', sx + 36, sy + 1170, { size: 32, weight: 900, align: 'left', stroke: 'rgba(0,0,0,.35)', sw: 6 });
+  T('Serum glow 7 hari ✨ #racuntiktok #fyp', sx + 36, sy + 1215, { size: 26, weight: 700, align: 'left', stroke: 'rgba(0,0,0,.35)', sw: 5, maxW: sw - 160 });
+  ctx.restore();
+  ctx.fillStyle = '#000'; rr(540 - 70, sy + 12, 140, 32, 16); ctx.fill();
+}
+function sAffiliate(t, lt) {
+  bgGrad([[0, '#1a0626'], [1, '#07020c']]);
+  radial(540, 900, 1000, 'rgba(255,0,90,.22)', 'rgba(0,0,0,0)');
+  if (lt < 1.6) {
+    rays(540, 1100, 18, lt * .4, 'rgba(255,214,10,.06)');
+    T('Dan yang paling GILA... 🤯', 540, 770, { size: 70, weight: 900, sc: pop(lt, .05) });
+    T('Animasi kamu bisa', 540, 920, { size: 90, weight: 900, sc: pop(lt, .5) });
+    T('JUALAN!', 540, 1120, { size: 270, font: 'Anton', color: YEL, sc: lt > .8 ? lerp(2.4, 1, E.back(P(lt, .8, 1.05))) : 0, shadow: { c: '#b3004b', x: 12, y: 14 } });
+    T('di TikTok 🛒', 540, 1320, { size: 90, weight: 900, sc: pop(lt, 1.0) });
     return;
   }
-  if (lt < 2.8) {
-    const l = lt - 1.3; bgFill('#0a0705'); rays(540, 940, 20, l * .4, 'rgba(255,200,60,.1)'); radial(540, 940, 800, 'rgba(255,190,60,.35)', 'rgba(0,0,0,0)');
-    for (let i = 0; i < 40; i++) { const a = h(i) * 6.28, v = 900 + h(i + 1) * 1300; const x = 540 + Math.cos(a) * v * l, y = 940 + Math.sin(a) * v * l * .8 + 1400 * l * l; coin(x, y, 26 + h(i + 2) * 22, l * 10 + i); }
-    T('CUAN', 540, 820, { size: 320, font: 'Anton', grad: ['#fff6c0', '#ffd34d', '#e09b00'], glow: 'rgba(255,200,60,.7)', gb: 60, sc: lerp(2.4, 1, E.back(P(l, 0, .25))) });
-    T('SEUMUR HIDUP.', 540, 1060, { size: 150, font: 'Anton', sc: pop(l, .3), ls: 4 });
+  if (lt < 7.6) {
+    const l = lt - 1.6, enter = (1 - E.out(P(l, 0, .45))) * 1600;
+    pill(540, 150, '🛒 TikTok Affiliate', { size: 40, bg: '#ff0050', sc: pop(l, .1) });
+    rich([['Karakter animasi ', '#fff'], ['JUALAN', YEL], [' untukmu', '#fff']], 540, 255, { size: 48, weight: 900, sc: pop(l, .25) });
+    ctx.save(); ctx.translate(0, enter); tiktokPhone(l, t); ctx.restore();
+    // order notifications
+    for (let i = 0; i < 4; i++) {
+      const t0 = 3.6 + i * .6, k = E.out(P(l, t0, t0 + .3)); if (k <= 0) continue;
+      const y = 470 + i * 128; ctx.save(); ctx.globalAlpha = k; ctx.translate((1 - k) * 500, 0);
+      ctx.fillStyle = 'rgba(255,255,255,.96)'; rr(560, y - 54, 490, 108, 28); ctx.fill();
+      T('🛒', 612, y + 2, { size: 46 }); T('Pesanan baru!', 660, y - 20, { size: 30, weight: 800, color: '#444', align: 'left' }); T('Komisi +Rp' + idn([12500, 18000, 9500, 22000][i]), 660, y + 22, { size: 34, weight: 900, color: '#16a34a', align: 'left' });
+      ctx.restore();
+    }
+    const com = 2450000 * E.out(P(l, 3.6, 5.8));
+    if (l > 3.5) { T('Komisi hari ini', 540, 1660, { size: 40, weight: 800, color: '#ccc', sc: pop(l, 3.5) }); T('Rp' + idn(com), 540, 1760, { size: 120, font: 'Anton', color: '#3dff8f', glow: 'rgba(60,255,140,.7)', gb: 40, sc: pop(l, 3.5) }); T('*Ilustrasi. Hasil setiap orang berbeda.', 540, 1860, { size: 24, weight: 600, color: 'rgba(255,255,255,.55)' }); }
     return;
   }
-  // final CTA
-  const l = lt - 2.8;
-  bgGrad([[0, '#0b0b16'], [1, '#22102e']]);
-  rays(540, 1500, 24, l * .2, 'rgba(255,200,80,.045)');
-  radial(540, 1500, 800, 'rgba(217,119,87,.28)', 'rgba(0,0,0,0)');
-  for (let i = 0; i < 30; i++) { const y = ((h(i) * H - l * (60 + h(i + 1) * 120)) % H + H) % H; ctx.fillStyle = `rgba(255,210,120,${.2 + h(i + 2) * .5})`; ctx.beginPath(); ctx.arc(h(i + 3) * W, y, 2 + h(i + 4) * 4, 0, 7); ctx.fill(); }
-  pill(540, 190, '⚠️ PROMO TERBATAS', { size: 40, bg: '#e11d48', sc: pop(l, .05) * (1 + .05 * Math.sin(l * 10)) });
-  T('AI MOTION CUAN', 540, 360, { size: 140, font: 'Anton', grad: ['#fff2a8', '#ffcf3f', CORAL], sc: pop(l, .15), maxW: 980, ls: 2 });
-  T('Kelas lengkap bikin video animasi viral pakai Claude', 540, 465, { size: 38, weight: 700, color: '#d6d8ff', alpha: fi(l, .3), maxW: 960 });
-  [['♾️', 'Akses SELAMANYA'], ['📄', 'PDF Prompt siap pakai'], ['🔄', 'Update materi gratis']].forEach(([ic, s], i) => {
-    const sc = pop(l, .5 + i * .3); rich([[ic + '  ', '#fff'], [s, '#fff']], 540, 580 + i * 80, { size: 46, weight: 800, sc });
+  const l = lt - 7.6;
+  T('Kamu NGGAK perlu:', 540, 420, { size: 80, weight: 900, sc: pop(l, .05) });
+  [['Tampil muka', '🙈'], ['Stok barang', '📦'], ['Modal produk', '💸'], ['Begadang live', '😴']].forEach(([s, ic], i) => {
+    const t0 = .15 + i * .4, sc = pop(l, t0); if (sc <= 0) return; const y = 620 + i * 150;
+    ctx.save(); ctx.translate(540, y); ctx.scale(sc, sc);
+    ctx.fillStyle = 'rgba(255,255,255,.07)'; rr(-400, -60, 800, 120, 30); ctx.fill();
+    T(ic, -320, 2, { size: 64 }); T(s, -240, 4, { size: 58, weight: 900, align: 'left' });
+    ctx.strokeStyle = '#ff1f3d'; ctx.lineWidth = 10; ctx.lineCap = 'round'; const kk = E.out(P(l, t0 + .15, t0 + .3)); ctx.beginPath(); ctx.moveTo(-260, 6); ctx.lineTo(-260 + 600 * kk, -2); ctx.stroke();
+    ctx.restore();
   });
-  rich([['Investasi ', '#fff'], ['SEKALI', CORAL], [', cuan ', '#fff'], ['SEUMUR HIDUP', YEL]], 540, 860, { size: 44, weight: 900, sc: pop(l, 1.4) });
-  // countdown
-  const cdA = pop(l, 1.8); if (cdA > 0) {
-    ctx.save(); ctx.translate(540, 1080); ctx.scale(cdA, cdA);
-    ctx.fillStyle = 'rgba(255,255,255,.07)'; rr(-450, -130, 900, 260, 34); ctx.fill(); ctx.strokeStyle = 'rgba(255,80,110,.6)'; ctx.lineWidth = 3; ctx.stroke();
-    T('HARGA PROMO BERAKHIR DALAM', 0, -82, { size: 36, weight: 900, color: '#ff6b81', ls: 3 });
-    const rem = 14 * 60 + 59 - Math.floor(l) , mm = Math.floor(rem / 60), ss = rem % 60, cs = 99 - Math.floor((l * 100) % 100);
-    const parts = ['00', String(mm).padStart(2, '0'), String(ss).padStart(2, '0'), String(cs).padStart(2, '0')];
-    parts.forEach((p, i) => { const x = -300 + i * 200; ctx.fillStyle = '#000'; rr(x - 80, -38, 160, 140, 18); ctx.fill(); T(p, x, 34, { size: 104, font: 'Anton', color: i === 3 ? '#ff6b81' : '#fff' }); if (i < 3) T(':', x + 100, 26, { size: 80, font: 'Anton', color: '#888' }); });
+  T('Animasi yang kerja,', 540, 1330, { size: 80, weight: 900, sc: pop(l, 1.8) });
+  T('KAMU YANG CUAN.', 540, 1480, { size: 150, font: 'Anton', color: YEL, glow: 'rgba(255,214,10,.6)', gb: 40, sc: pop(l, 2.1), maxW: 1000 });
+}
+
+// =====================================================================
+// SCENE 9 — CTA: "Komen MOTION" → we DM you (62.5 – 69.5)
+// =====================================================================
+const COMMENTS = [[1.9, 'rina.sari', 'MOTION 🔥', '#f72585'], [2.3, 'budi_kreatif', 'MOTION', '#4cc9f0'], [2.7, 'dewi.art', 'motion kak!! 🙏', '#ffbe0b'], [3.1, 'andi.cuan', 'MOTION 🙌', '#06d6a0'], [4.0, 'kamu', 'MOTION', CORAL]];
+function sCTA(t, lt) {
+  bgGrad([[0, '#0b0b16'], [1, '#22102e']]);
+  rays(540, 520, 24, lt * .2, 'rgba(255,200,80,.04)');
+  radial(540, 520, 800, 'rgba(217,119,87,.3)', 'rgba(0,0,0,0)');
+  for (let i = 0; i < 30; i++) { const y = ((h(i) * H - lt * (60 + h(i + 1) * 120)) % H + H) % H; ctx.fillStyle = `rgba(255,210,120,${.2 + h(i + 2) * .5})`; ctx.beginPath(); ctx.arc(h(i + 3) * W, y, 2 + h(i + 4) * 4, 0, 7); ctx.fill(); }
+  if (lt < 1.3) {
+    T('Mau belajar', 540, 820, { size: 110, weight: 900, sc: pop(lt, .05) });
+    T('semua ini? 🤔', 540, 960, { size: 110, weight: 900, sc: pop(lt, .3) });
+    T('Caranya cuma 1 langkah:', 540, 1140, { size: 58, weight: 800, color: YEL, sc: pop(lt, .7) });
+    return;
+  }
+  const pul = 1 + .04 * Math.sin(lt * 9);
+  T('KOMEN', 540, 330, { size: 130, font: 'Anton', sc: lerp(2.2, 1, E.back(P(lt, 1.3, 1.55))), ls: 10 });
+  T('MOTION', 540, 500, { size: 230, font: 'Anton', grad: ['#fff2a8', '#ffcf3f', CORAL], glow: 'rgba(255,170,60,.7)', gb: 60, sc: (lt > 1.5 ? lerp(2.4, 1, E.back(P(lt, 1.5, 1.75))) : 0) * pul, ls: 8 });
+  T('di kolom komentar 👇', 540, 660, { size: 54, weight: 800, sc: pop(lt, 1.7) });
+  // comment sheet
+  const pa = E.out(P(lt, 1.7, 2.0)); if (pa > 0) {
+    ctx.save(); ctx.globalAlpha = pa; ctx.translate(0, (1 - pa) * 300);
+    const x0 = 70, y0 = 740, w = 940, hh = 720;
+    ctx.fillStyle = '#17171f'; rr(x0, y0, w, hh, 40); ctx.fill(); ctx.strokeStyle = 'rgba(255,255,255,.12)'; ctx.lineWidth = 3; ctx.stroke();
+    T('Komentar  •  12,8 rb', 540, y0 + 50, { size: 34, weight: 800, color: '#ddd' });
+    ctx.fillStyle = 'rgba(255,255,255,.1)'; ctx.fillRect(x0 + 30, y0 + 90, w - 60, 2);
+    ctx.save(); ctx.beginPath(); ctx.rect(x0, y0 + 95, w, 490); ctx.clip();
+    const vis = COMMENTS.filter(c => lt >= c[0]); const last = vis.length ? vis[vis.length - 1][0] : 0; const push = (1 - E.out(P(lt, last, last + .25))) * 112;
+    vis.forEach((c, i) => {
+      const y = y0 + 530 - (vis.length - 1 - i) * 112 + push; const me = c[1] === 'kamu';
+      if (me) { ctx.fillStyle = 'rgba(217,119,87,.18)'; rr(x0 + 16, y - 50, w - 32, 100, 22); ctx.fill(); }
+      ctx.fillStyle = c[3]; ctx.beginPath(); ctx.arc(x0 + 70, y, 34, 0, 7); ctx.fill(); T(c[1][0].toUpperCase(), x0 + 70, y + 2, { size: 32, weight: 900 });
+      T(c[1], x0 + 125, y - 20, { size: 28, weight: 700, color: '#999', align: 'left' });
+      T(c[2], x0 + 125, y + 20, { size: 40, weight: 900, color: '#fff', align: 'left' });
+      heart(x0 + w - 60, y, 1, me ? '#ff2d55' : 'rgba(255,255,255,.35)');
+    });
+    ctx.restore();
+    // input bar
+    const iy = y0 + hh - 70; ctx.fillStyle = '#262631'; rr(x0 + 30, iy - 42, w - 160, 84, 42); ctx.fill();
+    const typed = 'MOTION'.slice(0, Math.floor(P(lt, 3.2, 3.7) * 6 + .001)); const sent = lt >= 3.95;
+    if (!typed || sent) T('Tambahkan komentar...', x0 + 70, iy + 2, { size: 32, weight: 600, color: '#777', align: 'left' });
+    else T(typed + (Math.floor(lt * 4) % 2 ? '|' : ''), x0 + 70, iy + 2, { size: 38, weight: 900, color: '#fff', align: 'left' });
+    const bs = lt > 3.85 && lt < 4.05 ? .85 : 1; ctx.save(); ctx.translate(x0 + w - 70, iy); ctx.scale(bs, bs); ctx.fillStyle = typed && !sent ? CORAL : '#444'; ctx.beginPath(); ctx.arc(0, 0, 42, 0, 7); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.moveTo(-16, -18); ctx.lineTo(20, 0); ctx.lineTo(-16, 18); ctx.lineTo(-8, 0); ctx.fill(); ctx.restore();
+    if (lt > 3.2 && lt < 4) { const k = (lt * 3) % 1; ctx.save(); ctx.globalAlpha = .9; T('👆', x0 + w - 40, iy + 90 - (lt > 3.75 ? 30 : 0), { size: 90 }); ctx.restore(); }
     ctx.restore();
   }
-  // button
-  const bA = pop(l, 2.3); if (bA > 0) {
-    const pul = 1 + .045 * Math.sin(l * 9); ctx.save(); ctx.translate(540, 1420); ctx.scale(bA * pul, bA * pul);
-    ctx.shadowColor = 'rgba(34,197,94,.8)'; ctx.shadowBlur = 60;
-    const g = ctx.createLinearGradient(0, -90, 0, 90); g.addColorStop(0, '#4ade80'); g.addColorStop(1, '#15803d'); ctx.fillStyle = g; rr(-430, -95, 860, 190, 95); ctx.fill(); ctx.shadowBlur = 0;
-    ctx.save(); rr(-430, -95, 860, 190, 95); ctx.clip(); const sx = ((l * 900) % 2400) - 900; ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.beginPath(); ctx.moveTo(sx, -100); ctx.lineTo(sx + 80, -100); ctx.lineTo(sx + 20, 100); ctx.lineTo(sx - 60, 100); ctx.fill(); ctx.restore();
-    T('DAFTAR SEKARANG', 0, 6, { size: 104, font: 'Anton', ls: 3, shadow: { c: 'rgba(0,60,20,.6)', x: 0, y: 6 } });
+  // DM notification
+  const dk = E.out(P(lt, 4.5, 4.85)); if (dk > 0) {
+    ctx.save(); ctx.translate(0, (1 - dk) * -260);
+    ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 30; ctx.fillStyle = 'rgba(255,255,255,.97)'; rr(60, 60, 960, 160, 38); ctx.fill(); ctx.shadowBlur = 0;
+    const g = ctx.createLinearGradient(90, 90, 190, 190); g.addColorStop(0, '#ff7a59'); g.addColorStop(1, '#d6249f'); ctx.fillStyle = g; rr(90, 90, 100, 100, 26); ctx.fill(); T('📩', 140, 142, { size: 54 });
+    T('AI Motion Cuan  •  Pesan baru', 220, 108, { size: 30, weight: 800, color: '#666', align: 'left' });
+    T('Halo! 👋 Ini info lengkap kelasnya...', 220, 160, { size: 38, weight: 900, color: '#111', align: 'left', maxW: 760 });
+    T('sekarang', 990, 108, { size: 26, weight: 600, color: '#999', align: 'right' });
     ctx.restore();
-    T('👆', 820, 1580 + Math.abs(Math.sin(l * 6)) * -30, { size: 120, sc: pop(l, 2.6) });
   }
-  rich([['👇 Klik link di bawah ', '#fff'], ['sebelum kuota habis!', YEL]], 540, 1660, { size: 40, weight: 800, sc: pop(l, 3.0) });
-  T('*Iklan ini juga 100% dibuat dengan Claude', 540, 1830, { size: 30, weight: 700, color: 'rgba(255,255,255,.65)', alpha: fi(l, 3.5) });
+  rich([['Kami kirim semua detailnya ', '#fff'], ['ke DM kamu 📩', YEL]], 540, 1560, { size: 40, weight: 900, sc: pop(lt, 5.0) });
+  const fa = pop(lt, 5.5); if (fa > 0) pill(540, 1710, 'KOMEN "MOTION" SEKARANG 👇', { size: 56, font: 'Anton', weight: '', bg: '#16a34a', sc: fa * (1 + .05 * Math.sin(lt * 9)), padX: 50, padY: 30 });
+  T('*Iklan ini juga 100% dibuat dengan Claude', 540, 1850, { size: 28, weight: 700, color: 'rgba(255,255,255,.6)', alpha: fi(lt, 5.8) });
 }
 
 // =====================================================================
@@ -860,10 +988,11 @@ const SCENES = [
   [3.5, 11, (t) => sFeed(t, t - 3.5)],
   [11, 17.5, (t) => sMoney(t, t - 11)],
   [17.5, 23.2, (t) => sTwist(t, t - 17.5)],
-  [23.2, 43, (t) => sShowcase(t, t - 23.2)],
-  [43, 52, (t) => sCourse(t, t - 43)],
-  [52, 60, (t) => sHow(t, t - 52)],
-  [60, 99, (t) => sOffer(t, t - 60)],
+  [23.2, 41.5, (t) => sShowcase(t)],
+  [41.5, 52, (t) => sAffiliate(t, t - 41.5)],
+  [52, 58.5, (t) => sCourse(t, t - 52)],
+  [58.5, 62.5, (t) => sHow(t, (t - 58.5) * 1.125)],
+  [62.5, 99, (t) => sCTA(t, t - 62.5)],
 ];
 function render(t) {
   ctx = MAIN; ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.shadowBlur = 0; ctx.setLineDash([]);

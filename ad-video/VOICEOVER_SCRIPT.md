@@ -1,25 +1,25 @@
-# Naskah Voice-Over — Iklan "AI MOTION CUAN" (68 detik, 9:16)
+# Naskah Voice-Over — Iklan "AI MOTION CUAN" (69,5 detik, 9:16)
 
-Video sudah lengkap dengan musik + efek suara dan bisa diposting tanpa suara narator (semua pesan ada di teks layar).
-Kalau mau lebih kuat, rekam voice-over di bawah ini (gaya: cepat, energik, seperti ngobrol ke teman) lalu taruh di atas musik (turunkan musik ±6 dB).
+Video sudah lengkap dengan musik dan efek suara, jadi bisa diposting tanpa narator (semua pesan ada di teks layar).
+Kalau mau rekam voice-over: gaya cepat, energik, seperti ngobrol ke teman. Turunkan musik sekitar 6 dB.
 
-| Waktu | Layar | Voice-over (Bahasa Indonesia) |
+| Waktu | Layar | Voice-over |
 |---|---|---|
 | 0:00–0:03 | TUNGGU! / Pernah lihat video kayak GINI? | "Tunggu! Jangan scroll dulu. Pernah lihat video kayak gini?" |
-| 0:03–0:08 | Feed video animasi | "Video animasi simpel kayak gini lagi ramai banget di YouTube, Instagram, TikTok..." |
-| 0:08–0:11 | 128.000.000 KALI! | "...dan ada yang ditonton sampai seratus juta kali lebih!" |
-| 0:11–0:17 | Rp100.000.000 PER BULAN / $600.000+ | "Yang bikin videonya? Bisa menghasilkan ratusan juta rupiah per bulan. Channel besar bahkan tembus enam ratus ribu dolar." |
-| 0:17–0:20 | BUKAN animator / editor / desainer | "Tapi rahasianya: mereka bukan animator. Bukan editor. Bukan desainer." |
-| 0:20–0:23 | CLAUDE | "Mereka cuma pakai Claude — AI yang bikin animasinya untukmu. Lihat sendiri!" |
-| 0:23–0:41 | Crayon → Graffiti → Manga → Anime → Pixel → Neon | "Gaya crayon... graffiti... manga... anime... pixel art... neon. Semua dibuat pakai Claude." |
-| 0:41–0:43 | SEMUA GAYA. SATU AI. | "Semua gaya. Satu AI." |
-| 0:43–0:52 | Kartu kelas + checklist | "Di kelas AI Motion Cuan, kami ajarkan semuanya: bikin video pakai Claude, semua gaya animasi, cari niche yang paling cuan, upload ke YouTube, IG dan TikTok, sampai strategi monetisasinya. Plus bonus PDF prompt siap pakai." |
-| 0:52–0:56 | 1-2-3 Caranya | "Caranya gampang banget: kasih PDF kami ke Claude, pilih topikmu, video jadi. Tinggal upload." |
-| 0:56–1:00 | Tidur + notifikasi | "Kamu tidur... channel kamu tetap jalan." |
-| 1:00–1:03 | BAYAR SEKALI. CUAN SEUMUR HIDUP. | "Bayar sekali. Manfaatnya seumur hidup." |
-| 1:03–1:08 | CTA + countdown | "Harga promo nggak lama lagi berakhir. Klik link di bawah dan daftar sekarang!" |
+| 0:03–0:11 | Feed video animasi → 128.000.000 KALI! | "Video animasi simpel kayak gini ditonton sampai seratus juta kali lebih!" |
+| 0:11–0:17 | Rp100 juta per bulan / $600.000+ | "Yang bikin videonya bisa menghasilkan ratusan juta rupiah per bulan." |
+| 0:17–0:23 | BUKAN animator → CLAUDE | "Rahasianya: mereka bukan animator. Mereka cuma pakai Claude. Lihat sendiri!" |
+| 0:23–0:40 | Ghibli → Bollywood → Sejarah → Crayon → Manga → Graffiti → Pixel | "Cerita ala Ghibli... drama ala Bollywood... video sejarah... crayon, manga, graffiti, pixel art." |
+| 0:40–0:41 | SEMUA GAYA. SATU AI. | "Semua gaya. Satu AI." |
+| 0:41–0:43 | Animasi kamu bisa JUALAN! | "Dan yang paling gila: animasi kamu bisa jualan di TikTok!" |
+| 0:43–0:49 | Karakter animasi jualan + pesanan masuk | "Karakter animasi yang promosikan produk affiliate untukmu. Pesanan masuk, komisi masuk." |
+| 0:49–0:52 | Kamu NGGAK perlu… | "Nggak perlu tampil muka, nggak perlu stok barang, nggak perlu modal. Animasi yang kerja, kamu yang cuan." |
+| 0:52–0:58 | Kartu kelas + checklist | "Di kelas AI Motion Cuan kami ajarkan semuanya: dari bikin video, storytelling, sampai TikTok affiliate." |
+| 0:58–1:02 | 1-2-3 Caranya | "Caranya gampang: kasih PDF kami ke Claude, pilih niche-mu, video jadi." |
+| 1:02–1:09 | KOMEN "MOTION" | "Mau belajar semua ini? Komen MOTION di bawah, kami kirim semua detailnya ke DM kamu!" |
 
-## Hal yang perlu kamu ganti sebelum tayang
-- **Nama kelas**: "AI MOTION CUAN" adalah placeholder → cari `AI MOTION` / `CUAN` di `ad.js`.
-- **Countdown promo**: timer mulai dari 14:59 sebagai efek urgensi; pastikan promo kamu memang punya batas waktu.
-- **Angka penghasilan**: sudah diberi catatan "*Ilustrasi potensi penghasilan. Hasil setiap kreator berbeda." — sebaiknya tetap dipertahankan (aturan iklan Meta/YouTube/TikTok ketat soal klaim penghasilan).
+## Hal yang perlu dicek sebelum tayang
+- **Nama kelas** "AI MOTION CUAN" masih placeholder. Kata kunci MOTION sudah cocok dengan ajakan komen.
+- **Auto-DM**: siapkan auto-reply untuk komentar "MOTION" (misalnya ManyChat untuk Instagram, atau fitur auto-reply kreator).
+- **Angka penghasilan/komisi** sudah diberi catatan "*Ilustrasi". Sebaiknya tetap dipertahankan.
+- Label **"ALA GHIBLI"** menyebut nama studio. Kalau iklan ditolak, ganti jadi "ANIME KLASIK" di `ad.js` (array `STYLES`).

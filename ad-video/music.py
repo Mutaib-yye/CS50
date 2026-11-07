@@ -4,7 +4,7 @@ import json, re, wave, os
 import numpy as np
 
 SR = 44100
-DUR = 68.0
+DUR = 69.5
 N = int(SR * (DUR + 1))
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, 'out'); os.makedirs(OUT, exist_ok=True)
@@ -140,10 +140,9 @@ def section(t):
     if t < 17.5: return 'groove'
     if t < 20.6: return 'break'
     if t < 23.15: return 'build'
-    if t < 43.0: return 'drop'
-    if t < 56.4: return 'groove2'
-    if t < 59.95: return 'sleep'
-    if t < 67.2: return 'drop'
+    if t < 41.5: return 'drop'
+    if t < 62.5: return 'groove2'
+    if t < 69.0: return 'drop'
     return 'end'
 
 drums = np.zeros(N); synth = np.zeros(N); sfx = np.zeros(N); send = np.zeros(N)
@@ -196,7 +195,7 @@ for st in range(nsteps):
         if s16 % 4 == 0: n_ = chord[(st // 4) % 3] * 4; add(synth, tb, bell(n_, 1.0), .12); add(send, tb, bell(n_, 1.0), .2)
 
 # final chord hit
-fin = supersaw([110, 220, 261.63, 329.63, 440], 1.2, 2800, 2.0); add(synth, 67.2, fin, .45); add(send, 67.2, fin, .5)
+fin = supersaw([110, 220, 261.63, 329.63, 440], 1.2, 2800, 2.0); add(synth, 69.0, fin, .45); add(send, 69.0, fin, .5)
 
 # sidechain ducking on synths
 duck = np.ones(N); L = int(.28 * SR); env = 1 - .55 * np.exp(-np.arange(L) / SR / .07)

@@ -6,7 +6,7 @@ const { spawn, execFileSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const FPS = 30, DUR = 68, N = FPS * DUR;
+const FPS = 30, DUR = 69.5, N = FPS * DUR;
 const WORKERS = +(process.env.WORKERS || 4);
 const OUT = path.resolve(process.env.OUT || path.join(__dirname, 'out'));
 fs.mkdirSync(OUT, { recursive: true });
