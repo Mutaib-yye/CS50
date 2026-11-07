@@ -1,7 +1,7 @@
 # AiiDell.com – "Send Gifts from India to Indonesia"
 ## Voice-over script (continuous, cheerful, no gaps)
 
-The video includes this narration in a fun, friendly female voice (Kokoro TTS, see `audio/make_vo.py`). It talks continuously from the first second to the logo. Each part is time-fitted to its scene.
+The final video (`AiiDell_India_to_Indonesia_Ad.mp4`) has **no voice**, only music and motion sound effects. This narration is used in the optional `AiiDell_India_to_Indonesia_Ad_FemaleVoice.mp4` (Kokoro TTS, see `audio/make_vo.py`). It talks continuously from the first second to the logo. Each part is time-fitted to its scene.
 To regenerate it with Qwen3-TTS on your PC, use `audio/make_vo_qwen.py` (a young Indonesian woman speaking English with a light, natural accent). To record your own voice, read each part within its time window.
 
 | Time | Scene | Voice-over |
