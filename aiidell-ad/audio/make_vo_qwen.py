@@ -24,10 +24,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from vo_lines import LINES
 
-PERSONA = ("Young adult female voice, early twenties, bright, cheerful and playful, with a warm smile in her tone. "
-           "Clear, crisp American English diction, medium-high pitch, lively storytelling energy like a friendly "
-           "social-media narrator. Fun and charming but natural, not over the top, never shouting.")
-REF_TEXT = "Hi there! Let me tell you a little story about two friends and one very special surprise."
+PERSONA = ("Young Indonesian woman in her early twenties speaking English with a natural, light Indonesian accent. "
+           "Bright, cheerful and playful voice with a warm smile in her tone, medium-high pitch, soft and sweet but clear. "
+           "Friendly storytelling energy like a fun social-media narrator; relaxed natural pacing, crisp consonants, "
+           "charming and easy to listen to, never shouting or exaggerated.")
+REF_TEXT = "Hi everyone! Let me tell you a little story about two friends and one very special surprise from India."
 
 ap = argparse.ArgumentParser()
 ap.add_argument('--design', default='Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign')
