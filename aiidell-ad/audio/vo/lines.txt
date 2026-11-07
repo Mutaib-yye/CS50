@@ -1,19 +1,7 @@
-00	0.55	1.38	Meet Rahul and Arjun!
-01	3.15	2.81	Both want to surprise someone special in Indonesia.
-02	6.10	0.98	But look at Rahul...
-03	8.30	2.54	Hours searching for the best shop, the best courier...
-04	11.00	2.25	and sending it directly? So expensive!
-05	13.10	0.78	And Arjun?
-06	15.10	2.14	Just a few clicks on Eye Dell dot com...
-07	19.15	0.84	Easy peasy!
-08	20.30	2.51	Our team in Indonesia takes care of everything...
-09	24.60	0.96	right to her door!
-10	28.45	0.70	Flowers,
-11	29.95	0.94	thoughtful gifts,
-12	31.45	0.95	delicious food,
-13	32.95	0.99	Indian snacks,
-14	34.45	0.95	and yummy cakes!
-15	38.20	1.24	One is still searching...
-16	40.90	1.54	the other is already smiling.
-17	45.25	3.00	Different countries. One simple way to make someone smile.
-18	48.35	1.16	Eye Dell dot com!
+00	0.35	5.59	Hey! Meet Rahul and Arjun! These two want to send a sweet surprise to someone special in Indonesia!
+01	6.05	6.97	But look at Rahul! Searching this, searching that... the best shop, the best courier, asking everyone! And sending it directly? So expensive!
+02	13.05	7.01	And Arjun? He just opens Eye Dell dot com, picks a pretty bouquet, adds her details, and... done! Easy peasy!
+03	20.20	7.51	Our team right here in Indonesia takes care of everything, wraps it with love, and brings it right to her door! Look at that smile!
+04	27.90	9.47	You can send beautiful flowers, thoughtful gifts, delicious food, yummy Indian snacks, and birthday cakes too! Same-day delivery may be available, depending on the location!
+05	37.55	6.91	So, one is still searching and waiting... while the other is already smiling, on a sweet video call with her! Aww, so cute!
+06	44.70	4.69	Different countries, one simple way to make someone smile. Eye Dell dot com!
