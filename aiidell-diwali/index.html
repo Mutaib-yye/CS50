@@ -12,8 +12,10 @@
     background:radial-gradient(ellipse at 50% 85%,#4a1368 0%,var(--deep) 60%,#05010f 100%);overflow:hidden}
   canvas{position:absolute;inset:0;width:100%;height:100%}
   .content{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;color:#fff;padding:5% 6% 0}
-  .hero{position:relative;width:62%;aspect-ratio:1;flex:none;opacity:0;animation:rise 1.4s .2s forwards}
-  .rangoli{position:absolute;inset:0;width:100%;height:100%;animation:spin 60s linear infinite}
+  .hero{position:relative;width:96%;aspect-ratio:1.75;flex:none;opacity:0;animation:rise 1.4s .2s forwards}
+  .rangoli{position:absolute;inset:0;width:100%;height:100%}
+  .d{opacity:0;animation:pop .5s forwards}
+  @keyframes pop{from{opacity:0}to{opacity:1}}
   @keyframes spin{to{transform:rotate(360deg)}}
   .logo{position:absolute;left:50%;top:50%;width:52%;transform:translate(-50%,-50%);border-radius:14px;box-shadow:0 0 28px rgba(255,200,61,.55),0 0 0 3px #ffe9b8}
   .wordmark{font-family:system-ui,sans-serif;font-weight:800;letter-spacing:.12em;font-size:clamp(22px,4.2vh,44px);
@@ -43,8 +45,7 @@
   <canvas id="fx"></canvas>
   <div class="content">
     <div class="hero">
-      <svg class="rangoli" id="rangoli" viewBox="-100 -100 200 200"></svg>
-      <img class="logo" src="logo.png" alt="Aiidell">
+      <svg class="rangoli" id="rangoli" viewBox="0 0 340 200"></svg>
     </div>
     <h1>Happy Diwali</h1>
     <h2>May light brighten every corner of your year</h2>
@@ -65,18 +66,30 @@ document.getElementById('diyas').innerHTML=diya.repeat(7);
 
 
 
-// rangoli mandala around the logo
+// rangoli whose centre is the word "AiiDell", drawn as coloured dots, framed by petals
 (function(){
-  const g=[],pal=['#ff4f8b','#ffc83d','#ff8a1f','#b98cff','#3ddc97','#fff3b0'];
-  const rot=(n,f)=>{for(let i=0;i<n;i++)g.push(`<g transform="rotate(${i*360/n})">${f(i)}</g>`)};
-  g.push('<circle r="97" fill="none" stroke="#ffc83d" stroke-width="1.2" stroke-dasharray="1 4"/>');
-  rot(36,i=>`<circle cy="-93" r="2.3" fill="${pal[i%pal.length]}"/>`);
-  rot(18,i=>`<path d="M0 -62Q-13 -78 0 -90Q13 -78 0 -62Z" fill="${pal[(i%2)?0:2]}" stroke="#fff3b0" stroke-width=".8"/><circle cy="-80" r="2" fill="#fff3b0"/>`);
-  rot(18,i=>`<path d="M-4 -60L0 -70L4 -60Z" fill="${pal[(i%2)?1:4]}"/>`);
-  g.push('<circle r="60" fill="none" stroke="#ff8a1f" stroke-width="2"/>');
-  rot(24,i=>`<circle cy="-56" r="1.6" fill="#fff3b0"/>`);
-  g.push('<circle r="51" fill="#2a0a47" opacity=".85"/><circle r="51" fill="none" stroke="#ffc83d" stroke-width="1.5"/>');
-  rot(12,i=>`<path d="M0 -50Q-9 -58 0 -66Q9 -58 0 -50Z" fill="${pal[i%pal.length]}" opacity=".95"/>`);
+  const pal=['#ff4f8b','#ffc83d','#ff8a1f','#b98cff','#3ddc97','#fff3b0'],g=[],cx=170,cy=100;
+  // petal frame on an ellipse
+  const N=44,rx=158,ry=90;
+  for(let i=0;i<N;i++){const t=i*2*Math.PI/N,x=cx+rx*Math.cos(t),y=cy+ry*Math.sin(t),
+    a=Math.atan2(Math.sin(t)/ry,Math.cos(t)/rx)*180/Math.PI+90,c=pal[i%2?0:2];
+    g.push(`<g transform="translate(${x} ${y}) rotate(${a})"><path d="M0 4Q-7 -4 0 -14Q7 -4 0 4Z" fill="${c}" stroke="#fff3b0" stroke-width=".6"/></g>`);
+    const x2=cx+(rx-17)*Math.cos(t),y2=cy+(ry-17)*Math.sin(t);
+    g.push(`<circle cx="${x2}" cy="${y2}" r="1.8" fill="${pal[(i+3)%pal.length]}"/>`);}
+  g.push(`<ellipse cx="${cx}" cy="${cy}" rx="${rx-24}" ry="${ry-24}" fill="#2a0a47" opacity=".9" stroke="#ffc83d" stroke-width="1.4"/>`);
+  g.push(`<ellipse cx="${cx}" cy="${cy}" rx="${rx-29}" ry="${ry-29}" fill="none" stroke="#ff8a1f" stroke-width=".8" stroke-dasharray="1.5 3"/>`);
+  // sample the word into dots
+  const cv=document.createElement('canvas');cv.width=520;cv.height=140;const k=cv.getContext('2d');
+  k.fillStyle='#000';k.font='900 110px "Arial Black",Helvetica,Arial,sans-serif';k.textBaseline='middle';
+  const word='AiiDell',mw=k.measureText(word).width;k.fillText(word,(520-mw)/2,72);
+  const d=k.getImageData(0,0,520,140).data,step=6,sc=212/mw;
+  let minx=1e9,maxx=-1;const pts=[];
+  for(let y=0;y<140;y+=step)for(let x=0;x<520;x+=step){if(d[(y*520+x)*4+3]>128){pts.push([x,y]);minx=Math.min(minx,x);maxx=Math.max(maxx,x)}}
+  pts.forEach(([x,y],i)=>{
+    const u=(x-minx)/(maxx-minx),col=pal[Math.floor(u*pal.length*1.6)%pal.length];
+    const X=cx+(x-260)*sc,Y=cy+(y-72)*sc,dl=3+u*1.8;
+    g.push(`<circle class="d" style="animation-delay:${dl.toFixed(2)}s" cx="${X.toFixed(1)}" cy="${Y.toFixed(1)}" r="1.7" fill="${col}"/>`);
+  });
   document.getElementById('rangoli').innerHTML=g.join('');
 })();
 
