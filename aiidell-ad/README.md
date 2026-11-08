@@ -6,6 +6,7 @@ It tells a **soft-sell story** in a left/right split screen: **Rahul** (left) do
 The characters have fair skin. Rahul and Arjun are distinctly Indian men. Putri, in a pastel kebaya with a batik accent and a frangipani, and the AiiDell team in Indonesia (one member in a hijab) are distinctly Indonesian, with fair, light skin and a yellow undertone. Hands have jointed fingers and thumbs, arms have elbows that bend out and down, and no arm, hand or prop ever crosses a face.
 
 * `AiiDell_India_to_Indonesia_Ad.mp4` – **the final video**: H.264 + AAC with music and motion sound effects only, **no voice**
+* `AiiDell_Indonesia_to_India_Ad_Women.mp4` – **women's version** (Bahasa Indonesia): two Indonesian women, Sari (struggling to find a jastiper) and Dewi (one click on AiiDell.com, cheap, pays in Rupiah), send gifts to India. The AiiDell team in India delivers to Arjun's door, and the ending uses the real AiiDell.com screen recording (`assets/aiidell_screen_recording.mov`). Music and SFX only. Render with `tools/extract_rec.sh` then `VARIANT=women node render.js video …`, and mix the audio with `VARIANT=women VO_DIR=__none__ OUT_WAV=soundtrack_women.wav python3 audio/make_audio.py`.
 * `AiiDell_India_to_Indonesia_Ad_FemaleVoice.mp4` – an optional extra with a continuous, cheerful female voice-over (`audio/vo/`, `audio/soundtrack_female.wav`)
 * `VOICEOVER_SCRIPT.md` – an optional, timed voice-over script for recording your own voice
 * `audio/soundtrack.wav` – the original music score and synced sound effects (48 kHz stereo)
