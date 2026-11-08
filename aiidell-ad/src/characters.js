@@ -1551,8 +1551,7 @@ function drawTunic(c, P, o) {
   c.beginPath(); c.rect(-14, 120, 28, 440); c.clip();
   kawung(c, -14, 120, 28, 440, 14, hexA(P.gold, 0.55), hexA(P.topDark, 0.6));
   c.restore();
-  c.fillStyle = '#fff'; c.beginPath(); c.arc(-104, 210, 17, 0, TAU); c.fill();
-  drawHeart(c, -104, 212, 19, '#ff4f8b', 1, false);
+  if (P.badge !== false) { c.fillStyle = '#fff'; c.beginPath(); c.arc(-104, 210, 17, 0, TAU); c.fill(); drawHeart(c, -104, 212, 19, '#ff4f8b', 1, false); }
 }
 
 // hijab shapes

@@ -290,6 +290,7 @@ function dustMotes(c, t, x0, x1, col = 'rgba(255,240,210,0.8)', n = 30, seed = 3
 }
 
 // ---------------- FLOATING UI ----------------
+const vc = (k, d) => (typeof V !== 'undefined' && V.cards && V.cards[k] !== undefined ? V.cards[k] : d);
 function card(c, x, y, w, h, o = {}) {
   c.save();
   c.shadowColor = o.shadow || 'rgba(20,10,40,0.35)'; c.shadowBlur = 30; c.shadowOffsetY = 12;
@@ -333,15 +334,15 @@ function searchScreen(c, x, y, w, h, u, t) {
   card(c, x, y, w, h, { fill: '#f7f8fb' });
   c.save(); rr(c, x, y, w, h, 24); c.clip();
   c.fillStyle = '#e6e9f2'; c.fillRect(x, y, w, 70);
-  txt(c, 'Search', x + 24, y + 36, { size: 24, align: 'left', color: '#4a5a8a', font: 'Fredoka', weight: 600 });
+  txt(c, vc('searchTitle', 'Search'), x + 24, y + 36, { size: 24, align: 'left', color: '#4a5a8a', font: 'Fredoka', weight: 600 });
   // search bar
   c.fillStyle = '#fff'; rr(c, x + 16, y + 86, w - 32, 54, 27); c.fill();
   c.strokeStyle = '#cfd5e6'; c.lineWidth = 2; c.stroke();
-  const q = 'how to send gift to indonesia';
+  const q = vc('q', 'how to send gift to indonesia');
   const n = Math.floor(clamp(u / 1.1) * q.length);
   txt(c, q.slice(0, n) + (Math.floor(t * 3) % 2 && n < q.length ? '|' : ''), x + 40, y + 113, { size: 17, align: 'left', color: '#333', font: 'Poppins', weight: 400 });
   c.strokeStyle = '#7a8ab8'; c.lineWidth = 3; c.beginPath(); c.arc(x + w - 46, y + 110, 9, 0, TAU); c.moveTo(x + w - 39, y + 117); c.lineTo(x + w - 32, y + 124); c.stroke();
-  const res = [['International shipping rules 2026', 'Restrictions, prohibited items, permits...'],
+  const res = vc('res', null) || [['International shipping rules 2026', 'Restrictions, prohibited items, permits...'],
     ['Customs duty calculator – Indonesia', 'Import tax, VAT, handling and clearance fees'],
     ['Find travellers to carry parcels', 'Forum · 312 replies · "anyone going?"'],
     ['Courier rates India → Indonesia', 'Rates vary. Contact for a quote...'],
@@ -349,7 +350,7 @@ function searchScreen(c, x, y, w, h, u, t) {
     ['Is it safe to send food abroad?', 'Perishables may be held at customs...']];
   const scroll = Math.max(0, u - 1.4) * 120;
   if (u > 1.2) {
-    txt(c, 'About 1,240,000 results', x + 24, y + 166, { size: 14, align: 'left', color: '#8a90a8', weight: 400, alpha: clamp((u - 1.2) * 3) });
+    txt(c, vc('results', 'About 1,240,000 results'), x + 24, y + 166, { size: 14, align: 'left', color: '#8a90a8', weight: 400, alpha: clamp((u - 1.2) * 3) });
     c.save(); c.beginPath(); c.rect(x, y + 180, w, h - 180); c.clip();
     res.concat(res).forEach(([a, b], i) => {
       const ry = y + 200 + i * 92 - scroll;
@@ -368,9 +369,9 @@ function chatScreen(c, x, y, w, h, u, t) {
   c.save(); rr(c, x, y, w, h, 24); c.clip();
   c.fillStyle = '#5b6b9a'; c.fillRect(x, y, w, 80);
   c.fillStyle = '#c9d2f0'; c.beginPath(); c.arc(x + 44, y + 40, 22, 0, TAU); c.fill();
-  txt(c, 'Travel Group', x + 78, y + 30, { size: 19, align: 'left', color: '#fff', weight: 600 });
-  txt(c, 'India → Indonesia · 248 members', x + 78, y + 54, { size: 13, align: 'left', color: '#dfe5ff', weight: 400 });
-  const msgs = [
+  txt(c, vc('group', 'Travel Group'), x + 78, y + 30, { size: 19, align: 'left', color: '#fff', weight: 600 });
+  txt(c, vc('groupSub', 'India → Indonesia · 248 members'), x + 78, y + 54, { size: 13, align: 'left', color: '#dfe5ff', weight: 400 });
+  const msgs = vc('msgs', null) || [
     ['me', 'Anyone flying to Indonesia this week?', 0.2],
     ['me', 'Can you carry a small gift? Please!', 0.9],
     ['them', 'Sorry bro, my bag is already full', 1.5],
@@ -390,7 +391,7 @@ function chatScreen(c, x, y, w, h, u, t) {
     c.shadowColor = 'rgba(0,0,0,0.08)'; c.shadowBlur = 4; c.shadowOffsetY = 2;
     rr(c, bx, yy, tw, 46, 16); c.fill(); c.shadowColor = 'transparent'; c.shadowBlur = 0;
     txt(c, s, bx + 16, yy + 23, { size: 15, align: 'left', color: '#2a2a2a', weight: 400 });
-    if (who === 'me') txt(c, 'Seen', bx + tw - 4, yy + 60, { size: 12, align: 'right', color: '#8a90a8', weight: 400 });
+    if (who === 'me') txt(c, vc('seen', 'Seen'), bx + tw - 4, yy + 60, { size: 12, align: 'right', color: '#8a90a8', weight: 400 });
     c.restore();
     yy += who === 'me' ? 78 : 62;
   });
@@ -407,9 +408,9 @@ function quoteScreen(c, x, y, w, h, u, t) {
   card(c, x, y, w, h, { fill: '#ffffff' });
   c.save(); rr(c, x, y, w, h, 24); c.clip();
   c.fillStyle = '#41507e'; c.fillRect(x, y, w, 80);
-  txt(c, 'Express Intl. Courier', x + 24, y + 30, { size: 19, align: 'left', color: '#fff', weight: 600 });
-  txt(c, 'Shipping Quote · India → Indonesia', x + 24, y + 56, { size: 13, align: 'left', color: '#dfe5ff', weight: 400 });
-  const rows = [['Shipping (express)', '₹6,800'], ['Customs duty', '₹2,150'], ['Import tax / VAT', '₹1,120'], ['Handling & fuel', '₹ 940'], ['Documentation fee', '₹ 650']];
+  txt(c, vc('quoteTitle', 'Express Intl. Courier'), x + 24, y + 30, { size: 19, align: 'left', color: '#fff', weight: 600 });
+  txt(c, vc('quoteSub', 'Shipping Quote · India → Indonesia'), x + 24, y + 56, { size: 13, align: 'left', color: '#dfe5ff', weight: 400 });
+  const rows = vc('rows', null) || [['Shipping (express)', '₹6,800'], ['Customs duty', '₹2,150'], ['Import tax / VAT', '₹1,120'], ['Handling & fuel', '₹ 940'], ['Documentation fee', '₹ 650']];
   rows.forEach(([a, b], i) => {
     const ap = clamp((u - 0.2 - i * 0.28) * 5);
     const ry = y + 120 + i * 50;
@@ -420,9 +421,9 @@ function quoteScreen(c, x, y, w, h, u, t) {
   });
   c.globalAlpha = clamp((u - 1.8) * 4);
   txt(c, 'TOTAL', x + 24, y + 392, { size: 20, align: 'left', color: '#1a1f33', weight: 700 });
-  txt(c, '₹11,660', x + w - 24, y + 392, { size: 26, align: 'right', color: '#d61f3c', weight: 700 });
-  txt(c, 'Delivery: 7–14 business days', x + 24, y + 432, { size: 14, align: 'left', color: '#666c80', weight: 400 });
-  txt(c, 'Food items: not allowed', x + 24, y + 456, { size: 14, align: 'left', color: '#c2334a', weight: 600 });
+  txt(c, vc('totalAmt', '₹11,660'), x + w - 24, y + 392, { size: 26, align: 'right', color: '#d61f3c', weight: 700 });
+  txt(c, vc('note1', 'Delivery: 7–14 business days'), x + 24, y + 432, { size: 14, align: 'left', color: '#666c80', weight: 400 });
+  txt(c, vc('note2', 'Food items: not allowed'), x + 24, y + 456, { size: 14, align: 'left', color: '#c2334a', weight: 600 });
   c.globalAlpha = 1;
   // stamp
   const sp = clamp((u - 2.3) * 5);
@@ -430,8 +431,8 @@ function quoteScreen(c, x, y, w, h, u, t) {
     c.save(); c.translate(x + w / 2 + 30, y + 250); c.rotate(-0.25); const k = 1 + (1 - E.out(sp)) * 1.5; c.scale(k, k);
     c.globalAlpha = sp * 0.85;
     c.strokeStyle = '#e0283f'; c.lineWidth = 6; rr(c, -120, -36, 240, 72, 10); c.stroke();
-    txt(c, 'DOCUMENTS', 0, -10, { size: 26, color: '#e0283f', font: 'Fredoka', weight: 700 });
-    txt(c, 'REQUIRED', 0, 20, { size: 22, color: '#e0283f', font: 'Fredoka', weight: 700 });
+    txt(c, vc('stamp1', 'DOCUMENTS'), 0, -10, { size: 26, color: '#e0283f', font: 'Fredoka', weight: 700 });
+    txt(c, vc('stamp2', 'REQUIRED'), 0, 20, { size: 22, color: '#e0283f', font: 'Fredoka', weight: 700 });
     c.restore();
   }
   c.restore();
@@ -544,6 +545,7 @@ function inFlag(c, x, y, w) {
 }
 
 function aiiScreen(c, w, h, u, t) {
+  const L = V.ai, PF = prodFn(L.prod);
   // u: seconds since phone appeared
   const bg = c.createLinearGradient(0, 0, 0, h);
   bg.addColorStop(0, '#fff7fb'); bg.addColorStop(1, '#f6efff');
@@ -563,7 +565,7 @@ function aiiScreen(c, w, h, u, t) {
       c.fillStyle = pressed ? '#ffb6cf' : '#fff'; rr(c, kx, ky, 35, 50, 7); c.fill();
     }
     c.fillStyle = '#ff5f97'; rr(c, w - 110, h - 84, 96, 50, 10); c.fill();
-    txt(c, 'Go', w - 62, h - 59, { size: 18, color: '#fff', weight: 700 });
+    txt(c, L.go, w - 62, h - 59, { size: 18, color: '#fff', weight: 700 });
     if (u > 1.3) tapRipple(c, w - 62, h - 59, (u - 1.3) / 0.35);
     return;
   }
@@ -581,20 +583,20 @@ function aiiScreen(c, w, h, u, t) {
     // hero
     const hg = brandGrad(c, 0, 190, w, 360);
     c.fillStyle = hg; rr(c, 16, 190, w - 32, 170, 22); c.fill();
-    txt(c, 'Send love to', 36, 236, { size: 20, align: 'left', color: '#fff', weight: 400 });
-    txt(c, 'Indonesia', 36, 268, { size: 32, align: 'left', color: '#fff', font: 'Fredoka', weight: 700 });
-    idFlag(c, 196, 254, 34);
+    txt(c, L.hero1, 36, 236, { size: 20, align: 'left', color: '#fff', weight: 400 });
+    txt(c, L.hero2, 36, 268, { size: 32, align: 'left', color: '#fff', font: 'Fredoka', weight: 700 });
+    c.font = '700 32px Fredoka'; V.destFlag(c, 36 + c.measureText(L.hero2).width + 14, 254, 34);
     c.fillStyle = '#fff'; rr(c, 36, 300, 118, 36, 18); c.fill();
-    txt(c, 'Shop gifts', 95, 318, { size: 14, color: '#ff4f8b', weight: 700 });
+    txt(c, L.shop, 95, 318, { size: 14, color: '#ff4f8b', weight: 700 });
     drawGiftBox(c, w - 86, 300, 0.42, t);
     for (let k = 0; k < 4; k++) sparkle(c, w - 150 + k * 30, 220 + (k % 2) * 30, 6, '#fff', 0.5 + 0.5 * Math.sin(t * 4 + k));
     // chips
-    const chips = ['Flowers', 'Gifts', 'Food', 'Snacks', 'Cakes'];
+    const chips = L.chips;
     let cx = 16;
     c.font = '600 13px Poppins';
     chips.forEach((ch, i) => { const cw = c.measureText(ch).width + 26; c.fillStyle = i === 0 ? '#ff5f97' : '#fff'; rr(c, cx, 378, cw, 32, 16); c.fill(); txt(c, ch, cx + cw / 2, 394, { size: 13, color: i === 0 ? '#fff' : '#5a4a7a', weight: 600 }); cx += cw + 8; });
     // grid
-    const items = [['Blush Roses', '₹1,999', drawBouquet], ['Choco Cake', '₹1,499', drawCake], ['Gift Hamper', '₹2,299', drawGiftBox], ['Indian Sweets', '₹899', drawSnacks]];
+    const items = L.items.map(([n, pr, k]) => [n, pr, prodFn(k)]);
     items.forEach(([name, price, fn], i) => {
       const gx = 16 + (i % 2) * ((w - 44) / 2 + 12), gy = 428 + Math.floor(i / 2) * 210, gw = (w - 44) / 2;
       const ap = E.outBack(clamp((u - 1.9 - i * 0.1) / 0.4));
@@ -621,18 +623,18 @@ function aiiScreen(c, w, h, u, t) {
     c.save(); c.translate((1 - sl) * w, 0);
     c.fillStyle = '#fde7f0'; c.fillRect(0, 174, w, 340);
     glowDot(c, w / 2, 350, 180, 'rgba(255,255,255,0.9)');
-    drawBouquet(c, w / 2, 470, 0.95, t);
+    PF(c, w / 2, 470, L.prod === 'gift' ? 0.9 : 0.95, t);
     for (let k = 0; k < 6; k++) sparkle(c, 60 + k * 55, 210 + (k % 3) * 40, 7, '#fff', 0.5 + 0.5 * Math.sin(t * 5 + k * 1.3));
-    txt(c, 'Blush Rose Bouquet', 24, 548, { size: 22, align: 'left', color: '#2a1f4a', font: 'Fredoka', weight: 700 });
-    txt(c, '12 premium pink roses, hand-tied', 24, 578, { size: 13, align: 'left', color: '#7a6a90', weight: 400 });
-    txt(c, '₹1,999', 24, 618, { size: 26, align: 'left', color: '#ff4f8b', weight: 700 });
+    txt(c, L.prodName, 24, 548, { size: 22, align: 'left', color: '#2a1f4a', font: 'Fredoka', weight: 700 });
+    txt(c, L.prodDesc, 24, 578, { size: 13, align: 'left', color: '#7a6a90', weight: 400 });
+    txt(c, L.price, 24, 618, { size: 26, align: 'left', color: '#ff4f8b', weight: 700 });
     c.fillStyle = '#eafaf0'; rr(c, 24, 644, w - 48, 40, 12); c.fill();
-    txt(c, 'Delivered anywhere in Indonesia', 44, 664, { size: 13, align: 'left', color: '#2f8a52', weight: 600 });
+    txt(c, L.deliv, 44, 664, { size: 13, align: 'left', color: '#2f8a52', weight: 600 });
     const press = u > 4.7 && u < 4.9 ? 1 : 0;
     c.save(); c.translate(w / 2, 740); c.scale(1 - press * 0.05, 1 - press * 0.05);
     c.shadowColor = 'rgba(255,79,139,0.5)'; c.shadowBlur = 18 + Math.sin(t * 6) * 6; c.shadowOffsetY = 6;
     c.fillStyle = brandGrad(c, -150, 0, 150, 0); rr(c, -(w / 2 - 24), -30, w - 48, 60, 30); c.fill(); c.shadowColor = 'transparent'; c.shadowBlur = 0;
-    txt(c, 'Add to Cart', 0, 1, { size: 19, color: '#fff', weight: 700 });
+    txt(c, L.addCart, 0, 1, { size: 19, color: '#fff', weight: 700 });
     c.restore();
     c.restore();
     const fp = E.inOut(clamp((u - 4.0) / 0.6));
@@ -643,7 +645,7 @@ function aiiScreen(c, w, h, u, t) {
     if (fl > 0 && fl < 1) {
       const e = E.inOut(fl);
       const fx = lerp(w / 2, w - 44, e), fy = lerp(470, 142, e) - Math.sin(e * Math.PI) * 120;
-      drawBouquet(c, fx, fy, lerp(0.5, 0.12, e), t);
+      PF(c, fx, fy, lerp(0.5, 0.12, e), t);
       for (let k = 0; k < 5; k++) sparkle(c, fx - (k + 1) * 14 * (1 - e), fy + k * 10, 6 - k, '#ffd27a', 1 - k * 0.18);
     }
     if (u > 5.3) for (let k = 0; k < 6; k++) { const a = k / 6 * TAU, d = clamp((u - 5.3) / 0.4) * 34; sparkle(c, w - 30 + Math.cos(a) * d, 128 + Math.sin(a) * d, 5, '#ff8fb5', 1 - clamp((u - 5.3) / 0.4)); }
@@ -652,10 +654,10 @@ function aiiScreen(c, w, h, u, t) {
   if (u < 8.5) { // RECIPIENT DETAILS
     const sl = E.out(clamp((u - 5.8) / 0.35));
     c.save(); c.translate((1 - sl) * w, 0);
-    txt(c, 'Recipient details', 24, 210, { size: 22, align: 'left', color: '#2a1f4a', font: 'Fredoka', weight: 700 });
+    txt(c, L.recip, 24, 210, { size: 22, align: 'left', color: '#2a1f4a', font: 'Fredoka', weight: 700 });
     // steps
-    ['Cart', 'Details', 'Pay'].forEach((s, i) => { c.fillStyle = i <= 1 ? '#ff5f97' : '#e5dcef'; rr(c, 24 + i * 120, 236, 110, 6, 3); c.fill(); txt(c, s, 24 + i * 120, 258, { size: 12, align: 'left', color: i <= 1 ? '#ff4f8b' : '#a99abd', weight: 600 }); });
-    const fields = [['Name', 'Putri', 6.1], ['Country', 'Indonesia', 6.6], ['Delivery date', 'Today', 7.3], ['Gift message', 'Happy Birthday, sayang!', 7.6]];
+    L.steps.forEach((s, i) => { c.fillStyle = i <= 1 ? '#ff5f97' : '#e5dcef'; rr(c, 24 + i * 120, 236, 110, 6, 3); c.fill(); txt(c, s, 24 + i * 120, 258, { size: 12, align: 'left', color: i <= 1 ? '#ff4f8b' : '#a99abd', weight: 600 }); });
+    const fields = L.fields;
     fields.forEach(([lab, val, at], i) => {
       const fy = 290 + i * 104;
       txt(c, lab, 24, fy, { size: 13, align: 'left', color: '#7a6a90', weight: 600 });
@@ -664,14 +666,14 @@ function aiiScreen(c, w, h, u, t) {
       rr(c, 24, fy + 14, w - 48, 54, 14); c.fill(); c.stroke();
       const n = Math.floor(clamp((u - at) / 0.5) * val.length);
       txt(c, val.slice(0, n) + (active && Math.floor(t * 4) % 2 ? '|' : ''), 42, fy + 42, { size: 17, align: 'left', color: '#2a1f4a', weight: 600 });
-      if (i === 1 && n === val.length) idFlag(c, w - 76, fy + 30, 30);
+      if (i === 1 && n === val.length) V.destFlag(c, w - 76, fy + 30, 30);
       if (i === 3 && n === val.length) drawHeart(c, w - 60, fy + 44, 20, '#ff4f8b', 1, false);
     });
     const press = u > 8.1 && u < 8.3 ? 1 : 0;
     c.save(); c.translate(w / 2, 740); c.scale(1 - press * 0.05, 1 - press * 0.05);
     c.shadowColor = 'rgba(255,79,139,0.5)'; c.shadowBlur = 18; c.shadowOffsetY = 6;
     c.fillStyle = brandGrad(c, -150, 0, 150, 0); rr(c, -(w / 2 - 24), -30, w - 48, 60, 30); c.fill(); c.shadowColor = 'transparent'; c.shadowBlur = 0;
-    txt(c, 'Checkout  ·  ₹1,999', 0, 1, { size: 19, color: '#fff', weight: 700 });
+    txt(c, L.checkout, 0, 1, { size: 19, color: '#fff', weight: 700 });
     c.restore();
     c.restore();
     const fp = E.inOut(clamp((u - 7.7) / 0.4));
@@ -682,21 +684,21 @@ function aiiScreen(c, w, h, u, t) {
   if (u < 10.2) { // PAYMENT / PROCESSING
     const sl = E.out(clamp((u - 8.5) / 0.35));
     c.save(); c.translate((1 - sl) * w, 0);
-    txt(c, 'Secure checkout', 24, 210, { size: 22, align: 'left', color: '#2a1f4a', font: 'Fredoka', weight: 700 });
+    txt(c, L.secure, 24, 210, { size: 22, align: 'left', color: '#2a1f4a', font: 'Fredoka', weight: 700 });
     c.fillStyle = '#fff'; c.shadowColor = 'rgba(140,80,160,0.15)'; c.shadowBlur = 14; rr(c, 24, 240, w - 48, 220, 18); c.fill(); c.shadowColor = 'transparent'; c.shadowBlur = 0;
-    drawBouquet(c, 80, 330, 0.3, t);
-    txt(c, 'Blush Rose Bouquet', 130, 290, { size: 15, align: 'left', color: '#2a1f4a', weight: 600 });
-    txt(c, 'To: Putri · Indonesia', 130, 316, { size: 13, align: 'left', color: '#7a6a90', weight: 400 });
+    PF(c, 80, 330, 0.3, t);
+    txt(c, L.prodName, 130, 290, { size: 15, align: 'left', color: '#2a1f4a', weight: 600 });
+    txt(c, L.toLine, 130, 316, { size: 13, align: 'left', color: '#7a6a90', weight: 400 });
     c.fillStyle = '#f0e8f7'; c.fillRect(44, 370, w - 88, 2);
-    txt(c, 'Delivery', 44, 396, { size: 14, align: 'left', color: '#7a6a90', weight: 400 });
-    txt(c, 'Included', w - 44, 396, { size: 14, align: 'right', color: '#2f8a52', weight: 600 });
-    txt(c, 'Total', 44, 432, { size: 17, align: 'left', color: '#2a1f4a', weight: 700 });
-    txt(c, '₹1,999', w - 44, 432, { size: 20, align: 'right', color: '#ff4f8b', weight: 700 });
+    txt(c, L.delivery, 44, 396, { size: 14, align: 'left', color: '#7a6a90', weight: 400 });
+    txt(c, L.included, w - 44, 396, { size: 14, align: 'right', color: '#2f8a52', weight: 600 });
+    txt(c, L.total, 44, 432, { size: 17, align: 'left', color: '#2a1f4a', weight: 700 });
+    txt(c, L.price, w - 44, 432, { size: 20, align: 'right', color: '#ff4f8b', weight: 700 });
     const press = u > 9.1 && u < 9.3 ? 1 : 0;
     c.save(); c.translate(w / 2, 740); c.scale(1 - press * 0.05, 1 - press * 0.05);
     c.shadowColor = 'rgba(255,79,139,0.5)'; c.shadowBlur = 18; c.shadowOffsetY = 6;
     c.fillStyle = brandGrad(c, -150, 0, 150, 0); rr(c, -(w / 2 - 24), -30, w - 48, 60, 30); c.fill(); c.shadowColor = 'transparent'; c.shadowBlur = 0;
-    if (u < 9.3) txt(c, 'Place Order', 0, 1, { size: 19, color: '#fff', weight: 700 });
+    if (u < 9.3) txt(c, L.place, 0, 1, { size: 19, color: '#fff', weight: 700 });
     else { c.strokeStyle = '#fff'; c.lineWidth = 4; c.lineCap = 'round'; c.beginPath(); c.arc(0, 0, 13, t * 10, t * 10 + 4.4); c.stroke(); }
     c.restore();
     c.restore();
@@ -725,10 +727,10 @@ function aiiScreen(c, w, h, u, t) {
   c.restore();
   for (let r = 0; r < 3; r++) { const rp = clamp((u - 10.4 - r * 0.15) / 0.9); if (rp > 0 && rp < 1) { c.strokeStyle = `rgba(76,201,120,${0.5 * (1 - rp)})`; c.lineWidth = 3; c.beginPath(); c.arc(w / 2, 380, 90 + rp * 120, 0, TAU); c.stroke(); } }
   const ta = clamp((u - 10.7) * 3);
-  txt(c, 'Order Confirmed!', w / 2, 530, { size: 30, color: '#2a1f4a', font: 'Fredoka', weight: 700, alpha: ta });
-  txt(c, 'Your gift is on its way', w / 2, 572, { size: 16, color: '#7a6a90', weight: 400, alpha: ta });
-  txt(c, 'to Putri in Indonesia', w / 2, 598, { size: 16, color: '#7a6a90', weight: 400, alpha: ta });
-  c.globalAlpha = ta; idFlag(c, w / 2 + 92, 588, 26); c.globalAlpha = 1;
+  txt(c, L.confirmed, w / 2, 530, { size: 30, color: '#2a1f4a', font: 'Fredoka', weight: 700, alpha: ta });
+  txt(c, L.onway, w / 2, 572, { size: 16, color: '#7a6a90', weight: 400, alpha: ta });
+  txt(c, L.toWhom, w / 2, 598, { size: 16, color: '#7a6a90', weight: 400, alpha: ta });
+  c.font = '400 16px Poppins'; c.globalAlpha = ta; V.destFlag(c, w / 2 + c.measureText(L.toWhom).width / 2 + 10, 588, 26); c.globalAlpha = 1;
   // confetti
   const R = rng(77);
   for (let i = 0; i < 60; i++) {
@@ -971,7 +973,8 @@ function drawMap(c, m, t, o = {}) {
   c.restore();
 }
 function routePoint(m, p, lift = 0.35) {
-  const [ax, ay] = mapProj(77.2, 28.6, m), [bx, by] = mapProj(106.8, -6.2, m);
+  let [ax, ay] = mapProj(77.2, 28.6, m), [bx, by] = mapProj(106.8, -6.2, m);
+  if (typeof V !== 'undefined' && V.rev) { [ax, ay, bx, by] = [bx, by, ax, ay]; }
   const cx = (ax + bx) / 2 + (by - ay) * lift * 0.2, cy = Math.min(ay, by) - Math.abs(bx - ax) * lift;
   const q = 1 - p;
   return [q * q * ax + 2 * q * p * cx + p * p * bx, q * q * ay + 2 * q * p * cy + p * p * by, ax, ay, bx, by, cx, cy];
@@ -998,6 +1001,6 @@ function drawRoute(c, m, p, t, o = {}) {
     c.strokeStyle = `rgba(255,255,255,${1 - pulse})`; c.lineWidth = 3; c.beginPath(); c.arc(x, y, 8 + pulse * 30, 0, TAU); c.stroke();
     c.fillStyle = '#fff'; c.beginPath(); c.arc(x, y, 9, 0, TAU); c.fill();
     c.fillStyle = BRAND.pink; c.beginPath(); c.arc(x, y, 5, 0, TAU); c.fill();
-    if (o.cityLabels === true) txt(c, n, x + (i ? 0 : 0), y + (i ? 34 : -26), { size: o.citySize || 20, weight: 600, color: '#fff', shadow: 'rgba(60,20,60,0.7)', blur: 6 });
+    if (false) txt(c, n, x + (i ? 0 : 0), y + (i ? 34 : -26), { size: o.citySize || 20, weight: 600, color: '#fff', shadow: 'rgba(60,20,60,0.7)', blur: 6 });
   });
 }

@@ -14,9 +14,9 @@ function onHoldScreen(c, x, y, w, h, u, t) {
   card(c, x, y, w, h, { fill: '#f4f5fa' });
   c.save(); rr(c, x, y, w, h, 24); c.clip();
   c.fillStyle = '#41507e'; c.fillRect(x, y, w, 80);
-  txt(c, 'Courier Helpline', x + 24, y + 30, { size: 19, align: 'left', color: '#fff', weight: 600 });
-  txt(c, 'Calling…', x + 24, y + 56, { size: 13, align: 'left', color: '#dfe5ff', weight: 400 });
-  txt(c, 'ON HOLD', x + w / 2, y + 140, { size: 22, color: '#c2334a', font: 'Fredoka', weight: 700, ls: 4 });
+  txt(c, V.hold.head, x + 24, y + 30, { size: 19, align: 'left', color: '#fff', weight: 600 });
+  txt(c, V.hold.sub, x + 24, y + 56, { size: 13, align: 'left', color: '#dfe5ff', weight: 400 });
+  txt(c, V.hold.label, x + w / 2, y + 140, { size: 22, color: '#c2334a', font: 'Fredoka', weight: 700, ls: 4 });
   const secs = 47 * 60 + 12 + Math.floor(u * 37);
   const hh = String(Math.floor(secs / 3600)).padStart(2, '0'), mm = String(Math.floor((secs % 3600) / 60)).padStart(2, '0'), ss = String(secs % 60).padStart(2, '0');
   txt(c, `${hh}:${mm}:${ss}`, x + w / 2, y + 196, { size: 46, color: '#1a1f33', weight: 700 });
@@ -25,10 +25,12 @@ function onHoldScreen(c, x, y, w, h, u, t) {
     const bh = 10 + Math.abs(Math.sin(t * 6 + i * 0.7)) * 40;
     c.fillStyle = '#9aa6d0'; rr(c, x + 36 + i * 15, y + 280 - bh / 2, 8, bh, 4); c.fill();
   }
-  txt(c, '"Your call is important to us"', x + w / 2, y + 345, { size: 15, color: '#666c80', weight: 400 });
-  txt(c, 'Position in queue: 38', x + w / 2, y + 380, { size: 15, color: '#666c80', weight: 600 });
+  txt(c, V.hold.quote, x + w / 2, y + 345, { size: 15, color: '#666c80', weight: 400 });
+  txt(c, V.hold.queue, x + w / 2, y + 380, { size: 15, color: '#666c80', weight: 600 });
   c.fillStyle = '#e24a5a'; c.beginPath(); c.arc(x + w / 2, y + 440, 28, 0, TAU); c.fill();
-  c.strokeStyle = '#fff'; c.lineWidth = 6; c.lineCap = 'round'; c.beginPath(); c.arc(x + w / 2, y + 448, 14, Math.PI * 1.15, Math.PI * 1.85); c.stroke();
+  c.strokeStyle = '#fff'; c.lineWidth = 6; c.lineCap = 'round';
+  if (V.hold.icon === 'clock') { c.lineWidth = 4; c.beginPath(); c.arc(x + w / 2, y + 440, 14, 0, TAU); c.moveTo(x + w / 2, y + 440); c.lineTo(x + w / 2, y + 431); c.moveTo(x + w / 2, y + 440); c.lineTo(x + w / 2 + 7, y + 444); c.stroke(); }
+  else { c.beginPath(); c.arc(x + w / 2, y + 448, 14, Math.PI * 1.15, Math.PI * 1.85); c.stroke(); }
   c.restore();
   // floating music notes
   for (let k = 0; k < 4; k++) {
@@ -59,8 +61,8 @@ function teamScene(c, t, u) {
   c.fillStyle = '#fff'; rr(c, 300, 110, 520, 110, 26); c.fill(); c.shadowColor = 'transparent'; c.shadowBlur = 0;
   drawLogoIcon(c, 368, 165, 0.6);
   txt(c, 'AiiDell Team', 420, 148, { size: 34, align: 'left', font: 'Fredoka', weight: 700, color: '#ff4f8b' });
-  txt(c, 'in Indonesia', 420, 188, { size: 20, align: 'left', weight: 600, color: '#8a6ab8' });
-  idFlag(c, 750, 175, 50);
+  txt(c, V.team.sub, 420, 188, { size: 20, align: 'left', weight: 600, color: '#8a6ab8' });
+  V.team.flag(c, 750, 175, 50);
   c.restore();
   // shelves with gifts
   [[60, 320], [820, 320]].forEach(([sx, sy], i) => {
@@ -70,9 +72,9 @@ function teamScene(c, t, u) {
   });
   drawPlant(c, 900, 900, 0.7, t);
   // team members
-  drawWoman(c, { x: 280, y: 770, s: 0.82, who: 'H', t, mood: { happy: 0.7 }, look: { x: 0.5, y: -0.1 }, blink: blink(t, 8), tilt: Math.sin(t * 1.4) * 0.03,
+  drawWoman(c, { x: 280, y: 770, s: 0.82, who: V.team.w, t, mood: { happy: 0.7 }, look: { x: 0.5, y: -0.1 }, blink: blink(t, 8), tilt: Math.sin(t * 1.4) * 0.03,
     pose: { lh: [-70, 200], rh: [70, 200], prop: c2 => drawBouquet(c2, 0, 200, 0.32, t) } });
-  drawMan(c, { x: 690, y: 780, s: 0.82, who: 'T', t, mood: { happy: 0.85 }, look: { x: -0.5, y: -0.1 }, blink: blink(t, 9), tilt: Math.sin(t * 1.2 + 1) * 0.03,
+  drawMan(c, { x: 690, y: 780, s: 0.82, who: V.team.m, t, mood: { happy: 0.85 }, look: { x: -0.5, y: -0.1 }, blink: blink(t, 9), tilt: Math.sin(t * 1.2 + 1) * 0.03,
     pose: { phone: false, lh: [-70, 210], rh: [70, 210], prop: c2 => drawGiftBox(c2, 6, 250, 0.42, t) } });
   // desk
   const dg = c.createLinearGradient(0, 940, 0, 1080); dg.addColorStop(0, '#ffffff'); dg.addColorStop(1, '#e8dcfa');
@@ -85,9 +87,9 @@ function teamScene(c, t, u) {
     c.shadowColor = 'rgba(139,92,246,0.35)'; c.shadowBlur = 30; c.shadowOffsetY = 10;
     c.fillStyle = '#fff'; rr(c, -230, -110, 460, 250, 26); c.fill(); c.shadowColor = 'transparent'; c.shadowBlur = 0;
     c.fillStyle = brandGrad(c, -230, 0, 230, 0); rr(c, -230, -110, 460, 56, 26); c.fill(); c.fillRect(-230, -80, 460, 26);
-    txt(c, 'NEW ORDER  #ID-2048', 0, -82, { size: 22, color: '#fff', font: 'Fredoka', weight: 700, ls: 1 });
-    txt(c, 'Blush Rose Bouquet  →  Putri, Indonesia', 0, -26, { size: 17, color: '#2a1f4a', weight: 600 });
-    const steps = ['Order received', 'Gift prepared', 'Out for delivery'];
+    txt(c, V.team.order, 0, -82, { size: 22, color: '#fff', font: 'Fredoka', weight: 700, ls: 1 });
+    txt(c, V.team.item, 0, -26, { size: 17, color: '#2a1f4a', weight: 600 });
+    const steps = V.team.steps;
     steps.forEach((s, i) => {
       const p = clamp((u - 1.0 - i * 0.55) * 4);
       const yy = 18 + i * 38;
@@ -125,7 +127,7 @@ function journeyScene(c, t, u, pw = 960) {
     drawGiftBox(c, bx, by + 30 - E.outBack(clamp((u - 2.5) * 3)) * 10, 0.38 * (1 + Math.sin(clamp((u - 2.5) * 3) * Math.PI) * 0.2), t);
   }
   c.restore();
-  txt(c, 'Delivered with love', 480, 190, { size: 40, font: 'Fredoka', weight: 700, color: '#fff', shadow: 'rgba(80,20,60,0.6)', blur: 12, alpha: win(u, 0.4, 3.3, 0.4, 0.3) });
+  txt(c, V.journey, 480, 190, { size: 40, font: 'Fredoka', weight: 700, color: '#fff', shadow: 'rgba(80,20,60,0.6)', blur: 12, alpha: win(u, 0.4, 3.3, 0.4, 0.3) });
 }
 
 function recipientScene(c, t, u) {
@@ -159,6 +161,15 @@ function recipientScene(c, t, u) {
   c.fillStyle = lg; c.fillRect(-300, 1078, 1560, 600);
   c.fillStyle = '#efe0c8';
   for (let k = 0; k < 5; k++) { c.beginPath(); c.ellipse(480 + Math.sin(k * 1.7) * 20, 1120 + k * 70, 90 - k * 4, 22, 0, 0, TAU); c.fill(); }
+  if (WOMEN) { // Indian home touches: marigold toran over the door + diya lamps
+    for (let k = 0; k <= 16; k++) { const a = Math.PI + k / 16 * Math.PI, gx = 480 + Math.cos(a) * 180, gy = 520 + Math.sin(a) * 180; c.fillStyle = k % 2 ? '#ffb02e' : '#ff7a1a'; c.beginPath(); c.arc(gx, gy, 13, 0, TAU); c.fill(); c.fillStyle = 'rgba(255,255,255,0.35)'; c.beginPath(); c.arc(gx - 4, gy - 4, 4, 0, TAU); c.fill(); }
+    [[300, 1072], [660, 1072]].forEach(([dx, dy], i) => {
+      glowDot(c, dx, dy - 24, 46, 'rgba(255,200,90,0.85)');
+      c.fillStyle = '#c8653a'; c.beginPath(); c.ellipse(dx, dy, 24, 10, 0, 0, Math.PI); c.fill();
+      const fl = 1 + Math.sin(t * 14 + i) * 0.1;
+      c.save(); c.translate(dx, dy - 4); c.scale(fl, fl); c.fillStyle = '#ffd34d'; c.beginPath(); c.moveTo(0, -26); c.quadraticCurveTo(9, -12, 0, 0); c.quadraticCurveTo(-9, -12, 0, -26); c.fill(); c.restore();
+    });
+  }
   // warm interior light spill
   glowDot(c, 480, 600, 330, 'rgba(255,220,160,0.45)');
   // lanterns
@@ -178,11 +189,11 @@ function recipientScene(c, t, u) {
   const hold = clamp((u - 1.2) * 4);
   const happy = kf(u, [[0, 0.5], [1.2, 0.8], [1.7, 1]]);
   const surprise = kf(u, [[0, 0], [0.4, 0.8], [1.1, 0.6], [1.7, 0.2], [2.4, 0]]);
-  drawWoman(c, {
-    x: 480, y: 740, s: 0.95, who: 'P', t, mood: { happy, surprise }, look: { x: 0, y: kf(u, [[0, -0.8], [1.0, 0.6], [1.7, 0.2], [2.4, 0]]) },
+  (WOMEN ? drawMan : drawWoman)(c, {
+    x: 480, y: 740, s: 0.95, who: WOMEN ? 'R' : 'P', t, mood: { happy, surprise }, look: { x: 0, y: kf(u, [[0, -0.8], [1.0, 0.6], [1.7, 0.2], [2.4, 0]]) },
     blink: blink(t, 12), tilt: Math.sin(t * 1.3) * 0.04 + kf(u, [[1.6, 0], [2.2, 0.08]]),
     pose: {
-      lh: [-92, 205], rh: [92, 205],
+      phone: false, lh: [-92, 205], rh: [92, 205],
       prop: c2 => { if (hold > 0) drawGiftBox(c2, 6, 225, 0.5, t, open); },
     },
   });
@@ -211,7 +222,7 @@ function recipientScene(c, t, u) {
       fn(c, x, y, s * ip, t);
     });
   }
-  txt(c, 'Surprise delivered!', 520, 150, { size: 46, font: 'Fredoka', weight: 700, color: '#fff', stroke: '#ff4f8b', sw: 10, alpha: win(u, 1.8, 4, 0.3, 0.3) });
+  txt(c, V.surprise, 520, 150, { size: 46, font: 'Fredoka', weight: 700, color: '#fff', stroke: '#ff4f8b', sw: 10, alpha: win(u, 1.8, 4, 0.3, 0.3) });
 }
 
 function pipMan(c, t, x, y, r, a) {
@@ -224,7 +235,7 @@ function pipMan(c, t, x, y, r, a) {
   c.save(); c.beginPath(); c.arc(0, 0, r, 0, TAU); c.clip();
   const g = c.createLinearGradient(0, -r, 0, r); g.addColorStop(0, '#ffe6f0'); g.addColorStop(1, '#f7c6da');
   c.fillStyle = g; c.fillRect(-r, -r, r * 2, r * 2);
-  drawMan(c, { x: 0, y: 105, s: 0.62, who: 'R', t, mood: { happy: 1 }, look: { x: 0, y: 0.1 }, tilt: Math.sin(t * 2) * 0.05, blink: blink(t, 4), pose: { phoneY: 215 } });
+  drawLead(c, { x: 0, y: 105, s: 0.62, who: 'R', t, mood: { happy: 1 }, look: { x: 0, y: 0.1 }, tilt: Math.sin(t * 2) * 0.05, blink: blink(t, 4), pose: { phoneY: 215 } }, 'R');
   c.restore();
   c.strokeStyle = brandGrad(c, -r, 0, r, 0); c.lineWidth = 8; c.beginPath(); c.arc(0, 0, r + 4, 0, TAU); c.stroke();
   for (let i = 0; i < 3; i++) { const p = (t * 0.6 + i / 3) % 1; drawHeart(c, r * 0.7 + Math.sin(p * 6) * 10, -r * 0.6 - p * 90, 22, '#ff4f8b', Math.sin(p * Math.PI)); }
@@ -236,18 +247,21 @@ function videoCallScreen(c, w, h, t) {
   bg.addColorStop(0, '#ffe2b8'); bg.addColorStop(1, '#ffb3cf');
   c.fillStyle = bg; c.fillRect(0, 0, w, h);
   glowDot(c, w * 0.7, h * 0.25, 200, 'rgba(255,255,255,0.6)');
-  drawWoman(c, { x: w / 2, y: h * 0.62, s: 0.95, who: 'P', t, mood: { happy: 1 }, look: { x: 0, y: 0 }, blink: blink(t, 13), tilt: Math.sin(t * 1.6) * 0.05,
+  if (WOMEN) drawMan(c, { x: w / 2, y: h * 0.62, s: 0.95, who: 'R', t, mood: { happy: 1 }, look: { x: 0, y: 0 }, blink: blink(t, 13), tilt: Math.sin(t * 1.6) * 0.05,
+    pose: { phone: false, lh: [-80, 205], rh: [80, 205], prop: c2 => drawGiftBox(c2, 6, 228, 0.45, t, 1) } });
+  else drawWoman(c, { x: w / 2, y: h * 0.62, s: 0.95, who: 'P', t, mood: { happy: 1 }, look: { x: 0, y: 0 }, blink: blink(t, 13), tilt: Math.sin(t * 1.6) * 0.05,
     pose: { lh: [-70, 200], rh: [70, 200], prop: c2 => drawBouquet(c2, 0, 200, 0.42, t) } });
   // UI
   const tg = c.createLinearGradient(0, 0, 0, 150); tg.addColorStop(0, 'rgba(0,0,0,0.35)'); tg.addColorStop(1, 'rgba(0,0,0,0)');
   c.fillStyle = tg; c.fillRect(0, 0, w, 150);
-  txt(c, 'Putri', w / 2, 82, { size: 26, color: '#fff', weight: 700 });
+  txt(c, V.call.name, w / 2, 82, { size: 26, color: '#fff', weight: 700 });
   drawHeart(c, w / 2 + 52, 84, 20, '#ff4f8b', 1, false);
-  txt(c, 'Video call · 02:14', w / 2, 114, { size: 15, color: '#fff', weight: 400 });
+  txt(c, V.call.sub, w / 2, 114, { size: 15, color: '#fff', weight: 400 });
   // self view
   c.save(); rr(c, w - 128, 140, 104, 150, 18); c.clip();
   c.fillStyle = '#fbe0ec'; c.fillRect(w - 128, 140, 104, 150);
-  drawMan(c, { x: w - 76, y: 310, s: 0.4, who: 'R', t, mood: { happy: 1 }, look: { x: 0, y: 0 }, blink: blink(t, 4), pose: { phone: false, lh: [-60, 300], rh: [60, 300] } });
+  if (WOMEN) drawWoman(c, { x: w - 76, y: 310, s: 0.4, who: 'P', t, mood: { happy: 1 }, look: { x: 0, y: 0 }, blink: blink(t, 4), pose: { lh: [-60, 300], rh: [60, 300] } });
+  else drawMan(c, { x: w - 76, y: 310, s: 0.4, who: 'R', t, mood: { happy: 1 }, look: { x: 0, y: 0 }, blink: blink(t, 4), pose: { phone: false, lh: [-60, 300], rh: [60, 300] } });
   c.restore();
   c.strokeStyle = '#fff'; c.lineWidth = 3; rr(c, w - 128, 140, 104, 150, 18); c.stroke();
   // buttons
@@ -393,9 +407,9 @@ function endCard(c, t) {
   if (u > 1.4) { const [, , , , bx, by] = routePoint(m, 1); const bp = clamp((u - 1.4) / 1.2); for (let k = 0; k < 12; k++) { const a = k / 12 * TAU; drawHeart(c, bx + Math.cos(a) * bp * 160, by + Math.sin(a) * bp * 110, 30, '#ff6f9f', 1 - bp); } }
   c.restore();
   const h1 = E.out(seg(u, 0.5, 1.1)), h2 = E.out(seg(u, 0.9, 1.5));
-  txt(c, 'Different countries.', 540, 300 + (1 - h1) * 20, { size: 76, font: 'Fredoka', weight: 700, color: '#ffffff', alpha: h1, shadow: 'rgba(40,10,60,0.6)', blur: 20 });
-  txt(c, 'One simple way to', 540, 400 + (1 - h2) * 20, { size: 58, font: 'Fredoka', weight: 600, color: '#ffe0ec', alpha: h2, shadow: 'rgba(40,10,60,0.6)', blur: 20 });
-  txt(c, 'make someone smile.', 540, 470 + (1 - h2) * 20, { size: 58, font: 'Fredoka', weight: 600, color: '#ffe0ec', alpha: h2, shadow: 'rgba(40,10,60,0.6)', blur: 20 });
+  txt(c, V.end.h1, 540, 300 + (1 - h1) * 20, { size: 76, font: 'Fredoka', weight: 700, color: '#ffffff', alpha: h1, shadow: 'rgba(40,10,60,0.6)', blur: 20 });
+  txt(c, V.end.h2a, 540, 400 + (1 - h2) * 20, { size: 58, font: 'Fredoka', weight: 600, color: '#ffe0ec', alpha: h2, shadow: 'rgba(40,10,60,0.6)', blur: 20 });
+  txt(c, V.end.h2b, 540, 470 + (1 - h2) * 20, { size: 58, font: 'Fredoka', weight: 600, color: '#ffe0ec', alpha: h2, shadow: 'rgba(40,10,60,0.6)', blur: 20 });
   const LY = 960;
   const la = E.outBack(seg(u, 1.9, 2.6));
   if (la > 0) {
@@ -424,14 +438,14 @@ function endCard(c, t) {
     c.fillStyle = 'rgba(255,255,255,0.16)'; rr(c, 120, 1130, 840, 190, 95); c.fill();
     c.shadowColor = 'transparent';
     c.strokeStyle = 'rgba(255,230,190,0.7)'; c.lineWidth = 3; rr(c, 120, 1130, 840, 190, 95); c.stroke();
-    txt(c, 'Send love the easy way', 540, 1198, { size: 54, font: 'Fredoka', weight: 700, color: '#ffffff', shadow: 'rgba(40,10,60,0.5)', blur: 12 });
+    txt(c, V.end.pill, 540, 1198, { size: 54, font: 'Fredoka', weight: 700, color: '#ffffff', shadow: 'rgba(40,10,60,0.5)', blur: 12 });
     txt(c, 'www.aiidell.com', 540, 1266, { size: 40, font: 'Fredoka', weight: 600, color: '#ffe0a8', ls: 1 });
     c.restore();
     const sw2 = seg(u, 3.6, 4.4);
     if (sw2 > 0 && sw2 < 1) { c.save(); rr(c, 120, 1130, 840, 190, 95); c.clip(); const sx = lerp(0, 1080, sw2); const sg = c.createLinearGradient(sx - 90, 0, sx + 90, 0); sg.addColorStop(0, 'rgba(255,255,255,0)'); sg.addColorStop(0.5, 'rgba(255,255,255,0.45)'); sg.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = sg; c.fillRect(sx - 90, 1130, 180, 190); c.restore(); }
   }
   const sm = E.out(seg(u, 3.4, 4.0));
-  txt(c, 'Flowers · Gifts · Food · Snacks · Cakes', 540, 1400, { size: 32, weight: 600, color: '#ffe0ec', alpha: sm, ls: 1 });
+  txt(c, V.end.items, 540, 1400, { size: 32, weight: 600, color: '#ffe0ec', alpha: sm, ls: 1 });
 }
 
 // =====================================================================================
@@ -456,7 +470,7 @@ const CAPS = [
   [40.9, 43.5, '…the other is already smiling.'],
 ];
 function captions(c, t) {
-  CAPS.forEach(([a, b, s]) => {
+  (V.caps || CAPS).forEach(([a, b, s]) => {
     const al = win(t, a, b, 0.35, 0.3);
     if (al <= 0) return;
     c.save();
@@ -532,7 +546,7 @@ function drawRoomLeftTall(c, t, gloom) {
   // shelf + sticky notes
   c.fillStyle = '#4b4369'; c.fillRect(320, 820, 220, 14);
   [[335, 750, 50, 70, '#6f6290'], [392, 770, 36, 50, '#806aa8'], [434, 736, 24, 84, '#5d7aa8'], [462, 760, 58, 60, '#5d5880']].forEach(([x, y, w, h, col]) => { c.fillStyle = col; c.fillRect(x, y, w, h); });
-  [['?', 360, 900, -0.12, '#ffe27a'], ['Customs?', 470, 930, 0.08, '#ffb0b0'], ['Courier??', 90, 860, -0.05, '#a8e6ff'], ['Tax?', 200, 900, 0.12, '#ffe27a']].forEach(([s, x, y, r, col], i) => {
+  V.notes.forEach(([s, x, y, r, col], i) => {
     c.save(); c.translate(x, y + Math.sin(t * 2 + i) * 1.5); c.rotate(r);
     c.shadowColor = 'rgba(0,0,0,0.3)'; c.shadowBlur = 8; c.shadowOffsetY = 4;
     c.fillStyle = col; c.fillRect(-44, -38, 88, 76); c.shadowColor = 'transparent';
@@ -664,14 +678,14 @@ function drawLeftPanel(c, t) {
   drawRoomLeftTall(c, t, gloom);
   const m = leftMan(t);
   drawChairLeft(c, 270, 1440, 0.82);
-  drawMan(c, m);
+  drawLead(c, m, 'L');
   drawDeskLeftTall(c, t, kf(t, [[0, 0], [11.5, 0], [14, 0.5], [38, 1]]));
   // S1: dreaming of her
   const tb = win(t, 1.3, 5.6, 0.5, 0.4);
   if (tb > 0) {
     thoughtBubble(c, 270, 730, 250, 150, [], tb, { tail: [0.15, 1] });
     c.save(); c.globalAlpha *= clamp(tb * 1.5);
-    drawHeart(c, 228, 730, 62 * E.outBack(tb), '#ff4f8b'); idFlag(c, 282, 710, 54);
+    drawHeart(c, 228, 730, 62 * E.outBack(tb), '#ff4f8b'); V.destFlag(c, 282, 710, 54);
     c.restore();
   }
   // S2: the struggle
@@ -681,12 +695,12 @@ function drawLeftPanel(c, t) {
   cardSlotL(c, t, 13.4, 37.2, (c, u) => onHoldScreen(c, 100, 400, 340, 500, u, t));
   cardSlotL(c, t, 38.0, 44.0, (c, u) => onHoldScreen(c, 100, 400, 340, 500, u + 30, t));
   // forms & bills flying onto the desk
-  [[12.0, 'CUSTOMS FORM', 0], [12.4, 'INVOICE', 1], [12.8, 'DECLARATION', 0], [13.2, 'ID PROOF', 1], [13.6, 'FORM 7B', 0], [14.0, 'TAX SLIP', 1]].forEach(([at, lab, kind], i) => {
+  V.forms.map(([lab, kind], i) => [12.0 + i * 0.4, lab, kind]).forEach(([at, lab, kind], i) => {
     const p = seg(t, at, at + 0.8);
     if (p <= 0 || p >= 1) return;
     const e = E.inOut(p);
     const x = lerp(560, i % 2 ? 490 : 62, e), y = lerp(500 + i * 40, 1720 - i * 6, e) - Math.sin(e * Math.PI) * 140;
-    if (kind) bill(c, x, y, e * 6 + i, lerp(0.9, 0.55, e), lab, ['₹2,150', '₹940', '₹650'][i % 3]);
+    if (kind) bill(c, x, y, e * 6 + i, lerp(0.9, 0.55, e), lab, V.billAmts[i % 3]);
     else formSheet(c, x, y, e * 5 + i, lerp(0.9, 0.55, e), lab);
   });
   // question marks around (never over) his face
@@ -701,10 +715,10 @@ function drawLeftPanel(c, t) {
     }
   }
   // unanswered messages (below the chin)
-  [['No reply', 9.4, 400, 1420], ['Seen 2h ago', 9.9, 140, 1450], ['No reply', 10.4, 410, 1530]].forEach(([s, at, x, y], i) => {
+  [[V.badges1[0], 9.4, 400, 1420], [V.badges1[1], 9.9, 140, 1450], [V.badges1[2], 10.4, 410, 1530]].forEach(([s, at, x, y], i) => {
     msgBadge(c, x, y + Math.sin(t * 2 + i) * 5, E.outBack(clamp((t - at) * 3)) * 0.9, win(t, at, at + 3.0, 0.3, 0.4), s);
   });
-  [[39.0, 'Seen', 410, 1430], [39.5, 'No reply', 140, 1480]].forEach(([at, s, x, y], i) => msgBadge(c, x, y, 0.9 * E.outBack(clamp((t - at) * 3)), win(t, at, 44, 0.3, 0.3), s));
+  [[39.0, V.badges2[0], 410, 1430], [39.5, V.badges2[1], 140, 1480]].forEach(([at, s, x, y], i) => msgBadge(c, x, y, 0.9 * E.outBack(clamp((t - at) * 3)), win(t, at, 44, 0.3, 0.3), s));
   // cool vignette
   const v = c.createRadialGradient(270, 1100, 300, 270, 1000, 1200);
   v.addColorStop(0, 'rgba(10,10,40,0)'); v.addColorStop(1, `rgba(10,10,40,${0.35 + gloom * 0.25})`);
@@ -717,13 +731,13 @@ function drawRightPanel(c, t) {
   godRays(c, t, 470, 520, 0.9);
   const m = rightMan(t);
   drawSofaRight(c, 270, 1430, 0.8);
-  drawMan(c, m);
+  drawLead(c, m, 'R');
   dustMotes(c, t, -100, PW + 100, 'rgba(255,240,210,0.8)', 26, 3, 1920);
   const tb = win(t, 1.3, 5.6, 0.5, 0.4);
   if (tb > 0) {
     thoughtBubble(c, 270, 730, 250, 150, [], tb, { tail: [-0.15, 1] });
     c.save(); c.globalAlpha *= clamp(tb * 1.5);
-    drawGiftBox(c, 232, 770, 0.3 * E.outBack(tb), t); idFlag(c, 282, 710, 54);
+    drawGiftBox(c, 232, 770, 0.3 * E.outBack(tb), t); V.destFlag(c, 282, 710, 54);
     c.restore();
   }
   // AiiDell phone flow (13.4 - 20.6)
@@ -749,6 +763,54 @@ function drawRightPanel(c, t) {
   const v = c.createRadialGradient(270, 1000, 350, 270, 1000, 1200);
   v.addColorStop(0, 'rgba(255,200,220,0)'); v.addColorStop(1, 'rgba(160,60,120,0.18)');
   c.fillStyle = v; c.fillRect(-300, 0, PW + 600, 1920);
+}
+
+// ---------- lead characters (men: Rahul/Arjun; women: Sari/Dewi holding phones) ----------
+function drawLead(c, m, side) {
+  if (!WOMEN) { drawMan(c, m); return; }
+  const who = side === 'L' ? V.leftW : V.rightW;
+  const pose = m.pose || {};
+  const px = pose.phoneX || 0, py = pose.phoneY !== undefined ? pose.phoneY : 215;
+  const lh = pose.lh || [px - 50, py + 17], rh = pose.rh || [px + 50, py + 17];
+  const col = side === 'L' ? '#2b2f3a' : '#f1c9b5';
+  drawWoman(c, Object.assign({}, m, { who, pose: { lh, rh, rFist: pose.rFist, prop: c2 => drawPhoneBack(c2, px, py, pose.phoneA || 0, col, m.screenGlow) } }));
+}
+
+// ---------- women's ending: real AiiDell.com screen recording in a phone ----------
+function recScene(c, t) {
+  const bg = c.createRadialGradient(540, 1000, 100, 540, 960, 1300);
+  bg.addColorStop(0, '#fff8f2'); bg.addColorStop(0.5, '#ffe3ee'); bg.addColorStop(1, '#d9c6ff');
+  c.fillStyle = bg; c.fillRect(0, 0, W, H);
+  const R = rng(99);
+  for (let i = 0; i < 30; i++) {
+    const bx = R() * W, by = R() * H, br = 30 + R() * 90, ph = R() * TAU;
+    glowDot(c, bx + Math.sin(t * 0.4 + ph) * 30, by + Math.cos(t * 0.3 + ph) * 20, br, ['rgba(255,170,200,0.25)', 'rgba(200,170,255,0.25)', 'rgba(255,220,150,0.25)'][i % 3]);
+  }
+  dustMotes(c, t, 0, W, 'rgba(255,215,140,0.9)', 40, 8, H);
+  const k = E.outBack(clamp((t - 28.1) / 0.6));
+  const sg = t < 33.1 ? 'a' : 'b';
+  const srcT = sg === 'a' ? Math.max(0, t - 28.6) * 2.0 : (t - 33.1) * 1.5;
+  const idx = clamp(Math.floor(srcT * 30), 0, REC_SEG[sg].n - 1);
+  const img = REC[sg][idx];
+  glowDot(c, 540, 1090, 640, 'rgba(255,160,200,0.45)');
+  phoneFrame(c, 540, 1090, 590, 1280, 0.86 * k, (c2, w, h) => {
+    if (img && img.complete && img.naturalWidth) c2.drawImage(img, 0, 0, w, h);
+    else { c2.fillStyle = '#fff'; c2.fillRect(0, 0, w, h); }
+    const fl = 1 - Math.abs(clamp((t - 33.1) / 0.18 + 1, 0, 2) - 1);
+    if (fl > 0) { c2.fillStyle = `rgba(255,255,255,${fl})`; c2.fillRect(0, 0, w, h); }
+  });
+  [[29.0, 'Bayar pakai Rupiah', 215, 720, '#ff4f8b'], [30.5, 'Diantar sampai India', 865, 980, '#8b5cf6'], [32.0, 'Promo Diwali', 215, 1250, '#f5a54a'], [34.2, 'Hampers & kado', 865, 1480, '#ff4f8b']].forEach(([at, s, x, y, col], i) => {
+    const a = E.outBack(clamp((t - at) / 0.45));
+    if (a <= 0) return;
+    c.save(); c.translate(x, y + Math.sin(t * 2 + i) * 6); c.scale(a, a); c.rotate((i % 2 ? 1 : -1) * 0.04);
+    c.font = '700 34px Fredoka'; const bw = c.measureText(s).width + 70;
+    c.shadowColor = 'rgba(80,30,90,0.3)'; c.shadowBlur = 22; c.shadowOffsetY = 8;
+    c.fillStyle = '#ffffff'; rr(c, -bw / 2, -36, bw, 72, 36); c.fill(); c.shadowColor = 'transparent';
+    c.fillStyle = col; c.beginPath(); c.arc(-bw / 2 + 32, 0, 14, 0, TAU); c.fill();
+    c.strokeStyle = '#fff'; c.lineWidth = 3.5; c.lineCap = 'round'; c.beginPath(); c.moveTo(-bw / 2 + 25, 0); c.lineTo(-bw / 2 + 30, 6); c.lineTo(-bw / 2 + 39, -6); c.stroke();
+    txt(c, s, 14, 2, { size: 34, font: 'Fredoka', weight: 700, color: '#3a2a5a' });
+    c.restore();
+  });
 }
 
 // ---------- split screen (left | right) ----------
@@ -808,8 +870,8 @@ function drawSplit(c, t, splitX = 540, leftFade = 0) {
   if (actR > 0) { c.save(); c.globalAlpha = actR * 0.8; c.strokeStyle = '#ffb3cf'; c.lineWidth = 6; c.shadowColor = '#ff8fb5'; c.shadowBlur = 30; c.strokeRect(splitX + 3, 3, W - splitX - 6, H - 6); c.restore(); }
   // names
   const na = win(t, 1.0, 6.0, 0.4, 0.4);
-  nameTag(c, splitX / 2 + lOff, 935, 'Rahul', na, '#6b78a8');
-  nameTag(c, splitX + (W - splitX) / 2 + rOff, 935, 'Arjun', na, '#ff5f97');
+  nameTag(c, splitX / 2 + lOff, 935, V.leftName, na, '#6b78a8');
+  nameTag(c, splitX + (W - splitX) / 2 + rOff, 935, V.rightName, na, '#ff5f97');
 }
 
 // ---------- full-screen delivery story (20 - 28.6) ----------
@@ -822,12 +884,12 @@ function pipRahul(c, t, x, y, r, a) {
   c.save(); c.beginPath(); c.arc(0, 0, r, 0, TAU); c.clip();
   const g = c.createLinearGradient(0, -r, 0, r); g.addColorStop(0, '#3a4170'); g.addColorStop(1, '#222545');
   c.fillStyle = g; c.fillRect(-r, -r, r * 2, r * 2);
-  drawMan(c, { x: 0, y: 110, s: 0.6, who: 'L', t, mood: { stress: 0.9, tired: 0.6 }, look: { x: 0.2, y: 0.7 }, tilt: 0.05 + sn(t, 3) * 0.03, blink: blink(t, 1), screenGlow: '#a9d4ff', pose: { phoneY: 215 } });
+  drawLead(c, { x: 0, y: 110, s: 0.6, who: 'L', t, mood: { stress: 0.9, tired: 0.6 }, look: { x: 0.2, y: 0.7 }, tilt: 0.05 + sn(t, 3) * 0.03, blink: blink(t, 1), screenGlow: '#a9d4ff', pose: { phoneY: 215 } }, 'L');
   c.restore();
   c.strokeStyle = '#8a96c4'; c.lineWidth = 6; c.beginPath(); c.arc(0, 0, r + 3, 0, TAU); c.stroke();
   for (let i = 0; i < 2; i++) { const p = (t * 0.5 + i / 2) % 1; questionMark(c, -r * 0.75 + i * r * 1.5, -r * 0.5 - p * 60, 30, Math.sin(p * Math.PI), 0); }
   c.restore();
-  txt(c, 'Rahul: still on hold…', x, y + r + 40, { size: 26, font: 'Fredoka', weight: 600, color: '#ffffff', alpha: a, stroke: 'rgba(40,30,80,0.8)', sw: 6 });
+  txt(c, V.pipLabel, x, y + r + 40, { size: 24, font: 'Fredoka', weight: 600, color: '#ffffff', alpha: a, stroke: 'rgba(40,30,80,0.8)', sw: 6 });
 }
 function deliveryStory(c, t) {
   const s4 = t - 20.0;
@@ -842,7 +904,7 @@ function deliveryStory(c, t) {
   if (fl > 0) { c.fillStyle = `rgba(255,240,248,${fl})`; c.fillRect(-300, -450, 1560, 2000); }
   if (s4 > 5.2) pipMan(c, t, 780, 330, 105, win(t, 25.6, 28.8, 0.5, 0.3));
   c.restore();
-  pipRahul(c, t, 170, 480, 105, win(t, 20.8, 28.0, 0.5, 0.3));
+  pipRahul(c, t, 200, 480, 105, win(t, 20.8, 28.0, 0.5, 0.3));
 }
 
 // ---------------------------------------------------------------- MASTER
@@ -863,7 +925,7 @@ function renderScene(c, t) {
     const IX = 540, IY = 1250;
     c.save();
     if (ir < 1) { c.beginPath(); c.arc(IX, IY, ir * 2300, 0, TAU); c.clip(); }
-    showcase(c, t);
+    (WOMEN ? recScene : showcase)(c, t);
     c.restore();
     if (ir > 0 && ir < 1) {
       c.save(); c.strokeStyle = 'rgba(255,225,160,0.95)'; c.lineWidth = 14; c.shadowColor = '#ffd27a'; c.shadowBlur = 40;

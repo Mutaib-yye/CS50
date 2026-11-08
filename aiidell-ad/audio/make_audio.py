@@ -552,14 +552,26 @@ place(sfx, riser(0.9, 1.0), 26.9, 0, 0.14)
 place(sfx, whoosh(0.9, 250, 5000), 27.75, 0, 0.42)
 sparkle_cloud(27.8, 0.9, 26, 0.2)
 
-# S5 – what you can send
-for k in range(4):
-    place(sfx, whoosh(0.5, 600, 2800), 28.4 + k * 1.5 + 1.11 - 0.05, (k % 2 - 0.5), 0.18)
-for k in range(5):
-    chime_arp(28.4 + k * 1.5 + (0.05 if k == 0 else 0), [81 + (k % 3) * 2, 88 + (k % 3) * 2], 0.05, 0.1, 0)
-place(sfx, whoosh(0.7, 400, 3000), 35.85, 0, 0.25)
-place(sfx, pop(700, 1100, 0.08), 36.3, -0.2, 0.18)
-place(sfx, pop(700, 1100, 0.08), 36.7, 0.2, 0.18)
+# S5 – what you can send (men: product carousel) / women: AiiDell.com screen recording
+if os.environ.get('VARIANT', 'men') == 'women':
+    place(sfx, whoosh(0.6, 500, 3000), 28.15, 0, 0.22)
+    for ca in (17.7, 28.4, 33.0):                         # extra caption reveals in the women's version
+        place(sfx, pop(700, 1100, 0.07), ca, 0, 0.12)
+    place(sfx, pop(600, 1200, 0.1), 28.5, 0, 0.18)
+    for k in range(10):                                  # gentle scroll swishes while browsing
+        place(sfx, whoosh(0.25, 2500, 900), 28.9 + k * 0.85, 0.1, 0.05)
+    place(sfx, whoosh(0.3, 1200, 5000), 33.05, 0, 0.15)  # jump to the Diwali hampers
+    for i, a_ in enumerate([29.0, 30.5, 32.0, 34.2]):     # badge pops
+        place(sfx, pop(700 + i * 80, 1200, 0.08), a_, (-0.4 if i % 2 == 0 else 0.4), 0.2)
+        place(sfx, celesta(mtof(86 + (i % 3) * 2), 0.7), a_ + 0.02, 0, 0.06)
+else:
+    for k in range(4):
+        place(sfx, whoosh(0.5, 600, 2800), 28.4 + k * 1.5 + 1.11 - 0.05, (k % 2 - 0.5), 0.18)
+    for k in range(5):
+        chime_arp(28.4 + k * 1.5 + (0.05 if k == 0 else 0), [81 + (k % 3) * 2, 88 + (k % 3) * 2], 0.05, 0.1, 0)
+    place(sfx, whoosh(0.7, 400, 3000), 35.85, 0, 0.25)
+    place(sfx, pop(700, 1100, 0.08), 36.3, -0.2, 0.18)
+    place(sfx, pop(700, 1100, 0.08), 36.7, 0.2, 0.18)
 
 # S6 – one still searching, the other already smiling
 place(sfx, whoosh(0.7, 300, 2600), 37.35, -0.6, 0.3)

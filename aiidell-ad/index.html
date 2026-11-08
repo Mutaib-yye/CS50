@@ -10,8 +10,10 @@ html,body{margin:0;background:#000;overflow:hidden}
 canvas{display:block}
 </style></head>
 <body><canvas id="cv" width="1080" height="1920"></canvas>
+<script>window.VARIANT = new URLSearchParams(location.search).get("variant") || "men";</script>
 <script src="src/core.js"></script>
 <script src="src/characters.js"></script>
+<script src="src/variant.js"></script>
 <script src="src/props.js"></script>
 <script src="src/scenes.js"></script>
 <script>
@@ -19,7 +21,7 @@ const cv=document.getElementById('cv'); const ctx=cv.getContext('2d');
 window.fontsReady = Promise.all([
  document.fonts.load('700 40px Fredoka'),document.fonts.load('600 40px Fredoka'),
  document.fonts.load('400 40px Poppins'),document.fonts.load('600 40px Poppins'),document.fonts.load('700 40px Poppins'),
- document.fonts.load('700 40px Playfair'),document.fonts.load('italic 400 40px Playfair')]).then(()=>true);
+ document.fonts.load('700 40px Playfair'),document.fonts.load('italic 400 40px Playfair'), loadRecFrames()]).then(()=>true);
 window.renderFrame = t => { ctx.save(); renderScene(ctx, t); ctx.restore(); return true; };
 const q=new URLSearchParams(location.search); if(q.get('t')) fontsReady.then(()=>renderFrame(parseFloat(q.get('t'))));
 </script></body></html>

@@ -9,7 +9,7 @@ const fs = require('fs');
   const page = await browser.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
   page.on('pageerror', e => { console.error('PAGEERROR', e.message); });
   page.on('console', m => { if (m.type() === 'error') console.error('CONSOLE', m.text()); });
-  await page.goto('file://' + path.resolve(__dirname, 'index.html'));
+  await page.goto('file://' + path.resolve(__dirname, 'index.html') + '?variant=' + (process.env.VARIANT || 'men'));
   await page.evaluate(() => window.fontsReady);
   if (mode === 'stills') {
     fs.mkdirSync(out, { recursive: true });
