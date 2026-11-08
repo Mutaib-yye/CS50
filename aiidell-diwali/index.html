@@ -11,7 +11,7 @@
   .stage{position:relative;height:100vh;aspect-ratio:9/16;max-width:100vw;margin:0 auto;
     background:radial-gradient(ellipse at 50% 85%,#4a1368 0%,var(--deep) 60%,#05010f 100%);overflow:hidden}
   canvas{position:absolute;inset:0;width:100%;height:100%}
-  .content{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;padding:6%}
+  .content{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;color:#fff;padding:9% 6% 0}
   .logo{width:34%;max-height:14%;object-fit:contain;opacity:0;animation:rise 1.2s .3s forwards}
   .wordmark{font-family:system-ui,sans-serif;font-weight:800;letter-spacing:.12em;font-size:clamp(22px,4.2vh,44px);
     color:var(--gold);opacity:0;animation:rise 1.2s .3s forwards;display:none}
@@ -20,10 +20,14 @@
   h2{font-weight:400;font-style:italic;font-size:clamp(16px,3vh,32px);color:#ffe9b8;opacity:0;animation:rise 1.4s 2s forwards}
   .tag{font-family:system-ui,sans-serif;font-size:clamp(11px,1.8vh,18px);letter-spacing:.2em;text-transform:uppercase;
     color:#ffd88a;margin-top:3vh;opacity:0;animation:rise 1.4s 2.8s forwards}
-  .diyas{position:absolute;bottom:4%;left:0;right:0;display:flex;justify-content:space-around;padding:0 8%}
-  .diya{width:15%;opacity:0;animation:rise 1s forwards}
+  .people{position:absolute;bottom:9%;left:0;right:0;height:36%;display:flex;justify-content:center;align-items:flex-end;gap:1%;padding:0 3%}
+  .person{height:100%;opacity:0;animation:rise 1.2s forwards;transform-origin:50% 100%}
+  .person .sway{animation:sway 2.4s ease-in-out infinite alternate;transform-origin:50% 100%}
+  @keyframes sway{from{transform:rotate(-1.2deg)}to{transform:rotate(1.2deg)}}
+  .diyas{position:absolute;bottom:2%;left:0;right:0;display:flex;justify-content:space-around;padding:0 8%}
+  .diya{width:11%;opacity:0;animation:rise 1s forwards}
   .diya:nth-child(1){animation-delay:3.2s}.diya:nth-child(2){animation-delay:3.5s}
-  .diya:nth-child(3){animation-delay:3.8s}.diya:nth-child(4){animation-delay:4.1s}.diya:nth-child(5){animation-delay:4.4s}
+  .diya:nth-child(3){animation-delay:3.8s}.diya:nth-child(n+6){animation-delay:4.7s}.diya:nth-child(4){animation-delay:4.1s}.diya:nth-child(5){animation-delay:4.4s}
   .flame{transform-origin:50% 100%;animation:flick .5s infinite alternate}
   @keyframes flick{from{transform:scale(1,.92) rotate(-2deg)}to{transform:scale(.94,1.06) rotate(2deg)}}
   @keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
@@ -42,6 +46,7 @@
     <h2>May light brighten every corner of your year</h2>
     <div class="tag">Warm wishes from Aiidell</div>
   </div>
+  <div class="people" id="people"></div>
   <div class="diyas" id="diyas"></div>
 </div>
 <script>
@@ -52,7 +57,72 @@ const diya=`<svg class="diya" viewBox="0 0 100 80"><defs><radialGradient id="g" 
 <path class="flame" d="M50 16C55 24 55 29 50 35C45 29 45 24 50 16Z" fill="#fff3b0"/>
 <path d="M8 44H92C90 66 72 76 50 76C28 76 10 66 8 44Z" fill="#c4521a"/>
 <path d="M8 44H92C88 52 70 56 50 56C30 56 12 52 8 44Z" fill="#e8742a"/></svg>`;
-document.getElementById('diyas').innerHTML=diya.repeat(5);
+document.getElementById('diyas').innerHTML=diya.repeat(7);
+
+
+// Indian characters (original illustrations): faces with eyes, brows, smile, bindi; sari, kurta, lehenga
+function person(o){
+  const sk=o.skin,hair=o.hair,female=o.type!=='man';
+  const eyes=(dx)=>`<ellipse cx="${50+dx}" cy="38" rx="4.6" ry="${female?5:4.2}" fill="#fff"/><circle cx="${50+dx}" cy="38.6" r="3" fill="#3b2314"/><circle cx="${50+dx}" cy="38.6" r="1.5" fill="#000"/><circle cx="${51.2+dx}" cy="37.2" r="1" fill="#fff"/>
+  <path d="M${44.5+dx} ${female?34:35.5}Q${50+dx} ${female?31:33} ${55.5+dx} ${female?34:35.5}" stroke="${hair}" stroke-width="1.6" fill="none" stroke-linecap="round"/>`;
+  let back='',front='',body='',extras='';
+  if(female){
+    back=`<path d="M28 34C26 8 74 8 72 34C74 60 72 78 66 90L34 90C28 78 26 60 28 34Z" fill="${hair}"/>`;
+    front=`<path d="M30 30C32 12 68 12 70 30C62 22 56 18 50 18C44 18 38 22 30 30Z" fill="${hair}"/>
+      <circle cx="50" cy="28" r="2.2" fill="#d81b3c"/>
+      <circle cx="30" cy="44" r="2" fill="${o.gold||'#ffc83d'}"/><circle cx="70" cy="44" r="2" fill="${o.gold||'#ffc83d'}"/>
+      <path d="M45 48Q50 53 55 48" stroke="#b3243b" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <circle cx="40" cy="47" r="3.2" fill="#ff7a90" opacity=".35"/><circle cx="60" cy="47" r="3.2" fill="#ff7a90" opacity=".35"/>`;
+  } else {
+    back=`<path d="M29 32C28 10 72 10 71 32C66 22 34 22 29 32Z" fill="${hair}"/>`;
+    front=`<path d="M30 34C28 10 72 10 70 34C68 24 62 19 50 19C38 19 32 24 30 34Z" fill="${hair}"/><path d="M40 49Q50 45 60 49" stroke="${hair}" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <path d="M44 52Q50 56 56 52" stroke="#9d3a3a" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <circle cx="40" cy="47" r="3" fill="#ff8a70" opacity=".3"/><circle cx="60" cy="47" r="3" fill="#ff8a70" opacity=".3"/>`;
+  }
+  if(o.type==='woman'){ // sari: blouse, wrapped skirt, pallu over shoulder
+    body=`<path d="M38 56H62L66 96H34Z" fill="${o.blouse}"/>
+      <path d="M30 96H70L82 196H18Z" fill="${o.sari}"/>
+      <path d="M18 196L30 96H36L28 196Z" fill="${o.gold||'#ffc83d'}" opacity=".85"/>
+      <path d="M40 56L64 60L78 150L60 154L56 96Z" fill="${o.pallu}"/>
+      <path d="M40 56L64 60L78 150" stroke="${o.gold||'#ffc83d'}" stroke-width="2.5" fill="none"/>
+      <path d="M30 120H72M26 150H76" stroke="${o.gold||'#ffc83d'}" stroke-width="1.4" opacity=".7"/>`;
+  } else if(o.type==='girl'){ // lehenga
+    body=`<path d="M37 56H63L65 92H35Z" fill="${o.blouse}"/>
+      <path d="M33 90H67L88 196H12Z" fill="${o.sari}"/>
+      <path d="M22 160H78M16 182H84" stroke="${o.gold||'#ffc83d'}" stroke-width="2.2"/>
+      <path d="M36 58Q50 76 64 58" stroke="${o.pallu}" stroke-width="5" fill="none"/>`;
+  } else { // kurta
+    body=`<path d="M34 56H66L72 128H28Z" fill="${o.sari}"/>
+      <path d="M50 56V92" stroke="${o.gold||'#ffc83d'}" stroke-width="2"/>
+      <circle cx="50" cy="66" r="1.4" fill="${o.gold||'#ffc83d'}"/><circle cx="50" cy="78" r="1.4" fill="${o.gold||'#ffc83d'}"/>
+      <path d="M38 56Q50 66 62 56" stroke="${o.gold||'#ffc83d'}" stroke-width="2" fill="none"/>
+      <path d="M33 128H49V196H35ZM51 128H67L65 196H51Z" fill="${o.pants}"/>
+      <path d="M36 56Q50 80 64 56L66 70Q50 92 34 70Z" fill="${o.stole}" opacity=".95"/>`;
+  }
+  // arms + hands holding a tiny diya
+  const sleeve=o.type==='man'?o.sari:(o.type==='woman'?o.blouse:o.blouse);
+  extras=`<path d="M38 60Q24 80 42 104" stroke="${sleeve}" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <path d="M62 60Q76 80 58 104" stroke="${sleeve}" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <circle cx="42" cy="105" r="5" fill="${sk}"/><circle cx="58" cy="105" r="5" fill="${sk}"/>
+    <ellipse cx="50" cy="108" rx="10" ry="4" fill="#c4521a"/>
+    <path class="flame" d="M50 94C55 100 55 104 50 107C45 104 45 100 50 94Z" fill="#ffb02e"/>
+    <circle cx="50" cy="100" r="12" fill="#ffd36b" opacity=".25"/>`;
+  return `<svg class="person" style="animation-delay:${o.d}s" viewBox="0 0 100 200"><g class="sway">
+    ${back}${body}
+    <rect x="45" y="50" width="10" height="9" fill="${sk}"/>
+    <ellipse cx="50" cy="36" rx="20" ry="22" fill="${sk}"/>
+    <ellipse cx="30" cy="38" rx="3" ry="5" fill="${sk}"/><ellipse cx="70" cy="38" rx="3" ry="5" fill="${sk}"/>
+    ${eyes(-8.5)}${eyes(8.5)}
+    <path d="M50 40L48.5 45H51.5" stroke="#00000022" stroke-width="1.2" fill="none"/>
+    ${front}${extras}</g></svg>`;
+}
+document.getElementById('people').innerHTML=[
+ person({type:'man',  skin:'#e9b48a',hair:'#1f140c',sari:'#ffb347',pants:'#fff4dc',stole:'#c62a5a',d:3.0}),
+ person({type:'woman',skin:'#f2c8a4',hair:'#20120a',blouse:'#8e1b5a',sari:'#d6264f',pallu:'#f2a516',d:3.3}),
+ person({type:'girl', skin:'#f6d3b3',hair:'#2a1a10',blouse:'#7a3bd1',sari:'#ff6aa5',pallu:'#ffd36b',d:3.6}),
+ person({type:'woman',skin:'#e2a77a',hair:'#1a0f08',blouse:'#0e7a6e',sari:'#17a589',pallu:'#ffc83d',d:3.9}),
+ person({type:'man',  skin:'#f0c29c',hair:'#241610',sari:'#6a4bd8',pants:'#f7f1e6',stole:'#ffc83d',d:4.2}),
+].join('');
 
 // fireworks + sparkles
 const c=document.getElementById('fx'),x=c.getContext('2d');
