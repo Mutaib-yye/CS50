@@ -1,0 +1,382 @@
+<title>Rumah di Dalam Diri</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,600&family=Nunito:wght@600;800&display=swap">
+<style>
+/* Layout: one 9:16 stage centered on a plum page; scenes crossfade inside it, controls sit beneath. Single dark fairytale look by choice. */
+:root{
+  --plum:#24142f; --plum-2:#3a2150; --pink:#f6b8cb; --rose:#e87fa3;
+  --lav:#b9a6e8; --cream:#fff4e0; --gold:#f4c76a;
+  --skin:#f6c9a8; --hair:#6b3a24;
+  --display:'Fraunces',Georgia,serif; --body:'Nunito',system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--plum);color:var(--cream);font-family:var(--body);margin:0;
+  padding-block:20px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;align-items:center;gap:14px}
+.stage{position:relative;width:min(100%,405px);aspect-ratio:9/16;border-radius:22px;overflow:hidden;background:#1a0f24;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);isolation:isolate}
+.scene{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease;z-index:1}
+.scene.on{opacity:1}
+.bg{position:absolute;inset:0}
+.char{position:absolute;left:10%;width:80%;bottom:-3%;transform-origin:50% 30%;
+  transition:transform 9s cubic-bezier(.3,.1,.2,1);animation:float 5s ease-in-out infinite;z-index:2}
+.char svg{display:block;width:100%;height:auto;overflow:visible}
+@keyframes float{50%{translate:0 -6px}}
+.char.zoom{transform:scale(1.9)}
+.char.zoom2{transform:scale(2.2);transition-duration:7s}
+#eyes{animation:blink 4.2s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.08)}}
+#hairBack{animation:sway 6s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 0}
+@keyframes sway{50%{transform:rotate(1.6deg)}}
+
+.spark{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px 3px rgba(244,199,106,.7);
+  z-index:3;animation:rise var(--d,6s) linear forwards;pointer-events:none}
+@keyframes rise{from{transform:translateY(0) scale(.4);opacity:0}15%{opacity:1}to{transform:translateY(-260px) scale(1);opacity:0}}
+
+.bubbles{position:absolute;inset:0;z-index:4;pointer-events:none}
+.bub{position:absolute;max-width:62%;padding:9px 14px;border-radius:20px;background:rgba(255,244,224,.92);color:#4a2a5c;
+  font-weight:800;font-size:13px;line-height:1.25;opacity:0;transform:scale(.6) translateY(10px);
+  transition:opacity .6s,transform .6s cubic-bezier(.3,1.6,.5,1)}
+.bub.show{opacity:1;transform:none;animation:bob 3s ease-in-out infinite}
+.bub::after{content:"";position:absolute;bottom:-9px;left:22px;width:12px;height:12px;border-radius:50%;background:inherit}
+.bub:nth-child(even)::after{left:auto;right:22px}
+@keyframes bob{50%{translate:0 -4px}}
+.bub:nth-child(1){top:21%;left:6%}.bub:nth-child(2){top:29%;right:6%}.bub:nth-child(3){top:37%;left:8%}.bub:nth-child(4){top:12%;right:8%}
+
+.chips{position:absolute;left:6%;right:6%;top:20%;display:grid;gap:7px;z-index:4}
+.chip{padding:8px 12px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid rgba(185,166,232,.35);
+  font-size:12.5px;font-weight:800;color:rgba(255,244,224,.55);transition:all .5s}
+.chip.on{background:rgba(232,127,163,.85);color:#fff;border-color:#fff;transform:scale(1.03);box-shadow:0 0 18px rgba(232,127,163,.7)}
+.ecg{position:absolute;left:0;right:0;top:45%;width:100%;height:40px;z-index:1}
+.ecg path{fill:none;stroke:var(--rose);stroke-width:2.5;stroke-dasharray:420;stroke-dashoffset:420;animation:ecg var(--bpm,2s) linear infinite}
+@keyframes ecg{to{stroke-dashoffset:0}}
+.heart{transform-origin:150px 285px;animation:beat var(--bpm,2s) ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.22)}30%{transform:scale(1)}45%{transform:scale(1.14)}}
+
+.screen{position:absolute;left:8%;right:8%;top:7%;z-index:6;text-align:center;font-family:var(--display);font-style:italic;font-weight:600;
+  font-size:clamp(19px,5.6cqw,24px);line-height:1.2;color:var(--cream);text-shadow:0 2px 14px rgba(36,20,47,.9);
+  opacity:0;transform:translateY(-8px);transition:all .8s;container-type:inline-size;text-wrap:balance}
+.stage{container-type:inline-size}
+.screen{font-size:6cqw}
+.screen.show{opacity:1;transform:none}
+.sub{position:absolute;left:0;right:0;bottom:0;z-index:6;padding:46px 18px 24px;text-align:center;
+  background:linear-gradient(transparent,rgba(26,15,36,.88) 55%);font-weight:800;font-size:4cqw;line-height:1.35;
+  color:var(--cream);text-shadow:0 1px 6px rgba(0,0,0,.8);min-height:28%;display:flex;align-items:flex-end;justify-content:center}
+.sub b{color:var(--gold);font-weight:800}
+.prog{position:absolute;left:12px;right:12px;top:10px;z-index:8;display:flex;gap:4px}
+.prog i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.25);overflow:hidden}
+.prog i span{display:block;height:100%;width:0;background:var(--cream)}
+.cover{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+  padding:24px;text-align:center;background:radial-gradient(circle at 50% 35%,rgba(58,33,80,.78),rgba(26,15,36,.94));transition:opacity .8s}
+.cover.off{opacity:0;pointer-events:none}
+.cover h1{font-family:var(--display);font-style:italic;font-weight:600;font-size:7.4cqw;line-height:1.15;margin:0;text-wrap:balance}
+.cover p{margin:0;font-size:3.6cqw;color:var(--lav);font-weight:600;max-width:30ch}
+button{font:inherit;font-weight:800;cursor:pointer;border:0;border-radius:999px;padding:13px 26px;color:#4a1f3d;
+  background:linear-gradient(135deg,var(--pink),var(--gold));box-shadow:0 6px 24px rgba(232,127,163,.45)}
+button:focus-visible{outline:3px solid var(--cream);outline-offset:3px}
+button.ghost{background:transparent;color:var(--cream);box-shadow:inset 0 0 0 1.5px rgba(255,244,224,.4);padding:10px 20px}
+.bar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.note{max-width:405px;font-size:12.5px;color:var(--lav);text-align:center;line-height:1.5;margin:0}
+.mirror{position:absolute;right:5%;top:12%;width:47%;height:60%;border-radius:999px 999px 14px 14px;overflow:hidden;
+  border:6px solid var(--gold);box-shadow:0 0 40px rgba(244,199,106,.5),inset 0 0 40px rgba(255,255,255,.25);
+  background:linear-gradient(#cdbff0,#f8dff0)}
+.mirror svg{position:absolute;left:-10%;width:120%;bottom:-6%;transform:scaleX(-1);opacity:.85}
+@media (prefers-reduced-motion:reduce){.char,.heart,.bub.show,#hairBack,.spark{animation:none}}
+</style>
+
+<!-- Shared character: body, then head. Every scene reuses these so the face, hair and dress never change. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="gBody">
+      <g id="hairBack">
+        <path d="M92 120C68 80 95 36 150 36C205 36 232 80 208 120C232 150 228 210 206 238L94 238C72 210 68 150 92 120Z" fill="#6b3a24"/>
+        <circle cx="86" cy="214" r="22" fill="#6b3a24"/><circle cx="214" cy="214" r="22" fill="#6b3a24"/>
+        <circle cx="96" cy="236" r="16" fill="#7a4429"/><circle cx="204" cy="236" r="16" fill="#7a4429"/>
+      </g>
+      <rect x="136" y="180" width="28" height="48" rx="12" fill="#efb995"/>
+      <path d="M150 300L98 300C20 330 30 400 18 430L282 430C270 400 280 330 202 300Z" fill="#f8c6d6"/>
+      <path d="M60 372C110 392 190 392 240 372" stroke="#fff" stroke-opacity=".45" stroke-width="3" fill="none"/>
+      <path d="M100 244C106 218 130 210 150 218C170 210 194 218 200 244L204 296L96 296Z" fill="#f5b5c8"/>
+      <rect x="94" y="288" width="112" height="16" rx="3" fill="#f2a3bb"/>
+      <path d="M150 218L128 208L136 236Z" fill="#fbd0dd"/><path d="M150 218L172 208L164 236Z" fill="#fbd0dd"/>
+      <path d="M150 220V288" stroke="#e993ad" stroke-width="2"/>
+      <circle cx="150" cy="262" r="2.2" fill="#fff4e0"/><circle cx="150" cy="276" r="2.2" fill="#fff4e0"/>
+    </g>
+    <g id="gHead">
+      <ellipse cx="97" cy="244" rx="17" ry="14" fill="#f5b5c8"/><ellipse cx="203" cy="244" rx="17" ry="14" fill="#f5b5c8"/>
+      <ellipse cx="150" cy="126" rx="52" ry="58" fill="#f6c9a8"/>
+      <ellipse cx="124" cy="150" rx="11" ry="7" fill="#f4a39a" opacity=".5"/><ellipse cx="176" cy="150" rx="11" ry="7" fill="#f4a39a" opacity=".5"/>
+      <g id="eyes">
+        <ellipse cx="127" cy="127" rx="14" ry="16" fill="#fff"/><ellipse cx="173" cy="127" rx="14" ry="16" fill="#fff"/>
+        <circle cx="128" cy="129" r="10.5" fill="#7a4a2a"/><circle cx="172" cy="129" r="10.5" fill="#7a4a2a"/>
+        <circle cx="128" cy="129" r="5.5" fill="#2a160e"/><circle cx="172" cy="129" r="5.5" fill="#2a160e"/>
+        <circle cx="123" cy="123" r="4" fill="#fff"/><circle cx="167" cy="123" r="4" fill="#fff"/>
+        <circle cx="132" cy="134" r="1.8" fill="#fff" opacity=".8"/><circle cx="176" cy="134" r="1.8" fill="#fff" opacity=".8"/>
+        <path d="M112 118Q127 106 142 117M158 117Q173 106 188 118" fill="none" stroke="#3a1d12" stroke-width="3" stroke-linecap="round"/>
+      </g>
+      <path id="browL" d="M114 104Q128 97 142 103" fill="none" stroke="#5a2f1c" stroke-width="3.4" stroke-linecap="round"/>
+      <path id="browR" d="M158 103Q172 97 186 104" fill="none" stroke="#5a2f1c" stroke-width="3.4" stroke-linecap="round"/>
+      <path d="M148 142Q150 147 153 143" fill="none" stroke="#e0a07c" stroke-width="2" stroke-linecap="round"/>
+      <path id="mouth" d="M136 154Q150 167 164 154" fill="none" stroke="#d9506f" stroke-width="3.6" stroke-linecap="round"/>
+      <path d="M97 120C96 78 134 60 158 68C186 68 206 90 203 120C192 96 172 88 150 90C126 92 108 100 97 120Z" fill="#6b3a24"/>
+      <path d="M110 92C128 76 156 74 176 84" fill="none" stroke="#8a5233" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+      <circle cx="94" cy="132" r="12" fill="#6b3a24"/><circle cx="206" cy="132" r="12" fill="#6b3a24"/>
+    </g>
+  </defs>
+</svg>
+
+<div class="stage" id="stage">
+  <div class="prog" id="prog"><i><span></span></i><i><span></span></i><i><span></span></i><i><span></span></i><i><span></span></i></div>
+
+  <!-- Scene 1: bedroom -->
+  <section class="scene on" id="s1">
+    <svg class="bg" viewBox="0 0 405 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd9e6"/><stop offset="1" stop-color="#f6b8cb"/></linearGradient></defs>
+      <rect width="405" height="720" fill="url(#g1)"/>
+      <rect x="250" y="120" width="120" height="150" rx="60" fill="#cfe3ff"/><path d="M310 120V270M250 195H370" stroke="#fff" stroke-width="5"/>
+      <circle cx="330" cy="170" r="14" fill="#fff6c8"/>
+      <rect x="0" y="470" width="405" height="250" fill="#f3a9c0"/><rect x="0" y="450" width="405" height="40" rx="20" fill="#fff4e0"/>
+      <path d="M20 90Q100 130 190 80T380 70" fill="none" stroke="#fff4e0" stroke-width="2"/>
+      <g fill="#ffe08a"><circle cx="60" cy="108" r="5"/><circle cx="130" cy="112" r="5"/><circle cx="190" cy="82" r="5"/><circle cx="260" cy="92" r="5"/><circle cx="330" cy="76" r="5"/></g>
+    </svg>
+    <div class="bubbles" id="b1"><div class="bub">Dia bosan sama aku?</div><div class="bub">Dia nggak sayang lagi?</div><div class="bub">Aku ditinggalkan?</div></div>
+    <div class="char" id="c1">
+      <svg viewBox="0 0 300 420"><use href="#gBody"/>
+        <g stroke="#f6c9a8" stroke-width="15" fill="none" stroke-linecap="round"><path d="M100 244Q82 296 130 282"/><path d="M200 244Q218 296 170 282"/></g>
+        <g transform="rotate(-6 150 268)"><rect x="132" y="238" width="36" height="62" rx="7" fill="#3a2150"/><rect x="135" y="242" width="30" height="52" rx="4" id="phoneScr" fill="#cfe3ff"/>
+          <rect x="139" y="250" width="20" height="9" rx="4" fill="#f6b8cb"/></g>
+        <circle cx="131" cy="283" r="8" fill="#f6c9a8"/><circle cx="169" cy="283" r="8" fill="#f6c9a8"/>
+        <use href="#gHead"/></svg>
+    </div>
+  </section>
+
+  <!-- Scene 2: lavender, sad -->
+  <section class="scene" id="s2">
+    <svg class="bg" viewBox="0 0 405 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs><linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5b4a8a"/><stop offset="1" stop-color="#8c76c4"/></linearGradient></defs>
+      <rect width="405" height="720" fill="url(#g2)"/>
+      <circle cx="320" cy="140" r="40" fill="#e9e1ff" opacity=".85"/><circle cx="335" cy="130" r="36" fill="#5b4a8a"/>
+      <rect x="0" y="470" width="405" height="250" fill="#6f5aa8"/><rect x="0" y="450" width="405" height="40" rx="20" fill="#d9ccf5"/>
+    </svg>
+    <div class="bubbles" id="b2"><div class="bub">Apa dia sudah nggak mencintaiku?</div><div class="bub">Apa aku melakukan kesalahan?</div><div class="bub">Kenapa dia tiba-tiba berubah?</div><div class="bub">Apa dia akan meninggalkanku?</div></div>
+    <div class="char">
+      <svg viewBox="0 0 300 420"><use href="#gBody"/>
+        <g stroke="#f6c9a8" stroke-width="15" fill="none" stroke-linecap="round"><path d="M100 244Q76 306 150 298"/><path d="M200 244Q224 306 150 298"/></g>
+        <use href="#gHead"/></svg>
+    </div>
+  </section>
+
+  <!-- Scene 3: heart + alarm -->
+  <section class="scene" id="s3">
+    <svg class="bg" viewBox="0 0 405 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs><radialGradient id="g3" cx=".5" cy=".6" r=".8"><stop offset="0" stop-color="#5a2d6e"/><stop offset="1" stop-color="#1f1233"/></radialGradient></defs>
+      <rect width="405" height="720" fill="url(#g3)"/>
+      <g stroke="#b9a6e8" stroke-opacity=".25" fill="none"><circle cx="202" cy="420" r="120"/><circle cx="202" cy="420" r="200"/><circle cx="202" cy="420" r="290"/></g>
+    </svg>
+    <svg class="ecg" viewBox="0 0 405 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 20H120L135 20L145 4L158 36L170 20H260L275 20L285 6L298 34L310 20H405"/></svg>
+    <div class="chips" id="chips">
+      <div class="chip">Pesan sudah dibaca, belum dibalas</div>
+      <div class="chip">Dia terlihat sedang online</div>
+      <div class="chip">Dia menjawab dengan singkat</div>
+      <div class="chip">Dia tiba-tiba jadi lebih pendiam</div>
+    </div>
+    <div class="char">
+      <svg viewBox="0 0 300 420"><use href="#gBody"/>
+        <g stroke="#f6c9a8" stroke-width="15" fill="none" stroke-linecap="round"><path d="M100 244Q84 304 134 296"/><path d="M200 244Q216 304 166 296"/></g>
+        <g class="heart"><circle cx="150" cy="282" r="34" fill="#ffb3cf" opacity=".28"/>
+          <path d="M150 304C122 284 122 258 138 256C146 255 150 262 150 262C150 262 154 255 162 256C178 258 178 284 150 304Z" fill="#ff7fa8" stroke="#fff4e0" stroke-width="2"/></g>
+        <circle cx="136" cy="296" r="8" fill="#f6c9a8"/><circle cx="164" cy="296" r="8" fill="#f6c9a8"/>
+        <use href="#gHead"/></svg>
+    </div>
+  </section>
+
+  <!-- Scene 4: mirror -->
+  <section class="scene" id="s4">
+    <svg class="bg" viewBox="0 0 405 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs><linearGradient id="g4" x1="0" y1="0" x2="0" y2="1"><stop id="g4a" offset="0" stop-color="#6a58a0"/><stop id="g4b" offset="1" stop-color="#9a86d0"/></linearGradient></defs>
+      <rect id="warm" width="405" height="720" fill="url(#g4)"/>
+    </svg>
+    <div class="bg" id="glow4" style="background:radial-gradient(circle at 60% 40%,#ffd98a,#ffb98a 45%,#f6a3b8);opacity:0;transition:opacity 5s"></div>
+    <div class="mirror"><svg viewBox="0 0 300 420" aria-hidden="true"><use href="#gBody"/><use href="#gHead"/></svg></div>
+    <div class="char" style="left:-12%;width:76%">
+      <svg viewBox="0 0 300 420"><use href="#gBody"/>
+        <g stroke="#f6c9a8" stroke-width="15" fill="none" stroke-linecap="round"><path d="M100 244Q82 300 92 344"/><path d="M200 244Q232 304 158 266"/></g>
+        <circle cx="156" cy="266" r="9" fill="#f6c9a8"/>
+        <use href="#gHead"/></svg>
+    </div>
+  </section>
+
+  <!-- Scene 5: sunset garden -->
+  <section class="scene" id="s5">
+    <svg class="bg" viewBox="0 0 405 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs><linearGradient id="g5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b9a6e8"/><stop offset=".45" stop-color="#ffb3c6"/><stop offset=".75" stop-color="#ffd98a"/></linearGradient></defs>
+      <rect width="405" height="720" fill="url(#g5)"/>
+      <circle cx="205" cy="360" r="70" fill="#fff4d0" opacity=".9"/>
+      <path d="M0 470Q100 410 210 450T405 430V720H0Z" fill="#8fbf8a"/><path d="M0 540Q120 490 250 530T405 510V720H0Z" fill="#6fae7c"/>
+      <g id="flowers"></g>
+    </svg>
+    <div class="char" id="c5" style="animation-duration:4s">
+      <svg viewBox="0 0 300 420"><use href="#gBody"/>
+        <g stroke="#f6c9a8" stroke-width="15" fill="none" stroke-linecap="round"><path d="M100 244Q66 276 44 296"/><path d="M200 244Q238 268 262 252"/></g>
+        <use href="#gHead"/>
+        <g id="finalHeart" style="opacity:0;transition:opacity 2s"><path d="M250 150C226 134 226 112 240 110C246 109 250 115 250 115C250 115 254 109 260 110C274 112 274 134 250 150Z" fill="#ff7fa8"/></g></svg>
+    </div>
+  </section>
+
+  <div class="screen" id="screen"></div>
+  <div class="sub" id="sub" aria-live="polite"></div>
+
+  <div class="cover" id="cover">
+    <h1>Mengapa orang dengan anxious attachment selalu takut kehilangan seseorang?</h1>
+    <p>Animasi storytelling 5 scene, sekitar 85 detik, lengkap dengan narasi dan subtitle.</p>
+    <button id="play">Putar dengan suara</button>
+  </div>
+</div>
+
+<div class="bar">
+  <button class="ghost" id="restart">Ulangi</button>
+  <button class="ghost" id="voice">Suara: nyala</button>
+</div>
+<p class="note">Ini animasi vektor di browser sebagai pratinjau storyboard. Untuk video 3D sungguhan, tempel prompt yang sama ke generator video AI, lalu pakai gambar karakter sebagai referensi. Narasi memakai suara Indonesia bawaan perangkat, jadi kualitasnya bergantung pada perangkat Anda.</p>
+
+<script>
+const $=s=>document.querySelector(s);
+const FACES={
+  smile:{m:'M136 154Q150 167 164 154',l:'M114 104Q128 97 142 103',r:'M158 103Q172 97 186 104'},
+  worry:{m:'M138 160Q150 151 162 160',l:'M114 108Q128 104 142 94',r:'M158 94Q172 104 186 108'},
+  sad:{m:'M139 162Q150 150 161 162',l:'M114 110Q128 105 142 92',r:'M158 92Q172 105 186 110'},
+  calm:{m:'M137 154Q150 165 163 154',l:'M114 102Q128 96 142 101',r:'M158 101Q172 96 186 102'},
+  joy:{m:'M133 151Q150 175 167 151Z',l:'M114 100Q128 92 142 99',r:'M158 99Q172 92 186 100'}
+};
+function face(n){const f=FACES[n];$('#mouth').setAttribute('d',f.m);$('#browL').setAttribute('d',f.l);$('#browR').setAttribute('d',f.r);
+  $('#mouth').setAttribute('fill',n==='joy'?'#c4455f':'none')}
+
+/* Narration cues. *word* is highlighted in the subtitle. */
+const CUES=[
+ {sc:1,face:'smile',screen:'Kenapa kamu begitu takut kehilangan seseorang?',fx:'s1a',t:'Pernah nggak, kamu mengirim pesan kepada seseorang yang kamu sayang, tapi ketika dia nggak membalas, *pikiranmu langsung ke mana-mana*?'},
+ {sc:1,fx:'s1b',t:'Jangan-jangan dia sudah bosan. Jangan-jangan dia sudah nggak sayang. Atau jangan-jangan… dia akan *meninggalkanmu*?',pause:900},
+ {sc:1,fx:'s1c',t:'Kalau kamu sering mengalami ini, mungkin kamu memiliki pola *anxious attachment*.'},
+ {sc:2,face:'sad',screen:'Ketakutan akan ditinggalkan.',fx:'s2',t:'Tapi sebenarnya, kenapa orang dengan anxious attachment begitu takut kehilangan seseorang?'},
+ {sc:2,t:'Bukan selalu karena mereka terlalu manja atau terlalu emosional.'},
+ {sc:2,t:'Jauh di dalam dirinya, mungkin ada pengalaman yang membuat mereka belajar bahwa *cinta itu tidak selalu terasa aman*.'},
+ {sc:2,t:'Mereka mungkin pernah mengalami penolakan, perhatian yang tidak konsisten, atau ketakutan ditinggalkan oleh orang yang mereka sayangi.'},
+ {sc:3,face:'worry',screen:'Kadang, bukan perhatian yang mereka cari. Melainkan rasa aman.',fx:'s3',t:'Begini cara pikiran mereka bekerja.'},
+ {sc:3,chip:0,t:'Ketika seseorang yang mereka cintai mulai menjauh, otak mereka bisa menganggap jarak tersebut sebagai sebuah *ancaman*.'},
+ {sc:3,chip:1,t:'Pesan yang terlambat dibalas terasa seperti penolakan.'},
+ {sc:3,chip:2,t:'Pasangan yang tiba-tiba diam terasa seperti seseorang yang mulai kehilangan rasa cinta.'},
+ {sc:3,chip:3,t:'Perubahan kecil saja bisa memunculkan ribuan pertanyaan di kepala mereka.'},
+ {sc:3,t:'Itulah mengapa mereka sering membutuhkan kepastian dan reassurance dari pasangannya.'},
+ {sc:3,fx:'s3calm',t:'Bukan selalu karena ingin mencari perhatian, tetapi karena mereka sangat ingin merasa *aman* dalam hubungan.'},
+ {sc:4,face:'sad',screen:'Nilai dirimu tidak bergantung pada perhatian seseorang.',fx:'s4',t:'Tapi ada satu hal penting yang perlu kamu pahami.'},
+ {sc:4,t:'Kamu tidak bisa membangun rasa aman hanya dengan terus-menerus memastikan apakah seseorang masih mencintaimu.'},
+ {sc:4,t:'Pasanganmu memang bisa memberikan kepastian.'},
+ {sc:4,face:'calm',fx:'s4b',t:'Tetapi proses penyembuhan juga berarti belajar *menenangkan dirimu sendiri*.'},
+ {sc:4,t:'Belajar memahami bahwa seseorang yang sedang sibuk bukan berarti sedang meninggalkanmu.'},
+ {sc:4,face:'smile',t:'Dan yang paling penting, *nilai dirimu* tidak ditentukan oleh seberapa besar perhatian yang diberikan seseorang kepadamu.'},
+ {sc:5,face:'smile',screen:'',fx:'s5',t:'Jadi, kalau kamu adalah seseorang yang memiliki anxious attachment, ingatlah ini.'},
+ {sc:5,t:'Kamu pantas mendapatkan cinta yang *aman, konsisten, dan menenangkan*.'},
+ {sc:5,t:'Tetapi kamu juga pantas memiliki rasa aman di dalam dirimu sendiri.'},
+ {sc:5,fx:'s5b',t:'Karena cinta seharusnya terasa seperti *rumah*… bukan seperti ketakutan yang terus-menerus akan kehilangan seseorang.',pause:1200},
+ {sc:5,face:'joy',fx:'s5c',screen:'Kamu tetap berharga, bahkan ketika tidak ada seorang pun yang membalas pesanmu.',t:'',hold:5500}
+];
+
+/* ---------- audio ---------- */
+let ac,master,musicTimer,hbTimer,windNode,voiceOn=true,musicMinor=false;
+function initAudio(){ if(ac)return; try{ac=new (window.AudioContext||window.webkitAudioContext)();master=ac.createGain();master.gain.value=.9;master.connect(ac.destination)}catch(e){ac=null} }
+function tone(f,t0,dur,type,gain,dest){ if(!ac)return; const o=ac.createOscillator(),g=ac.createGain(); o.type=type;o.frequency.value=f;
+  g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(gain,t0+.02);g.gain.exponentialRampToValueAtTime(.0001,t0+dur);
+  o.connect(g);g.connect(dest||master);o.start(t0);o.stop(t0+dur+.05)}
+function ping(){ if(!ac)return; const t=ac.currentTime; tone(1175,t,.25,'sine',.18); tone(1568,t+.12,.35,'sine',.16) }
+function thump(){ if(!ac)return; const t=ac.currentTime; tone(60,t,.22,'sine',.5); tone(55,t+.18,.2,'sine',.35) }
+function sparkle(){ if(!ac)return; const t=ac.currentTime; [2093,2637,3136,3951].forEach((f,i)=>tone(f,t+i*.07,.5,'sine',.05)) }
+function heart(ms){ clearInterval(hbTimer); if(!ms)return; thump(); hbTimer=setInterval(thump,ms) }
+function music(on){ clearInterval(musicTimer); if(!on||!ac)return; let i=0;
+  const maj=[261.6,329.6,392,523.3,392,329.6,293.7,349.2,440,587.3,440,349.2];
+  const min=[220,261.6,329.6,440,329.6,261.6,246.9,293.7,370,493.9,370,293.7];
+  musicTimer=setInterval(()=>{ const s=musicMinor?min:maj,t=ac.currentTime; const f=s[i%s.length];
+    tone(f,t,1.6,'triangle',.05); if(i%4===0) tone(f/2,t,2.4,'sine',.06); i++ },520) }
+function wind(on){ if(windNode){try{windNode.stop()}catch(e){} windNode=null} if(!on||!ac)return;
+  const b=ac.createBuffer(1,ac.sampleRate*2,ac.sampleRate),d=b.getChannelData(0); for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+  const s=ac.createBufferSource();s.buffer=b;s.loop=true;const f=ac.createBiquadFilter();f.type='lowpass';f.frequency.value=500;
+  const g=ac.createGain();g.gain.value=.03;s.connect(f);f.connect(g);g.connect(master);s.start();windNode=s }
+
+/* ---------- engine ---------- */
+let token=0,timers=[],cur=0;
+const later=(fn,ms)=>{const my=token;timers.push(setTimeout(()=>{if(my===token)fn()},ms))};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function pickVoice(){ const vs=speechSynthesis.getVoices().filter(v=>/^id/i.test(v.lang)); return vs.find(v=>/female|gadis|damayanti/i.test(v.name))||vs[0] }
+function speak(text,my){ return new Promise(res=>{
+  const est=text.length*70+600; let done=false; const fin=()=>{if(!done){done=true;clearTimeout(tm);res()}};
+  const tm=setTimeout(fin,est*2.5);
+  if(!voiceOn||!('speechSynthesis' in window)){setTimeout(fin,est);return}
+  try{ speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang='id-ID';u.rate=.93;u.pitch=1.12;
+    const v=pickVoice(); if(v)u.voice=v; u.onend=fin; u.onerror=()=>setTimeout(fin,est); speechSynthesis.speak(u) }catch(e){setTimeout(fin,est)} }) }
+function showSub(t){ $('#sub').innerHTML=t?'<span>'+t.replace(/\*(.+?)\*/g,'<b>$1</b>')+'</span>':'' }
+function setScene(n){ document.querySelectorAll('.scene').forEach((s,i)=>s.classList.toggle('on',i+1===n));
+  musicMinor=(n===2||n===3); if(n!==3)heart(0); if(n!==5)wind(false);
+  document.querySelectorAll('#prog i span').forEach((s,i)=>s.style.width=i+1<n?'100%':'0') ;
+  document.querySelectorAll('.char').forEach(c=>c.classList.remove('zoom','zoom2')); cur=n }
+function bubbles(id,gap){ const els=[...document.querySelectorAll('#'+id+' .bub')]; els.forEach(e=>e.classList.remove('show')); els.forEach((e,i)=>later(()=>{e.classList.add('show');sparkle()},i*gap)) }
+
+const FX={
+  s1a(){ face('smile'); later(ping,900); later(()=>{ $('#phoneScr').setAttribute('fill','#e8f0ff') },900); later(ping,4200); later(()=>face('calm'),5200) },
+  s1b(){ face('worry'); heart(900); bubbles('b1',2400) },
+  s1c(){ $('#c1').classList.add('zoom') },
+  s2(){ bubbles('b2',3200) },
+  s3(){ document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on')); heart(1200); $('#s3').style.setProperty('--bpm','1.2s'); $('#s3 .heart').style.setProperty('--bpm','1.2s') },
+  s3calm(){ face('sad'); heart(1600); $('#s3').style.setProperty('--bpm','2s'); $('#s3 .heart').style.setProperty('--bpm','2s'); $('#s3 .ecg path').style.setProperty('--bpm','2.2s') },
+  s4(){ $('#glow4').style.opacity=0 },
+  s4b(){ $('#glow4').style.opacity=1; sparkle() },
+  s5(){ wind(true); sparkle() },
+  s5b(){ $('#c5').classList.add('zoom2'); sparkle() },
+  s5c(){ $('#finalHeart').style.opacity=1; sparkle(); later(sparkle,1500) }
+};
+
+async function run(from=0){
+  token++; const my=token; timers.forEach(clearTimeout);timers=[];
+  $('#cover').classList.add('off'); initAudio(); if(ac&&ac.state==='suspended')ac.resume(); music(true);
+  $('#phoneScr').setAttribute('fill','#cfe3ff');$('#glow4').style.opacity=0;$('#finalHeart').style.opacity=0;
+  $('#s3 .ecg path').style.removeProperty('--bpm');
+  for(let i=from;i<CUES.length;i++){
+    const c=CUES[i]; if(my!==token)return;
+    if(c.sc!==cur||i===0) setScene(c.sc);
+    if(c.face)face(c.face);
+    if(c.screen!==undefined){ const s=$('#screen'); s.classList.remove('show'); setTimeout(()=>{ if(my!==token)return; s.textContent=c.screen; if(c.screen)s.classList.add('show') },300) }
+    if(c.chip!==undefined) document.querySelectorAll('.chip').forEach((e,k)=>e.classList.toggle('on',k===c.chip));
+    if(c.fx&&FX[c.fx])FX[c.fx]();
+    showSub(c.t);
+    const segs=document.querySelectorAll('#prog i span'); const seg=segs[c.sc-1];
+    const sceneCues=CUES.filter(x=>x.sc===c.sc),pos=sceneCues.indexOf(c); seg.style.transition='width .6s';seg.style.width=((pos+1)/sceneCues.length*100)+'%';
+    if(c.t) await speak(c.t.replace(/\*/g,''),my); else await sleep(c.hold||1500);
+    if(my!==token)return; await sleep(c.pause||380);
+  }
+  if(my!==token)return;
+  showSub('');music(false);wind(false);heart(0);
+  document.querySelectorAll('#prog i span').forEach(s=>s.style.width='100%');
+  $('#play').textContent='Putar lagi';$('#cover h1').textContent='Kamu pantas merasa aman, di dalam maupun di luar.';
+  $('#cover p').textContent='Terima kasih sudah menonton.';
+  setTimeout(()=>{ if(my===token)$('#cover').classList.remove('off') },2500);
+}
+function stopAll(){ token++; timers.forEach(clearTimeout);timers=[]; try{speechSynthesis.cancel()}catch(e){} music(false);wind(false);heart(0) }
+
+$('#play').addEventListener('click',()=>{ stopAll(); setScene(1); showSub(''); $('#screen').classList.remove('show'); run(0) });
+$('#restart').addEventListener('click',()=>{ stopAll(); setScene(1); showSub(''); $('#screen').classList.remove('show'); run(0) });
+$('#voice').addEventListener('click',e=>{ voiceOn=!voiceOn; e.target.textContent='Suara: '+(voiceOn?'nyala':'mati'); if(!voiceOn){try{speechSynthesis.cancel()}catch(x){}} });
+if('speechSynthesis' in window) speechSynthesis.onvoiceschanged=()=>{};
+
+/* ambient sparkles and flowers */
+(function(){
+  const st=$('#stage');
+  setInterval(()=>{ const s=document.createElement('i');s.className='spark';
+    s.style.left=Math.random()*100+'%';s.style.top=(40+Math.random()*55)+'%';s.style.setProperty('--d',(4+Math.random()*4)+'s');
+    s.style.opacity=.9; st.appendChild(s); setTimeout(()=>s.remove(),8000) },cur>=4?350:900);
+  const cols=['#ff9fc0','#fff4e0','#d7c2ff','#ffd98a','#ff8fb3'],g=$('#flowers');
+  let h='';for(let i=0;i<46;i++){const x=Math.random()*405,y=520+Math.random()*190,r=5+Math.random()*7,c=cols[i%5];
+    h+=`<g transform="translate(${x} ${y})"><path d="M0 0V${r*2.6}" stroke="#4f9a63" stroke-width="2"/>`+
+    [0,72,144,216,288].map(a=>`<circle cx="${Math.cos(a*Math.PI/180)*r}" cy="${Math.sin(a*Math.PI/180)*r}" r="${r*.75}" fill="${c}"/>`).join('')+
+    `<circle r="${r*.6}" fill="#ffc94d"/></g>`}
+  g.innerHTML=h;
+})();
+face('smile');
+</script>
